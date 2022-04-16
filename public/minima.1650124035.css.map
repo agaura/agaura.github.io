@@ -1,7 +1,7 @@
 {
 	"version": 3,
-	"file": "minima.1650122113.css",
-	"sourceRoot": "/Users/alexandergaura/blog/agaura",
+	"file": "minima.1650124035.css",
+	"sourceRoot": "/Users/alexandergaura/blog/agaura/public",
 	"sources": [
 		"themes/minima/assets/sass/main.scss",
 		"themes/minima/assets/sass/atom.scss",

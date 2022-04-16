@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on Hi Folks</title>
-    <link>https://github.com/agaura/agaura.github.io/posts/</link>
+    <link>https://agaura.github.io/posts/</link>
     <description>Recent content in Posts on Hi Folks</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>© XJJ 2022</copyright>
-    <lastBuildDate>Sat, 16 Apr 2022 16:30:24 +0200</lastBuildDate><atom:link href="https://github.com/agaura/agaura.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 16 Apr 2022 16:30:24 +0200</lastBuildDate><atom:link href="https://agaura.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Examplepost</title>
-      <link>https://github.com/agaura/agaura.github.io/posts/examplepost/</link>
+      <link>https://agaura.github.io/posts/examplepost/</link>
       <pubDate>Sat, 16 Apr 2022 16:30:24 +0200</pubDate>
       
-      <guid>https://github.com/agaura/agaura.github.io/posts/examplepost/</guid>
+      <guid>https://agaura.github.io/posts/examplepost/</guid>
       <description></description>
     </item>
     
