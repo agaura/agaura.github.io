@@ -22,7 +22,8 @@
       <pubDate>Sun, 17 Apr 2022 17:08:58 +0200</pubDate>
       
       <guid>https://agaura.github.io/about/</guid>
-      <description>I just need some example text</description>
+      <description>I just need some example text
+      input[type=&#34;file&#34;] { display: none; } .custom-file-upload { border: 1px solid #ccc; display: inline-block; padding: 6px 12px; cursor: pointer; }    Custom Upload       &#34;use strict&#34;; var vertexShaderSource = `#version 300 es // an attribute is an input (in) to a vertex shader. // It will receive data from a buffer in vec2 a_position; in vec2 a_texCoord;// Used to pass in the resolution of the canvas uniform vec2 u_resolution;// Used to pass the texture coordinates to the fragment shader out vec2 v_texCoord;// all shaders have a main function void main() {// convert the position from pixels to 0.</description>
     </item>
     
     <item>
