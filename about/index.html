@@ -34,11 +34,11 @@
   
   
   
-  <link rel="stylesheet" href="/minima.1650646730.css">
+  <link rel="stylesheet" href="/minima.1650647191.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1650646730.js"></script>
+  <script defer type="text/javascript" src="/minima.1650647191.js"></script>
 </head>
 <script>
   
@@ -115,7 +115,7 @@
             padding: 6px 12px;
             cursor: pointer;
         }
-    </style>    <div align="center" style="padding-top: 50px">
+    </style>    <div align="center" >
         <img align="center" id="uploadPreview" style="width: 500px" />
     </div>    <div align="center">
         <label class="custom-file-upload">
@@ -262,7 +262,8 @@ float find_gamut_intersection(float a, float b, float L1, float C1, float L0, ve
 	float t;
 	if (((L1 - L0) * cusp.y - (cusp.x - L0) * C1) <= 0.f)
 	{
-		// Lower half		t = cusp.y * L0 / (C1 * cusp.x + cusp.y * (L0 - L1));
+		// Lower half	
+        t = cusp.y * L0 / (C1 * cusp.x + cusp.y * (L0 - L1));
 	}
 	else
 	{
