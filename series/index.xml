@@ -6,6 +6,16 @@
     <description>Recent content in Series on Pansemia</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <copyright>© XJJ 2022</copyright><atom:link href="https://agaura.github.io/series/index.xml" rel="self" type="application/rss+xml" />
+    <copyright>TH ↔ Þ</copyright>
+    <lastBuildDate>Sun, 17 Apr 2022 16:50:52 +0200</lastBuildDate><atom:link href="https://agaura.github.io/series/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>example</title>
+      <link>https://agaura.github.io/series/example/</link>
+      <pubDate>Sun, 17 Apr 2022 16:50:52 +0200</pubDate>
+      
+      <guid>https://agaura.github.io/series/example/</guid>
+      <description></description>
+    </item>
+    
   </channel>
 </rss>

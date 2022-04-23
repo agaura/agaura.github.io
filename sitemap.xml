@@ -2,21 +2,43 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://agaura.github.io/examplepost2/</loc>
+    <loc>https://agaura.github.io/okhsvapp/</loc>
     <lastmod>2022-04-17T17:25:49+02:00</lastmod>
   </url><url>
     <loc>https://agaura.github.io/about/</loc>
     <lastmod>2022-04-17T17:08:58+02:00</lastmod>
   </url><url>
-    <loc>https://agaura.github.io/examplepost/</loc>
+    <loc>https://agaura.github.io/categories/</loc>
     <lastmod>2022-04-17T16:50:52+02:00</lastmod>
   </url><url>
-    <loc>https://agaura.github.io/categories/</loc>
+    <loc>https://agaura.github.io/tags/content/</loc>
+    <lastmod>2022-04-17T16:50:52+02:00</lastmod>
+  </url><url>
+    <loc>https://agaura.github.io/categories/development/</loc>
+    <lastmod>2022-04-17T16:50:52+02:00</lastmod>
+  </url><url>
+    <loc>https://agaura.github.io/series/example/</loc>
+    <lastmod>2022-04-17T16:50:52+02:00</lastmod>
+  </url><url>
+    <loc>https://agaura.github.io/tags/hugo/</loc>
+    <lastmod>2022-04-17T16:50:52+02:00</lastmod>
   </url><url>
     <loc>https://agaura.github.io/</loc>
+    <lastmod>2022-04-17T16:50:52+02:00</lastmod>
+  </url><url>
+    <loc>https://agaura.github.io/categories/publishing/</loc>
+    <lastmod>2022-04-17T16:50:52+02:00</lastmod>
+  </url><url>
+    <loc>https://agaura.github.io/selectiveshader/</loc>
+    <lastmod>2022-04-17T16:50:52+02:00</lastmod>
   </url><url>
     <loc>https://agaura.github.io/series/</loc>
+    <lastmod>2022-04-17T16:50:52+02:00</lastmod>
+  </url><url>
+    <loc>https://agaura.github.io/tags/static-site-generator/</loc>
+    <lastmod>2022-04-17T16:50:52+02:00</lastmod>
   </url><url>
     <loc>https://agaura.github.io/tags/</loc>
+    <lastmod>2022-04-17T16:50:52+02:00</lastmod>
   </url>
 </urlset>

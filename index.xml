@@ -6,33 +6,34 @@
     <description>Recent content on Pansemia</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <copyright>© XJJ 2022</copyright><atom:link href="https://agaura.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <copyright>TH ↔ Þ</copyright>
+    <lastBuildDate>Sun, 17 Apr 2022 16:50:52 +0200</lastBuildDate><atom:link href="https://agaura.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>ExamplePost3</title>
-      <link>https://agaura.github.io/examplepost2/</link>
+      <title>Selective Shader Application—Okhsv</title>
+      <link>https://agaura.github.io/okhsvapp/</link>
       <pubDate>Sun, 17 Apr 2022 17:25:49 +0200</pubDate>
       
-      <guid>https://agaura.github.io/examplepost2/</guid>
-      <description></description>
+      <guid>https://agaura.github.io/okhsvapp/</guid>
+      <description>input[type=&#34;file&#34;] { display: none; } .custom-file-upload { border: 1px solid #ccc; display: inline-block; padding: 6px 12px; cursor: pointer; }   Upload       &#34;use strict&#34;; var vertexShaderSource = `#version 300 es // an attribute is an input (in) to a vertex shader. // It will receive data from a buffer in vec2 a_position; in vec2 a_texCoord;// Used to pass in the resolution of the canvas uniform vec2 u_resolution;// Used to pass the texture coordinates to the fragment shader out vec2 v_texCoord;// all shaders have a main function void main() {// convert the position from pixels to 0.</description>
     </item>
     
     <item>
-      <title>about</title>
+      <title>About</title>
       <link>https://agaura.github.io/about/</link>
       <pubDate>Sun, 17 Apr 2022 17:08:58 +0200</pubDate>
       
       <guid>https://agaura.github.io/about/</guid>
-      <description>I just need some example text
-      input[type=&#34;file&#34;] { display: none; } .custom-file-upload { border: 1px solid #ccc; display: inline-block; padding: 6px 12px; cursor: pointer; }   Upload       &#34;use strict&#34;; var vertexShaderSource = `#version 300 es // an attribute is an input (in) to a vertex shader. // It will receive data from a buffer in vec2 a_position; in vec2 a_texCoord;// Used to pass in the resolution of the canvas uniform vec2 u_resolution;// Used to pass the texture coordinates to the fragment shader out vec2 v_texCoord;// all shaders have a main function void main() {// convert the position from pixels to 0.</description>
+      <description></description>
     </item>
     
     <item>
-      <title>ExamplePost</title>
-      <link>https://agaura.github.io/examplepost/</link>
+      <title>Selective Dither Shader</title>
+      <link>https://agaura.github.io/selectiveshader/</link>
       <pubDate>Sun, 17 Apr 2022 16:50:52 +0200</pubDate>
       
-      <guid>https://agaura.github.io/examplepost/</guid>
-      <description></description>
+      <guid>https://agaura.github.io/selectiveshader/</guid>
+      <description>This is the shader.
+      input[type=&#34;file&#34;] { display: none; } .custom-file-upload { border: 1px solid #ccc; display: inline-block; padding: 6px 12px; cursor: pointer; }   Upload       &#34;use strict&#34;; var vertexShaderSource = `#version 300 es // an attribute is an input (in) to a vertex shader. // It will receive data from a buffer in vec2 a_position; in vec2 a_texCoord;// Used to pass in the resolution of the canvas uniform vec2 u_resolution;// Used to pass the texture coordinates to the fragment shader out vec2 v_texCoord;// all shaders have a main function void main() {// convert the position from pixels to 0.</description>
     </item>
     
   </channel>
