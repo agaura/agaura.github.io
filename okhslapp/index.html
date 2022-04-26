@@ -32,11 +32,11 @@
   
   
   
-  <link rel="stylesheet" href="/minima.1650997267.css">
+  <link rel="stylesheet" href="/minima.1650997848.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1650997267.js"></script>
+  <script defer type="text/javascript" src="/minima.1650997848.js"></script>
 </head>
 <script>
   
@@ -685,7 +685,7 @@ out vec4 outColor;void main()
             gl.useProgram(program);            // Bind the attribute/buffer set we want.
             gl.bindVertexArray(vao);            // Pass in the canvas resolution so we can convert from
             // pixels to clipspace in the shader
-            gl.uniform2f(resolutionLocation, gl.canvas.width, gl.canvas.height);            // Tell the shader to get the texture from texture unit 0
+            gl.uniform2f(resolutionLocation, image.width, image.height);            // Tell the shader to get the texture from texture unit 0
             gl.uniform1i(imageLocation, 0);            // Update the time
             gl.uniform1f(timeLocation, time * 0.001);
 			gl.uniform1f(hueLocation, sliderFill.value());
