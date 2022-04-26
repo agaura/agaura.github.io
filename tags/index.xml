@@ -7,31 +7,22 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>TH ↔ Þ</copyright>
-    <lastBuildDate>Sun, 17 Apr 2022 16:50:52 +0200</lastBuildDate><atom:link href="https://agaura.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 17 Apr 2022 17:25:49 +0200</lastBuildDate><atom:link href="https://agaura.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>content</title>
-      <link>https://agaura.github.io/tags/content/</link>
-      <pubDate>Sun, 17 Apr 2022 16:50:52 +0200</pubDate>
+      <title>dither</title>
+      <link>https://agaura.github.io/tags/dither/</link>
+      <pubDate>Sun, 17 Apr 2022 17:25:49 +0200</pubDate>
       
-      <guid>https://agaura.github.io/tags/content/</guid>
+      <guid>https://agaura.github.io/tags/dither/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>hugo</title>
-      <link>https://agaura.github.io/tags/hugo/</link>
-      <pubDate>Sun, 17 Apr 2022 16:50:52 +0200</pubDate>
+      <title>shader</title>
+      <link>https://agaura.github.io/tags/shader/</link>
+      <pubDate>Sun, 17 Apr 2022 17:25:49 +0200</pubDate>
       
-      <guid>https://agaura.github.io/tags/hugo/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>static site generator</title>
-      <link>https://agaura.github.io/tags/static-site-generator/</link>
-      <pubDate>Sun, 17 Apr 2022 16:50:52 +0200</pubDate>
-      
-      <guid>https://agaura.github.io/tags/static-site-generator/</guid>
+      <guid>https://agaura.github.io/tags/shader/</guid>
       <description></description>
     </item>
     
