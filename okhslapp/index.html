@@ -32,11 +32,11 @@
   
   
   
-  <link rel="stylesheet" href="/minima.1650995605.css">
+  <link rel="stylesheet" href="/minima.1650997267.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1650995605.js"></script>
+  <script defer type="text/javascript" src="/minima.1650997267.js"></script>
 </head>
 <script>
   
@@ -613,16 +613,17 @@ out vec4 outColor;void main()
         var image = new Image();
 		image.src = canvas.toDataURL();
         function resizeCanvas(image, multiplier) {
+			const maxWidth = Math.min(600, screen.width * 0.85);
             multiplier = multiplier || 1;
-            const width = (image.width * multiplier) | 0;
-            const height = (image.height * multiplier) | 0;
+            const width = Math.min(image.width, maxWidth) | 0;
+            const height = Math.min(image.height, image.height/image.width * maxWidth) | 0;
             if (canvas.width !== width || canvas.height !== height) {
                 canvas.width = width;
                 canvas.height = height;
                 return true;
             }
             return false;
-        }        
+        }  
         function render(time) {
             time = time || 0;            // lookup uniforms
             var resolutionLocation = gl.getUniformLocation(program, "u_resolution");
@@ -676,7 +677,8 @@ out vec4 outColor;void main()
                 internalFormat,
                 srcFormat,
                 srcType,
-                image);            resizeCanvas(image);            // Tell WebGL how to convert from clip space to pixels
+                image);
+			resizeCanvas(image);            // Tell WebGL how to convert from clip space to pixels
             gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);            // Clear the canvas
             gl.clearColor(0, 0, 0, 0);
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);            // Tell it to use our program (pair of shaders)
