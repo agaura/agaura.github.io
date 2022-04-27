@@ -7,14 +7,33 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>TH ↔ Þ</copyright>
-    <lastBuildDate>Sun, 17 Apr 2022 17:25:49 +0200</lastBuildDate><atom:link href="https://agaura.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 27 Apr 2022 17:08:43 +0200</lastBuildDate><atom:link href="https://agaura.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Selective Shader Application—Okhsl</title>
+      <title>Using Dithering to Get Rid of Colors</title>
+      <link>https://agaura.github.io/ditherbackground/</link>
+      <pubDate>Wed, 27 Apr 2022 17:08:43 +0200</pubDate>
+      
+      <guid>https://agaura.github.io/ditherbackground/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Kinetic Dither Application—Okhsl Space Explorer</title>
       <link>https://agaura.github.io/okhslapp/</link>
-      <pubDate>Sun, 17 Apr 2022 17:25:49 +0200</pubDate>
+      <pubDate>Wed, 27 Apr 2022 11:52:10 +0201</pubDate>
       
       <guid>https://agaura.github.io/okhslapp/</guid>
-      <description>⏸  input[type=&#34;file&#34;] { display: none; } .custom-file-upload { border: 1px solid #ccc; display: inline-block; padding: 6px 12px; cursor: pointer; }       &#34;use strict&#34;; var vertexShaderSource = `#version 300 es // an attribute is an input (in) to a vertex shader. // It will receive data from a buffer in vec2 a_position; in vec2 a_texCoord;// Used to pass in the resolution of the canvas uniform vec2 u_resolution;// Used to pass the texture coordinates to the fragment shader out vec2 v_texCoord;// all shaders have a main function void main() {// convert the position from pixels to 0.</description>
+      <description>⏸      &#34;use strict&#34;; var vertexShaderSource = `#version 300 es // an attribute is an input (in) to a vertex shader. // It will receive data from a buffer in vec2 a_position; in vec2 a_texCoord;// Used to pass in the resolution of the canvas uniform vec2 u_resolution;// Used to pass the texture coordinates to the fragment shader out vec2 v_texCoord;// all shaders have a main function void main() {// convert the position from pixels to 0.</description>
+    </item>
+    
+    <item>
+      <title>Kinetic Dither Shader</title>
+      <link>https://agaura.github.io/selectiveshader/</link>
+      <pubDate>Wed, 27 Apr 2022 11:52:10 +0202</pubDate>
+      
+      <guid>https://agaura.github.io/selectiveshader/</guid>
+      <description>This is the shader.
+     ⏸  input[type=&#34;file&#34;] { display: none; } .custom-file-upload { border: 1px solid #ccc; display: inline-block; padding: 6px 12px; cursor: pointer; }   Upload       &#34;use strict&#34;; var vertexShaderSource = `#version 300 es // an attribute is an input (in) to a vertex shader. // It will receive data from a buffer in vec2 a_position; in vec2 a_texCoord;// Used to pass in the resolution of the canvas uniform vec2 u_resolution;// Used to pass the texture coordinates to the fragment shader out vec2 v_texCoord;// all shaders have a main function void main() {// convert the position from pixels to 0.</description>
     </item>
     
     <item>
@@ -23,17 +42,8 @@
       <pubDate>Sun, 17 Apr 2022 17:08:58 +0200</pubDate>
       
       <guid>https://agaura.github.io/about/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Selective Dither Shader</title>
-      <link>https://agaura.github.io/selectiveshader/</link>
-      <pubDate>Sun, 17 Apr 2022 16:50:52 +0200</pubDate>
-      
-      <guid>https://agaura.github.io/selectiveshader/</guid>
-      <description>This is the shader.
-     ⏸  input[type=&#34;file&#34;] { display: none; } .custom-file-upload { border: 1px solid #ccc; display: inline-block; padding: 6px 12px; cursor: pointer; }   Upload       &#34;use strict&#34;; var vertexShaderSource = `#version 300 es // an attribute is an input (in) to a vertex shader. // It will receive data from a buffer in vec2 a_position; in vec2 a_texCoord;// Used to pass in the resolution of the canvas uniform vec2 u_resolution;// Used to pass the texture coordinates to the fragment shader out vec2 v_texCoord;// all shaders have a main function void main() {// convert the position from pixels to 0.</description>
+      <description>Howdy! My name is Alex and I&amp;rsquo;m currently a master&amp;rsquo;s student in a program called IMLEX where I&amp;rsquo;m currently completing a thesis at the Norwegian University of Science and Technology in Gjøvik, Norway.
+ This website mostly functions as a way for me to teach myself and strengthen my understanding of what I like to study, as well as provide a space in which some of my projects can live.</description>
     </item>
     
   </channel>

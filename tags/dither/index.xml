@@ -7,20 +7,20 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>TH ↔ Þ</copyright>
-    <lastBuildDate>Sun, 17 Apr 2022 17:25:49 +0200</lastBuildDate><atom:link href="https://agaura.github.io/tags/dither/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 27 Apr 2022 11:52:10 +0201</lastBuildDate><atom:link href="https://agaura.github.io/tags/dither/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Selective Shader Application—Okhsl</title>
+      <title>Kinetic Dither Application—Okhsl Space Explorer</title>
       <link>https://agaura.github.io/okhslapp/</link>
-      <pubDate>Sun, 17 Apr 2022 17:25:49 +0200</pubDate>
+      <pubDate>Wed, 27 Apr 2022 11:52:10 +0201</pubDate>
       
       <guid>https://agaura.github.io/okhslapp/</guid>
-      <description>⏸  input[type=&#34;file&#34;] { display: none; } .custom-file-upload { border: 1px solid #ccc; display: inline-block; padding: 6px 12px; cursor: pointer; }       &#34;use strict&#34;; var vertexShaderSource = `#version 300 es // an attribute is an input (in) to a vertex shader. // It will receive data from a buffer in vec2 a_position; in vec2 a_texCoord;// Used to pass in the resolution of the canvas uniform vec2 u_resolution;// Used to pass the texture coordinates to the fragment shader out vec2 v_texCoord;// all shaders have a main function void main() {// convert the position from pixels to 0.</description>
+      <description>⏸      &#34;use strict&#34;; var vertexShaderSource = `#version 300 es // an attribute is an input (in) to a vertex shader. // It will receive data from a buffer in vec2 a_position; in vec2 a_texCoord;// Used to pass in the resolution of the canvas uniform vec2 u_resolution;// Used to pass the texture coordinates to the fragment shader out vec2 v_texCoord;// all shaders have a main function void main() {// convert the position from pixels to 0.</description>
     </item>
     
     <item>
-      <title>Selective Dither Shader</title>
+      <title>Kinetic Dither Shader</title>
       <link>https://agaura.github.io/selectiveshader/</link>
-      <pubDate>Sun, 17 Apr 2022 16:50:52 +0200</pubDate>
+      <pubDate>Wed, 27 Apr 2022 11:52:10 +0202</pubDate>
       
       <guid>https://agaura.github.io/selectiveshader/</guid>
       <description>This is the shader.

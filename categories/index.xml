@@ -7,11 +7,20 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>TH ↔ Þ</copyright>
-    <lastBuildDate>Sun, 17 Apr 2022 17:25:49 +0200</lastBuildDate><atom:link href="https://agaura.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 27 Apr 2022 17:08:43 +0200</lastBuildDate><atom:link href="https://agaura.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Writing</title>
+      <link>https://agaura.github.io/categories/writing/</link>
+      <pubDate>Wed, 27 Apr 2022 17:08:43 +0200</pubDate>
+      
+      <guid>https://agaura.github.io/categories/writing/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>Projects</title>
       <link>https://agaura.github.io/categories/projects/</link>
-      <pubDate>Sun, 17 Apr 2022 17:25:49 +0200</pubDate>
+      <pubDate>Wed, 27 Apr 2022 11:52:10 +0201</pubDate>
       
       <guid>https://agaura.github.io/categories/projects/</guid>
       <description></description>
