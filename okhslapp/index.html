@@ -32,11 +32,11 @@
   
   
   
-  <link rel="stylesheet" href="/minima.1650997848.css">
+  <link rel="stylesheet" href="/minima.1651046220.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1650997848.js"></script>
+  <script defer type="text/javascript" src="/minima.1651046220.js"></script>
 </head>
 <script>
   
@@ -594,8 +594,7 @@ out vec4 outColor;void main()
             h = rightBound;
         else h = leftBound;
     vec3 col = okhsl_to_srgb(vec3(h, s, lum));
-    float w = s > 0.95 ? 0.0 : 1.0;
-    outColor = vec4(col,w);
+	outColor = s > 0.99 ? vec4(0.0) : vec4(col, 1.0);
 }`;        // Get A WebGL context
         /** @type {HTMLCanvasElement} */
 		var toggle = false;
