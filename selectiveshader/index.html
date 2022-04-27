@@ -45,11 +45,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1651076548.css">
+  <link rel="stylesheet" href="/minima.1651077828.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1651076548.js"></script>
+  <script defer type="text/javascript" src="/minima.1651077828.js"></script>
 </head>
 <script>
   
@@ -755,7 +755,7 @@ out vec4 outColor;void main()
 				.attr("fill", colors[index])
 				.select('.handle')
 				.attr("fill", colors[index]);
-				render();
+				if (toggle) render();
             });
         var gFill = d3
             .select('div#slider-fill')
@@ -790,7 +790,7 @@ out vec4 outColor;void main()
 				.attr("fill", grays[index])
 				.select('.handle')
 				.attr("fill", grays[index]);
-				render();
+				if (toggle) render();
             });
         var gFill2 = d3
             .select('div#slider-fill2')
