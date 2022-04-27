@@ -32,11 +32,11 @@
   
   
   
-  <link rel="stylesheet" href="/minima.1651046220.css">
+  <link rel="stylesheet" href="/minima.1651046734.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1651046220.js"></script>
+  <script defer type="text/javascript" src="/minima.1651046734.js"></script>
 </head>
 <script>
   
@@ -738,11 +738,7 @@ out vec4 outColor;void main()
 				.attr("fill", colors[index])
 				.select('.handle')
 				.attr("fill", colors[index]);
-				if (toggle) {
-					toggle = !toggle;
-					btn.textContent = '⏸';
-					render();
-					}
+				render();
             });
         var gFill = d3
             .select('div#slider-fill')
@@ -777,11 +773,7 @@ out vec4 outColor;void main()
 				.attr("fill", grays[index])
 				.select('.handle')
 				.attr("fill", grays[index]);
-				if (toggle) {
-					toggle = !toggle;
-					btn.textContent = '⏸';
-					render();
-					}
+				render();
             });
 		var gFill2 = d3
             .select('div#slider-fill2')
@@ -814,11 +806,7 @@ out vec4 outColor;void main()
 				.attr("fill", grays[index])
 				.select('.handle')
 				.attr("fill", grays[index]);
-				if (toggle) {
-					toggle = !toggle;
-					btn.textContent = '⏸';
-					render();
-					}
+				render();
             });
         var gFill3 = d3
             .select('div#slider-fill3')
