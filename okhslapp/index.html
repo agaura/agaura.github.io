@@ -43,11 +43,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1651156821.css">
+  <link rel="stylesheet" href="/minima.1651162196.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1651156821.js"></script>
+  <script defer type="text/javascript" src="/minima.1651162196.js"></script>
 </head>
 <script>
   
@@ -853,8 +853,6 @@ out vec4 outColor;void main()
 			.on('onchange', val => {
 				var index = parseInt((2-val)/2 * 255)
                 d3.select('div#slider-fill2')
-				.select('g')
-				.attr("fill", grays[index])
 				.select('.handle')
 				.attr("fill", grays[index]);
 				if (toggle) render();
