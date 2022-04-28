@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta property="og:title" content="Kinetic Dither Application—Okhsl Space Explorer" />
-<meta property="og:description" content="⏸      &#34;use strict&#34;; var vertexShaderSource = `#version 300 es // an attribute is an input (in) to a vertex shader. // It will receive data from a buffer in vec2 a_position; in vec2 a_texCoord;// Used to pass in the resolution of the canvas uniform vec2 u_resolution;// Used to pass the texture coordinates to the fragment shader out vec2 v_texCoord;// all shaders have a main function void main() {// convert the position from pixels to 0." />
+<meta property="og:description" content="▶️       &#34;use strict&#34;; var vertexShaderSource = `#version 300 es // an attribute is an input (in) to a vertex shader. // It will receive data from a buffer in vec2 a_position; in vec2 a_texCoord;// Used to pass in the resolution of the canvas uniform vec2 u_resolution;// Used to pass the texture coordinates to the fragment shader out vec2 v_texCoord;// all shaders have a main function void main() {// convert the position from pixels to 0." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://agaura.github.io/okhslapp/" /><meta property="article:section" content="" />
 <meta property="article:published_time" content="2022-04-27T11:52:10+02:01" />
@@ -13,7 +13,7 @@
 
   <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Kinetic Dither Application—Okhsl Space Explorer"/>
-<meta name="twitter:description" content="⏸      &#34;use strict&#34;; var vertexShaderSource = `#version 300 es // an attribute is an input (in) to a vertex shader. // It will receive data from a buffer in vec2 a_position; in vec2 a_texCoord;// Used to pass in the resolution of the canvas uniform vec2 u_resolution;// Used to pass the texture coordinates to the fragment shader out vec2 v_texCoord;// all shaders have a main function void main() {// convert the position from pixels to 0."/>
+<meta name="twitter:description" content="▶️       &#34;use strict&#34;; var vertexShaderSource = `#version 300 es // an attribute is an input (in) to a vertex shader. // It will receive data from a buffer in vec2 a_position; in vec2 a_texCoord;// Used to pass in the resolution of the canvas uniform vec2 u_resolution;// Used to pass the texture coordinates to the fragment shader out vec2 v_texCoord;// all shaders have a main function void main() {// convert the position from pixels to 0."/>
 
   
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-BBWS173BMQ"></script>
@@ -43,11 +43,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1651077828.css">
+  <link rel="stylesheet" href="/minima.1651147173.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1651077828.js"></script>
+  <script defer type="text/javascript" src="/minima.1651147173.js"></script>
 </head>
 <script>
   
@@ -122,7 +122,7 @@ if (!doNotTrack) {
     <script src="https://unpkg.com/d3-simple-slider"></script>    <!-- topojson -->
     <script src="https://unpkg.com/topojson@3"></script>    <!-- WebGL -->
     <script src="https://webgl2fundamentals.org/webgl/resources/webgl-utils.js"></script>
-	<b style="font-size:30px" id='btn' onmouseover="this.style.cursor='pointer';" width = 20px>⏸</b>
+	<b style="font-size:30px" id='btn' onmouseover="this.style.cursor='pointer';" width = 20px>▶️</b>
 	<div align="center">
         <canvas id="canvas" width= 600px height= 600px></canvas>
         <!--
@@ -136,6 +136,7 @@ for webgl-utils, m3, m4, and webgl-lessons-ui.
 	    <div align="center" id="slider-fill" ></div>
 	<div align="center" id="slider-fill2"></div>
 	<div align="center" id="slider-fill3"></div>
+	<div align="center" id="slider-fill4"></div>
     <script type="text/javascript">
         "use strict";        var vertexShaderSource = `#version 300 es
         // an attribute is an input (in) to a vertex shader.
@@ -560,24 +561,31 @@ vec3 okhsv_to_srgb(vec3 hsv)
 		h = h / 6.0;
 	}
 	return vec3( h, s, l );
-}// our texture
+}
+bool inDither( float h, float antiHue, float antiRad) {
+	return (((h > antiHue - antiRad) && (h < antiHue + antiRad))) ||
+	(((h - 1.0f > antiHue - antiRad) && (h - 1.0f < antiHue + antiRad))) ||
+	(((1.0f + h > antiHue - antiRad) && (1.0f + h < antiHue + antiRad)));
+}
 uniform sampler2D u_image;
 uniform float time;
 uniform float antiHue;
 uniform float antiRad;// the texCoords passed in from the vertex shader.
 uniform float lum;
+uniform float res;
 in vec2 v_texCoord;// we need to declare an output for the fragment shader
 out vec4 outColor;void main()
 {
     vec2 uv = 2.0*(v_texCoord - 0.5);
     float h = atan(uv.y, uv.x)/(2.0*M_PI);
     float s = length(uv);
+	if (inDither(h, antiHue, antiRad)) {
+		uv = floor(uv*res)/res;
+		h = atan(uv.y, uv.x)/(2.0*M_PI);
+	}
     float iTime = time / 1.0;
     float r = rand(vec2(uv.x, iTime));
     r = rand(vec2(r, uv.y));
-//    float antiHue = h;
-//    float antiRad = (1.0f) / 6.0f;
-    //antiRad = 0.05f;
     float rightBound = antiHue - antiRad;
     if (rightBound < -0.5f) rightBound = rightBound + 1.0f;
     float leftBound = antiHue + antiRad;
@@ -598,7 +606,7 @@ out vec4 outColor;void main()
 	outColor = s > 0.99 ? vec4(0.0) : vec4(col, 1.0);
 }`;        // Get A WebGL context
         /** @type {HTMLCanvasElement} */
-		var toggle = false;
+		var toggle = true;
 		const btn = document.getElementById('btn');
         var canvas = document.querySelector("canvas");
         var gl = canvas.getContext("webgl2");        // setup GLSL program
@@ -609,7 +617,8 @@ out vec4 outColor;void main()
         var timeLocation = gl.getUniformLocation(program, "time");
         var hueLocation = gl.getUniformLocation(program, "antiHue");
         var radLocation = gl.getUniformLocation(program, "antiRad");
-        var lumLocation = gl.getUniformLocation(program, "lum");        // image
+        var lumLocation = gl.getUniformLocation(program, "lum");
+		var resLocation = gl.getUniformLocation(program, "res");
         var image = new Image();
 		image.src = canvas.toDataURL();
         function resizeCanvas(image, multiplier) {
@@ -690,7 +699,8 @@ out vec4 outColor;void main()
             gl.uniform1f(timeLocation, time * 0.001);
 			gl.uniform1f(hueLocation, sliderFill.value());
             gl.uniform1f(radLocation, sliderFill2.value() / 2.0);
-            gl.uniform1f(lumLocation, sliderFill3.value());            // Bind the position buffer so gl.bufferData that will be called
+            gl.uniform1f(lumLocation, sliderFill3.value());
+			gl.uniform1f(resLocation, (Math.max(image.width,image.height)*Math.pow(1 - sliderFill4.value(), 4)) + 1);
             // in setRectangle puts data in the position buffer
             gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);            // Set a rectangle the same size as the image.
             setRectangle(gl, 0, 0, image.width, image.height);            // Draw the rectangle.
@@ -820,16 +830,41 @@ out vec4 outColor;void main()
         gFill3.call(sliderFill3);
 		gFill3.select('.handle')
 			.attr("fill", grays[0]);
-		render();
+		var sliderFill4 = d3
+            .sliderBottom()
+            .min(d3.min(data))
+            .max(d3.max(data))
+            .width(300)
+            .tickFormat(d3.format('.0%'))
+            .ticks(5)
+            .default(0.0)
+            .fill('#415794')
+			.handle(
+                d3
+                .symbol()
+                .type(d3.symbolCircle)
+                .size(250)
+            )
+			.on('onchange', val => {
+				if (toggle) render();
+            });
+        var gFill4 = d3
+            .select('div#slider-fill4')
+            .append('svg')
+            .attr('width', 350)
+            .attr('height', 75)
+            .append('g')
+            .attr('transform', 'translate(30,30)')
+			.attr('fill', '#aaaaaa');
+        gFill4.call(sliderFill4);
 		window.onload=function(){
   			btn.addEventListener('click', function handleClick() {
 				toggle = !toggle;
 				if (toggle) btn.textContent = '▶️';
-				else {
-					btn.textContent = '⏸';
-					render();
-				}
+				else btn.textContent = '⏸';
+				render();
 			});
+			render();
 		}
             </script>
 </html>
