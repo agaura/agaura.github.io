@@ -43,11 +43,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1651678413.css">
+  <link rel="stylesheet" href="/minima.1651679728.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1651678413.js"></script>
+  <script defer type="text/javascript" src="/minima.1651679728.js"></script>
 </head>
 <script>
   
@@ -798,7 +798,7 @@ out vec4 outColor;void main()
         .sliderBottom()
         .min(d3.min(data))
         .max(d3.max(data))
-        .width(300)
+        .width(Math.min(300,screen.width*0.55))
         .tickFormat(d3.format('.0'))
         .ticks(5)
         .default(0.5)
@@ -818,7 +818,7 @@ out vec4 outColor;void main()
     var gFill = d3
         .select('div#slider-fill')
         .append('svg')
-        .attr('width', 350)
+        .attr('width', Math.min(350,screen.width*0.7))
         .attr('height', 65)
         .append('g')
         .attr('transform', 'translate(30,30)')
@@ -828,7 +828,7 @@ out vec4 outColor;void main()
         .sliderBottom()
         .min(d3.min(data))
         .max(d3.max(data))
-        .width(300)
+        .width(Math.min(300,screen.width*0.55))
         .tickFormat(d3.format('.0%'))
         .ticks(5)
         .default(0.6)
@@ -852,7 +852,7 @@ out vec4 outColor;void main()
     var gFill2 = d3
         .select('div#slider-fill2')
         .append('svg')
-        .attr('width', 350)
+        .attr('width', Math.min(350,screen.width*0.7))
         .attr('height', 65)
         .append('g')
         .attr('transform', 'translate(30,30)')
@@ -862,7 +862,7 @@ out vec4 outColor;void main()
         .sliderBottom()
         .min(d3.min(data))
         .max(d3.max(data))
-        .width(300)
+        .width(Math.min(300,screen.width*0.55))
         .tickFormat(d3.format('.0'))
         .ticks(5)
         .default(0.4)
@@ -886,7 +886,7 @@ out vec4 outColor;void main()
     var gFill3 = d3
         .select('div#slider-fill3')
         .append('svg')
-        .attr('width', 350)
+        .attr('width', Math.min(350,screen.width*0.7))
         .attr('height', 65)
         .append('g')
         .attr('transform', 'translate(30,30)')
@@ -896,7 +896,7 @@ out vec4 outColor;void main()
         .sliderBottom()
         .min(d3.min(data))
         .max(d3.max(data))
-        .width(300)
+        .width(Math.min(300,screen.width*0.55))
         .tickFormat(d3.format('.0%'))
         .ticks(5)
         .default(0.0)
@@ -913,7 +913,7 @@ out vec4 outColor;void main()
     var gFill4 = d3
         .select('div#slider-fill4')
         .append('svg')
-        .attr('width', 350)
+        .attr('width', Math.min(350,screen.width*0.7))
         .attr('height', 65)
         .append('g')
         .attr('transform', 'translate(30,30)')
