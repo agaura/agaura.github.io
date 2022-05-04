@@ -43,11 +43,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1651676353.css">
+  <link rel="stylesheet" href="/minima.1651677235.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1651676353.js"></script>
+  <script defer type="text/javascript" src="/minima.1651677235.js"></script>
 </head>
 <script>
   
@@ -676,6 +676,7 @@ out vec4 outColor;void main()
         if (!toggle) requestAnimationFrame(render);
     }
 	function firstRender(time) {
+		resizeCanvas(image);
     	// it (2 triangles)
     	var positionBuffer = gl.createBuffer();            // Turn on the attribute
     	gl.enableVertexAttribArray(positionAttributeLocation);            // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
