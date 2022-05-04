@@ -43,11 +43,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1651677235.css">
+  <link rel="stylesheet" href="/minima.1651678413.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1651677235.js"></script>
+  <script defer type="text/javascript" src="/minima.1651678413.js"></script>
 </head>
 <script>
   
@@ -676,7 +676,6 @@ out vec4 outColor;void main()
         if (!toggle) requestAnimationFrame(render);
     }
 	function firstRender(time) {
-		resizeCanvas(image);
     	// it (2 triangles)
     	var positionBuffer = gl.createBuffer();            // Turn on the attribute
     	gl.enableVertexAttribArray(positionAttributeLocation);            // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
@@ -698,6 +697,8 @@ out vec4 outColor;void main()
     	    texCoordAttributeLocation, 2, gl.FLOAT, false, 0, 0);            // Create a texture.
     	// (ie, the unit all other texture commands will affect
     	// and we don't repeat
+		resizeCanvas(image);
+		gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);            // Clear the canvas
     	gl.useProgram(program);            // Bind the attribute/buffer set we want.
     	// pixels to clipspace in the shader
     	gl.uniform2f(gl.getUniformLocation(program, "u_resolution"), image.width, image.height);            // Tell the shader to get the texture from texture unit 0
