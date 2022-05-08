@@ -7,7 +7,17 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>TH ↔ Þ</copyright>
-    <lastBuildDate>Wed, 27 Apr 2022 17:08:43 +0200</lastBuildDate><atom:link href="https://agaura.github.io/tags/shader/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 08 May 2022 15:57:59 +0200</lastBuildDate><atom:link href="https://agaura.github.io/tags/shader/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Dithering-Based Comparison of Cylindrical Color Spaces</title>
+      <link>https://agaura.github.io/comparison/</link>
+      <pubDate>Sun, 08 May 2022 15:57:59 +0200</pubDate>
+      
+      <guid>https://agaura.github.io/comparison/</guid>
+      <description>The following represent the color spaces of HSL, OKLab, and CIELch, respectively.
+     ▶️          &#34;use strict&#34;; var vertexShaderSource = `#version 300 es // an attribute is an input (in) to a vertex shader. // It will receive data from a buffer in vec2 a_position; in vec2 a_texCoord;// Used to pass in the resolution of the canvas uniform vec2 u_resolution;// Used to pass the texture coordinates to the fragment shader out vec2 v_texCoord;// all shaders have a main function void main() {// convert the position from pixels to 0.</description>
+    </item>
+    
     <item>
       <title>Using Dithering to Get Rid of Colors</title>
       <link>https://agaura.github.io/ditherbackground/</link>
