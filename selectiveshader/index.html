@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta property="og:title" content="Kinetic Dither Shader" />
-<meta property="og:description" content="This is the shader.
-     ▶️  input[type=&#34;file&#34;] { display: none; } .custom-file-upload { border: 1px solid #ccc; display: inline-block; padding: 6px 12px; cursor: pointer; }   Upload         &#34;use strict&#34;; var vertexShaderSource = `#version 300 es // an attribute is an input (in) to a vertex shader. // It will receive data from a buffer in vec2 a_position; in vec2 a_texCoord;// Used to pass in the resolution of the canvas uniform vec2 u_resolution;// Used to pass the texture coordinates to the fragment shader out vec2 v_texCoord;// all shaders have a main function void main() {// convert the position from pixels to 0." />
+<meta property="og:description" content="Introduction  This shader displays images with a portion of the color wheel being impossible to show, instead being displayed as noise being dithered so as to approximate that color. For more information, see here.
+Shader      ▶️  input[type=&#34;file&#34;] { display: none; } .custom-file-upload { border: 1px solid #ccc; display: inline-block; padding: 6px 12px; cursor: pointer; }   Upload         &#34;" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://agaura.github.io/selectiveshader/" /><meta property="article:section" content="" />
 <meta property="article:published_time" content="2022-04-27T11:52:10+02:02" />
@@ -14,8 +14,8 @@
 
   <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Kinetic Dither Shader"/>
-<meta name="twitter:description" content="This is the shader.
-     ▶️  input[type=&#34;file&#34;] { display: none; } .custom-file-upload { border: 1px solid #ccc; display: inline-block; padding: 6px 12px; cursor: pointer; }   Upload         &#34;use strict&#34;; var vertexShaderSource = `#version 300 es // an attribute is an input (in) to a vertex shader. // It will receive data from a buffer in vec2 a_position; in vec2 a_texCoord;// Used to pass in the resolution of the canvas uniform vec2 u_resolution;// Used to pass the texture coordinates to the fragment shader out vec2 v_texCoord;// all shaders have a main function void main() {// convert the position from pixels to 0."/>
+<meta name="twitter:description" content="Introduction  This shader displays images with a portion of the color wheel being impossible to show, instead being displayed as noise being dithered so as to approximate that color. For more information, see here.
+Shader      ▶️  input[type=&#34;file&#34;] { display: none; } .custom-file-upload { border: 1px solid #ccc; display: inline-block; padding: 6px 12px; cursor: pointer; }   Upload         &#34;"/>
 
   
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-BBWS173BMQ"></script>
@@ -45,11 +45,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1653653609.css">
+  <link rel="stylesheet" href="/minima.1653933409.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1653653609.js"></script>
+  <script defer type="text/javascript" src="/minima.1653933409.js"></script>
 </head>
 <script>
   
@@ -118,7 +118,9 @@ if (!doNotTrack) {
 <main>
 	<p></p>
 	<article class="md">
-		<p>This is the shader.</p>
+		<h1 id="introduction">Introduction</h1>
+<p>       This shader displays images with a portion of the color wheel being impossible to show, instead being displayed as noise being dithered so as to approximate that color. For more information, see <a href="https://agaura.github.io/okhslapp/">here</a>.</p>
+<h1 id="shader">Shader</h1>
 <html>
  <!-- D3.js -->
     <script src="https://d3js.org/d3.v6.min.js"></script>
@@ -940,7 +942,45 @@ out vec4 outColor;void main()
 	image.onload = function() {firstRender();}
 		</script>
 </html>
-<p>If viewing on mobile, make sure to enable WebGL 2.0.</p>
+<h1 id="controls">Controls</h1>
+<ul>
+<li>▶️/⏸ Button: Controls time, causes noisiness to evolve over time and smoothens dither</li>
+<li>
+<html>
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+      style="position:relative; top:2px;">
+      <linearGradient id="Gradient2" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0%" stop-color="#d60071" />
+          <stop offset="20%" stop-color="#c04e00" />
+          <stop offset="30%" stop-color="#917200" />
+          <stop id='example' offset="45%" stop-color="#468a00" />
+          <stop offset="50%" stop-color="#008a79" />
+          <stop offset="60%" stop-color="#0083a8" />
+          <stop offset="70%" stop-color="#4b5dff" />
+          <stop offset="100%" stop-color="#b200df" />
+      </linearGradient>
+      <path fill="url(#Gradient2)"
+          d="M12 0c-4.87 7.197-8 11.699-8 16.075 0 4.378 3.579 7.925 8 7.925s8-3.547 8-7.925c0-4.376-3.13-8.878-8-16.075zm.462 20.471c2.56-1.049 4.124-4.889 3.021-8.853 3.798 4.909.754 9.393-3.021 8.853z" /></svg>
+          </html> Slider: Controls the annihilated hue. Runs counterclockwise starting from the rightmost point of the color wheel (red/hot pink)
+</li>
+<li>
+<html>
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+      style="position:relative; top:2px;">
+      <path fill='gray' d="M6 11v-4l-6 5 6 5v-4h12v4l6-5-6-5v4z" /></svg>
+          </html> Slider: Controls with width of the sector being annihilated, where the percentage corresponding to the percentage of the color wheel within that sector, centered around the annihilated hue as defined by the above slider
+</li>
+<li>
+<html>
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+      style="position:relative; top:2px;">
+      <path fill='gray'
+          d="M12 0l-11 6v12.131l11 5.869 11-5.869v-12.066l-11-6.065zm9 11.623l-3 1.569v-3.26l3-1.601v3.292zm-13-.654l3 1.625v3.186l-3-1.614v-3.197zm.9-1.799l2.986-1.603 3.132 1.688-3.014 1.608-3.104-1.693zm4.1 3.43l3-1.6v3.238l-3 1.569v-3.207zm4.138-4.475l-3.139-1.691 2.801-1.503 3.11 1.715-2.772 1.479zm-2.424-4.345l-2.825 1.517-2.728-1.47 2.834-1.546 2.719 1.499zm-7.649 1.19l2.711 1.46-2.973 1.596-2.67-1.456 2.932-1.6zm-1.065 4.908v3.204l-3-1.636v-3.216l3 1.648zm-3 3.843l3 1.636v3.185l-3-1.611v-3.21zm5 5.888v-3.169l3 1.614v3.146l-3-1.591zm5-1.545l3-1.569v3.104l-3 1.601v-3.136zm5 .468v-3.083l3-1.569v3.051l-3 1.601z" /></svg>
+          </html> Slider: Changes the size of the resolution of the dithered annihilated colors
+</li>
+</ul>
+<h1 id="discussion">Discussion</h1>
+<p>       This shader more-or-less functions as a fun little artistic thingy. The effect works best on images with large regions that are nearly monochromatic and that contrast a lot with their environment, and whose color is saturated. Realistically, this means things like flowers, auroras, neon signs, etc. A lot of digital art tends to be made this way as well, I would recommend trying out some of your favorite images and seeing what happens. Have fun! :)</p>
 
 	</article>
 </main>
@@ -984,5 +1024,7 @@ out vec4 outColor;void main()
     
   </p>
 </footer>
+
+  
 </body>
 </html>

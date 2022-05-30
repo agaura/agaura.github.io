@@ -14,7 +14,8 @@
       <pubDate>Thu, 26 May 2022 13:56:21 +0200</pubDate>
       
       <guid>https://agaura.github.io/isolate/</guid>
-      <description>▶️  input[type=&#34;file&#34;] { display: none; } .custom-file-upload { border: 1px solid #ccc; display: inline-block; padding: 6px 12px; cursor: pointer; }   Upload            &#34;use strict&#34;; var vertexShaderSource = `#version 300 es // an attribute is an input (in) to a vertex shader. // It will receive data from a buffer in vec2 a_position; in vec2 a_texCoord;// Used to pass in the resolution of the canvas uniform vec2 u_resolution;// Used to pass the texture coordinates to the fragment shader out vec2 v_texCoord;// all shaders have a main function void main() {// convert the position from pixels to 0.</description>
+      <description>Introduction  It&amp;rsquo;s quite common to see an image or to want to have an image in grayscale. What is it that we are doing when we have a grayscale image? We are deleting two dimensions—hue and saturation—from the color space representing our image. However, why cannot/why don&amp;rsquo;t we delete the other dimensions? Why is this the only standard operation?
+ The problem at the heart of the matter here is that there is not a good way to do it.</description>
     </item>
     
     <item>
@@ -23,7 +24,7 @@
       <pubDate>Wed, 27 Apr 2022 11:52:10 +0201</pubDate>
       
       <guid>https://agaura.github.io/okhslapp/</guid>
-      <description>▶️         &#34;use strict&#34;; var vertexShaderSource = `#version 300 es // an attribute is an input (in) to a vertex shader. // It will receive data from a buffer in vec2 a_position; in vec2 a_texCoord;// Used to pass in the resolution of the canvas uniform vec2 u_resolution;// Used to pass the texture coordinates to the fragment shader out vec2 v_texCoord;// all shaders have a main function void main() {// convert the position from pixels to 0.</description>
+      <description>Introduction  This shader is demonstrating what it would look like to remove a portion of the color wheel. The inspiration? I just don&amp;rsquo;t like the color green (🤮) and wanted to get rid of it&amp;hellip; however, this gave me the inspiration to see what it would look like if I could optionally remove any color by removing a sector from the color wheel. So now, with this shader, we can see what that would look like when looking directly at a color wheel.</description>
     </item>
     
     <item>
@@ -32,8 +33,8 @@
       <pubDate>Wed, 27 Apr 2022 11:52:10 +0202</pubDate>
       
       <guid>https://agaura.github.io/selectiveshader/</guid>
-      <description>This is the shader.
-     ▶️  input[type=&#34;file&#34;] { display: none; } .custom-file-upload { border: 1px solid #ccc; display: inline-block; padding: 6px 12px; cursor: pointer; }   Upload         &#34;use strict&#34;; var vertexShaderSource = `#version 300 es // an attribute is an input (in) to a vertex shader. // It will receive data from a buffer in vec2 a_position; in vec2 a_texCoord;// Used to pass in the resolution of the canvas uniform vec2 u_resolution;// Used to pass the texture coordinates to the fragment shader out vec2 v_texCoord;// all shaders have a main function void main() {// convert the position from pixels to 0.</description>
+      <description>Introduction  This shader displays images with a portion of the color wheel being impossible to show, instead being displayed as noise being dithered so as to approximate that color. For more information, see here.
+Shader      ▶️  input[type=&#34;file&#34;] { display: none; } .custom-file-upload { border: 1px solid #ccc; display: inline-block; padding: 6px 12px; cursor: pointer; }   Upload         &#34;</description>
     </item>
     
   </channel>
