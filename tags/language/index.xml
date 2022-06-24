@@ -14,7 +14,7 @@
       <pubDate>Fri, 24 Jun 2022 10:23:10 +0200</pubDate>
       
       <guid>https://agaura.github.io/transcriptor/</guid>
-      <description>window.onload = TextToIPA.loadDict(&#39;https://github.com/surrsurus/text-to-ipa/blob/5826d8d31a5a6d15bc72daa35212f5e481ef3758/lib/ipadict.txt&#39;);  Use the following text areas to convert english to it&#39;s IPA equivalent.
+      <description>window.onload = TextToIPA.loadDict(&#39;https://agaura.github.io/text-to-ipa/lib/ipadict.txt&#39;);  Use the following text areas to convert english to it&#39;s IPA equivalent.
 This is NOT case sensitive and punctuation is ignored.
 Note: If you are using chrome and this is being ran locally, the dictionary will not load due to the way Chrome handles XHTTP Requests. It does handle them normally on proper websites. Check out a live example here
  Convert!   This converter will not work unless Javascript is enabled.</description>
