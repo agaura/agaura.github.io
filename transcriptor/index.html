@@ -3,15 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta property="og:title" content="shader" />
-<meta property="og:description" content="" />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://agaura.github.io/tags/shader/" />
+  <meta property="og:title" content="Transcriptor" />
+<meta property="og:description" content="window.onload = TextToIPA.loadDict(&#39;https://github.com/surrsurus/text-to-ipa/blob/5826d8d31a5a6d15bc72daa35212f5e481ef3758/lib/ipadict.txt&#39;);  Use the following text areas to convert english to it&#39;s IPA equivalent.
+This is NOT case sensitive and punctuation is ignored.
+Note: If you are using chrome and this is being ran locally, the dictionary will not load due to the way Chrome handles XHTTP Requests. It does handle them normally on proper websites. Check out a live example here
+ Convert!   This converter will not work unless Javascript is enabled." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://agaura.github.io/transcriptor/" /><meta property="article:section" content="" />
+<meta property="article:published_time" content="2022-06-24T10:23:10+02:00" />
+<meta property="article:modified_time" content="2022-06-24T10:23:10+02:00" />
 
 
   <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="shader"/>
-<meta name="twitter:description" content=""/>
+<meta name="twitter:title" content="Transcriptor"/>
+<meta name="twitter:description" content="window.onload = TextToIPA.loadDict(&#39;https://github.com/surrsurus/text-to-ipa/blob/5826d8d31a5a6d15bc72daa35212f5e481ef3758/lib/ipadict.txt&#39;);  Use the following text areas to convert english to it&#39;s IPA equivalent.
+This is NOT case sensitive and punctuation is ignored.
+Note: If you are using chrome and this is being ran locally, the dictionary will not load due to the way Chrome handles XHTTP Requests. It does handle them normally on proper websites. Check out a live example here
+ Convert!   This converter will not work unless Javascript is enabled."/>
 
   
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-BBWS173BMQ"></script>
@@ -29,7 +37,7 @@ if (!doNotTrack) {
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#262d33">
   <title>
     
-    Alexander Gaura - shader
+    Alexander Gaura - Transcriptor
     
   </title>
   
@@ -92,50 +100,69 @@ if (!doNotTrack) {
 </header>
   
   
-<main>
+
+<h1 class="mt-6 mb-6" style="color: #456bc4;">Transcriptor</h1>
+<div class="mb-3 text-xs flex justify-between sm:flex-col">
+	<div>
 	
-	<h2 class="my-8">Tag - "shader"</h2>
+		Posted at &mdash; Jun 24, 2022
 	
-	<div class="mt-8">
-		
-		<div class="flex justify-between sm:flex-col-reverse my-3 sm:mb-6 sm:mt-3">
-
-<a class="" href="/isolate/">Dimension Isolating Shader</a>
-
-
-  <div class="sm:mb-1 sm:text-xs">May 26, 2022</div>
-
-</div>
-		
-		<div class="flex justify-between sm:flex-col-reverse my-3 sm:mb-6 sm:mt-3">
-
-<a class="" href="/comparison/">Dithering-Based Comparison of Cylindrical Color Spaces</a>
-
-
-  <div class="sm:mb-1 sm:text-xs">May 08, 2022</div>
-
-</div>
-		
-		<div class="flex justify-between sm:flex-col-reverse my-3 sm:mb-6 sm:mt-3">
-
-<a class="" href="/okhslapp/">Kinetic Dither Application—Okhsl Space Explorer</a>
-
-
-  <div class="sm:mb-1 sm:text-xs">Apr 27, 2022</div>
-
-</div>
-		
-		<div class="flex justify-between sm:flex-col-reverse my-3 sm:mb-6 sm:mt-3">
-
-<a class="" href="/selectiveshader/">Kinetic Dither Shader</a>
-
-
-  <div class="sm:mb-1 sm:text-xs">Apr 27, 2022</div>
-
-</div>
 		
 	</div>
+	
+	<div class="sm:mt-4">
+		
+		<a class="not-first:ml-3" href="/tags/language" style="color: #a469c3;">#language</a>
+		
+	</div>
+	
+</div>
+<main>
+	<p></p>
+	<article class="md">
+		<html>
+<script src='https://github.com/surrsurus/text-to-ipa/blob/5826d8d31a5a6d15bc72daa35212f5e481ef3758/lib/text-to-ipa.js'></script>
+<script src='https://github.com/surrsurus/text-to-ipa/blob/5826d8d31a5a6d15bc72daa35212f5e481ef3758/lib/converter-form.js'></script>
+<script>
+    window.onload = TextToIPA.loadDict('https://github.com/surrsurus/text-to-ipa/blob/5826d8d31a5a6d15bc72daa35212f5e481ef3758/lib/ipadict.txt');
+</script>
+<p>Use the following text areas to convert english to it's IPA equivalent.</p>
+  <p>This is NOT case sensitive and punctuation is ignored.</p>
+  <br />
+  <p>Note: If you are using chrome and this is being ran locally, the dictionary will not load due to the way Chrome handles XHTTP Requests. It does handle them normally on proper websites. Check out a live example <a href="http://surrsur.us/projects/ipa/english-to-ipa.html">here</a></p>
+  <br />
+  <!-- Create a form div -->
+  <div id="js-text-to-ipa-form">
+    <ul style="list-style-type: none;">
+      <!-- ipa-in is the designated ID to determine where text will be input from -->
+      <li><textarea id="ipa-in" placeholder="Write text here" rows="4" cols="50"></textarea></li>
+      <!-- This submit button runs the conversion on the input text
+      As you can see, when this buton is pressed, the conver() function is ran
+      where the input, output, and error IDs are given as parameters.
+      These can be set to whatever you like, as long as inID and outID are text areas, and errID is a div.
+      -->
+      <li class="button"><button type="button" id="js-ipa-submit" onClick="ConverterForm.convert('ipa-in', 'ipa-out', 'ipa-err')">Convert!</button></li>
+      <!-- ipa-out is the designated ID to determine where the converted text will be output to -->
+      <li><textarea readonly id="ipa-out" placeholder="aʊtpʊt gəʊz hɪə" rows="4" cols="50"></textarea></li>
+    </ul>
+    <ul style="list-style-type: none;">
+      <li><noscript><p>This converter will not work unless Javascript is enabled.</p></noscript></li>
+      <li>
+        <!-- ipa-err is the designated ID to determine where any errors with the translation will go -->
+        <div id="ipa-err">
+          <p>Errors will go here if you make any. (This will be overwritten)</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+</html>
+	</article>
 </main>
+
+
+
+
+
 
 
   <footer class="mt-8 flex sm:flex-col-reverse justify-between items-center">
