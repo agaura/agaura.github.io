@@ -45,11 +45,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1657959257.css">
+  <link rel="stylesheet" href="/minima.1658422908.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1657959257.js"></script>
+  <script defer type="text/javascript" src="/minima.1658422908.js"></script>
 </head>
 <script>
   
@@ -632,11 +632,11 @@ out vec4 outColor;void main()
     float s = hsl.y;
 	float temp = h;
 	if (inDither(h, antiHue, antiRad)) {
-		uv = floor(uv*res)/res;
+		uv = clamp(floor((uv-0.5)*res)/res + 0.5 + 0.5/res, 0.5/res, 1.0 - 0.5/res);
 		temp = srgb_to_okhsl(texture(u_image, uv).rgb).x;
 		if ((uv.x == 0.0) && (uv.y == 0.0)) h = atan(1.0, 1.0)/(2.0*M_PI);
 		if (inDither(temp, antiHue, antiRad)) h = temp;
-		}
+	}
     if (s > 1.0) s = 1.0;
     float r = rand(vec2(uv.x, iTime));
     r = rand(vec2(r, uv.y));

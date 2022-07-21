@@ -45,11 +45,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1657959257.css">
+  <link rel="stylesheet" href="/minima.1658422908.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1657959257.js"></script>
+  <script defer type="text/javascript" src="/minima.1658422908.js"></script>
 </head>
 <script>
   
@@ -655,39 +655,35 @@ uniform float lim;
 in vec2 v_texCoord;// we need to declare an output for the fragment shader
 out vec4 outColor;void main()
 {
-    vec2 uv = v_texCoord;
-    float iTime = time / 1.0;
+    vec2 uv = clamp(floor((v_texCoord - 0.5)*res)/res + 0.5 + 0.5/res, 0.5/res, 1.0 - 0.5/res);
 	vec4 tex = texture(u_image, uv);
     vec3 hsl = srgb_to_okhsl(tex.rgb);
-    vec2 biguv = floor(uv*res)/res;
-    biguv = biguv + 0.5*1.0/res;
-    vec3 bighsl = srgb_to_okhsl(texture(u_image, biguv).rgb);
-    float r1 = rand(vec2(biguv.x, iTime));
-    r1 = rand(vec2(r1, biguv.y));
-    float r2 = rand(vec2(biguv.x, biguv.y));
-    r2 = rand(vec2(r2, iTime));
+    float r1 = rand(vec2(uv.x, time));
+    r1 = rand(vec2(r1, uv.y));
+    float r2 = rand(vec2(uv.x, uv.y));
+    r2 = rand(vec2(r2, time));
     float r3 = rand(vec2(r1, r2));
-    //vec3 col = okhsl_to_srgb(vec3(ditherHue(bighsl.x, r1, rand(vec2(r1, r2 * r3 * 100.0)), 0.5 - hue / 2.0),
-    //    dither(bighsl.y, r2, 1.0 - sat, 0.0),
-    //    dither(bighsl.z, r3, 1.0 - lum, lim)));
-	//vec3 col = okhsl_to_srgb(vec3(dither(bighsl.z, r3, 1.0 - lum, lim),
-    //    dither(bighsl.y, r2, 1.0 - sat, 0.0),
-    //    ditherHue(bighsl.x, r1, rand(vec2(r1, r2 * r3 * 100.0)), 0.5 - hue / 2.0)));
-	//vec3 col = okhsl_to_srgb(vec3(dither(bighsl.y, r2, 1.0 - sat, 0.0),
-    //    ditherHue(bighsl.x, r1, rand(vec2(r1, r2 * r3 * 100.0)), 0.5 - hue / 2.0),
-    //    dither(bighsl.z, r3, 1.0 - lum, lim)));
-	//vec3 col = okhsl_to_srgb(vec3(dither(bighsl.z, r3, 1.0 - lum, lim),
-    //    dither(bighsl.y, r2, 1.0 - sat, 0.0),
-    //    ditherHue(bighsl.x, r1, rand(vec2(r1, r2 * r3 * 100.0)), 0.5 - hue / 2.0)));
-	//vec3 col = okhsl_to_srgb(vec3(ditherHue(bighsl.x, r1, rand(vec2(r1, r2 * r3 * 100.0)), 0.5 - hue / 2.0),
-    //    dither(bighsl.z, r3, 1.0 - lum, lim),
-    //    dither(bighsl.y, r2, 1.0 - sat, 0.0)));
-    //vec3 col = okhsl_to_srgb(vec3(ditherHue(((bighsl.z > 0.85) || (bighsl.z < 0.15)) ? 0.0 : bighsl.x, r1, rand(vec2(r1, r2 * r3 * 100.0)), 0.5 - hue / 2.0),
-    //   dither(((bighsl.z > 0.85) || (bighsl.z < 0.15)) ? 0.0 : bighsl.y, r2, 1.0 - sat, 0.0),
-    //   dither(bighsl.z, r3, 1.0 - lum, lim)));
-	vec3 col = okhsl_to_srgb(vec3(ditherHue(bighsl.x, r1, rand(vec2(r1, r2 * r3 * 100.0)), 0.5 - hue / 2.0),
-       dither(bighsl.y, r2, 1.0 - sat, 0.0),
-       dither(bighsl.z, r3, 1.0 - lum, lim)));
+    //vec3 col = okhsl_to_srgb(vec3(ditherHue(hsl.x, r1, rand(vec2(r1, r2 * r3 * 100.0)), 0.5 - hue / 2.0),
+    //    dither(hsl.y, r2, 1.0 - sat, 0.0),
+    //    dither(hsl.z, r3, 1.0 - lum, lim)));
+	//vec3 col = okhsl_to_srgb(vec3(dither(hsl.z, r3, 1.0 - lum, lim),
+    //    dither(hsl.y, r2, 1.0 - sat, 0.0),
+    //    ditherHue(hsl.x, r1, rand(vec2(r1, r2 * r3 * 100.0)), 0.5 - hue / 2.0)));
+	//vec3 col = okhsl_to_srgb(vec3(dither(hsl.y, r2, 1.0 - sat, 0.0),
+    //    ditherHue(hsl.x, r1, rand(vec2(r1, r2 * r3 * 100.0)), 0.5 - hue / 2.0),
+    //    dither(hsl.z, r3, 1.0 - lum, lim)));
+	//vec3 col = okhsl_to_srgb(vec3(dither(hsl.z, r3, 1.0 - lum, lim),
+    //    dither(hsl.y, r2, 1.0 - sat, 0.0),
+    //    ditherHue(hsl.x, r1, rand(vec2(r1, r2 * r3 * 100.0)), 0.5 - hue / 2.0)));
+	//vec3 col = okhsl_to_srgb(vec3(ditherHue(hsl.x, r1, rand(vec2(r1, r2 * r3 * 100.0)), 0.5 - hue / 2.0),
+    //    dither(hsl.z, r3, 1.0 - lum, lim),
+    //    dither(hsl.y, r2, 1.0 - sat, 0.0)));
+    //vec3 col = okhsl_to_srgb(vec3(ditherHue(((hsl.z > 0.85) || (hsl.z < 0.15)) ? 0.0 : hsl.x, r1, rand(vec2(r1, r2 * r3 * 100.0)), 0.5 - hue / 2.0),
+    //   dither(((hsl.z > 0.85) || (hsl.z < 0.15)) ? 0.0 : hsl.y, r2, 1.0 - sat, 0.0),
+    //   dither(hsl.z, r3, 1.0 - lum, lim)));
+	vec3 col = okhsl_to_srgb(vec3(ditherHue(hsl.x, r1, rand(vec2(r1, r2 * r3 * 100.0)), 0.5 - hue / 2.0),
+       dither(hsl.y, r2, 1.0 - sat, 0.0),
+       dither(hsl.z, r3, 1.0 - lum, lim)));
     outColor = vec4(col,tex.w);
 }`;        // Get A WebGL context
         /** @type {HTMLCanvasElement} */
