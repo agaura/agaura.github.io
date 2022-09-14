@@ -7,14 +7,25 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>TH ↔ Þ</copyright>
-    <lastBuildDate>Wed, 27 Apr 2022 17:08:43 +0200</lastBuildDate><atom:link href="https://agaura.github.io/categories/writing/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 10 Sep 2022 17:24:45 +0200</lastBuildDate><atom:link href="https://agaura.github.io/categories/writing/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Using Dithering to Get Rid of Colors</title>
-      <link>https://agaura.github.io/ditherbackground/</link>
-      <pubDate>Wed, 27 Apr 2022 17:08:43 +0200</pubDate>
+      <title>Experimental</title>
+      <link>https://agaura.github.io/colors_exp/</link>
+      <pubDate>Sat, 10 Sep 2022 17:24:45 +0200</pubDate>
       
-      <guid>https://agaura.github.io/ditherbackground/</guid>
-      <description>▶️          &#34;use strict&#34;; var vertexShaderSource = `#version 300 es // an attribute is an input (in) to a vertex shader. // It will receive data from a buffer in vec2 a_position; in vec2 a_texCoord;// Used to pass in the resolution of the canvas uniform vec2 u_resolution;// Used to pass the texture coordinates to the fragment shader out vec2 v_texCoord;// all shaders have a main function void main() {// convert the position from pixels to 0.</description>
+      <guid>https://agaura.github.io/colors_exp/</guid>
+      <description>Experimental stuff   @font-face { font-family: &#39;Znamenny&#39;; src: url(&#39;../fonts/MezenetsUnicode.otf&#39;) format(&#34;opentype&#34;); }      Sjødd dskuss wi blu iz natrly dark! 1
+It’s quite common to see an image or to want to have an image in grayscale. What is it that we are doing when we have a grayscale image? We are deleting two dimensions—hue and saturation—from the color space representing our image. However, why cannot/why don’t we delete the other dimensions?</description>
+    </item>
+    
+    <item>
+      <title>Color: Perception or Impression</title>
+      <link>https://agaura.github.io/colors/</link>
+      <pubDate>Wed, 27 Apr 2022 17:24:45 +0200</pubDate>
+      
+      <guid>https://agaura.github.io/colors/</guid>
+      <description>Experimental stuff   @font-face { font-family: &#39;Znamenny&#39;; src: url(&#39;../fonts/MezenetsUnicode.otf&#39;) format(&#34;opentype&#34;); }      Sjødd dskuss wi blu iz natrly dark! 1
+It’s quite common to see an image or to want to have an image in grayscale. What is it that we are doing when we have a grayscale image? We are deleting two dimensions—hue and saturation—from the color space representing our image. However, why cannot/why don’t we delete the other dimensions?</description>
     </item>
     
   </channel>

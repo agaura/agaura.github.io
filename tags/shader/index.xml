@@ -14,8 +14,8 @@
       <pubDate>Thu, 26 May 2022 13:56:21 +0200</pubDate>
       
       <guid>https://agaura.github.io/isolate/</guid>
-      <description>Introduction  It&amp;rsquo;s quite common to see an image or to want to have an image in grayscale. What is it that we are doing when we have a grayscale image? We are deleting two dimensions—hue and saturation—from the color space representing our image. However, why cannot/why don&amp;rsquo;t we delete the other dimensions? Why is this the only standard operation?
- The problem at the heart of the matter here is that there is not a good way to do it.</description>
+      <description>Introduction  It&amp;rsquo;s quite common to see an image or to want to have an image in grayscale. What is it that we are doing when we have a grayscale image? We are deleting two dimensions—hue and saturation—from the color space representing our image. However, why cannot/why don&amp;rsquo;t we delete the other dimensions? Why is this the only standard operation?
+ The problem at the heart of the matter here is that there is not a good way to do it.</description>
     </item>
     
     <item>

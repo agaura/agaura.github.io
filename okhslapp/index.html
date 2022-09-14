@@ -43,11 +43,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1658422908.css">
+  <link rel="stylesheet" href="/minima.1663176898.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1658422908.js"></script>
+  <script defer type="text/javascript" src="/minima.1663176898.js"></script>
 </head>
 <script>
   
@@ -123,23 +123,12 @@ if (!doNotTrack) {
 <p>       In other words, an annihilated color will be displayed as one of the two nearest acceptable colors at random, but it will be more likely to display the closer of the two acceptable colors (proportional to how close they are!). Let&rsquo;s see how this looks:</p>
 <h1 id="shader">Shader</h1>
 <p>If viewing on mobile, make sure to enable WebGL 2.0.</p>
-<html>
-<!-- D3.js -->
 <script src="https://d3js.org/d3.v6.min.js"></script>
-<script src="https://unpkg.com/d3-simple-slider"></script> <!-- topojson -->
-<script src="https://unpkg.com/topojson@3"></script> <!-- WebGL -->
+<script src="https://unpkg.com/d3-simple-slider"></script>
+<script src="https://unpkg.com/topojson@3"></script>
 <script src="https://webgl2fundamentals.org/webgl/resources/webgl-utils.js"></script>
-<b style="font-size:30px" id='btn' onmouseover="this.style.cursor='pointer';" width=20px>▶️</b>
-<div align="center">
-    <canvas id="canvas" width=600px height=600px></canvas>
-    <!--
-for most samples webgl-utils only provides shader compiling/linking and
-canvas resizing because why clutter the examples with code that's the same in every sample.
-See https://webgl2fundamentals.org/webgl/lessons/webgl-boilerplate.html
-and https://webgl2fundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html
-for webgl-utils, m3, m4, and webgl-lessons-ui.
--->
-</div>
+<p><b style="font-size:30px" id='btn' onmouseover="this.style.cursor='pointer';" width=20px>▶️</b></p>
+<div align="center"><canvas id="canvas" width=600px height=600px></canvas></div>
 <div align="center" id="slider-fill">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
         style="position:relative; top:-23px;">
@@ -154,8 +143,7 @@ for webgl-utils, m3, m4, and webgl-lessons-ui.
             <stop offset="100%" stop-color="#b200df" />
         </linearGradient>
         <path fill="url(#Gradient2)"
-            d="M12 0c-4.87 7.197-8 11.699-8 16.075 0 4.378 3.579 7.925 8 7.925s8-3.547 8-7.925c0-4.376-3.13-8.878-8-16.075zm.462 20.471c2.56-1.049 4.124-4.889 3.021-8.853 3.798 4.909.754 9.393-3.021 8.853z" /></svg>
-</div>
+            d="M12 0c-4.87 7.197-8 11.699-8 16.075 0 4.378 3.579 7.925 8 7.925s8-3.547 8-7.925c0-4.376-3.13-8.878-8-16.075zm.462 20.471c2.56-1.049 4.124-4.889 3.021-8.853 3.798 4.909.754 9.393-3.021 8.853z" /></svg></div>
 <div align="center" id="slider-fill2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
         style="position:relative; top:-23px;">
         <path fill='gray' d="M6 11v-4l-6 5 6 5v-4h12v4l6-5-6-5v4z" /></svg></div>
@@ -167,8 +155,10 @@ for webgl-utils, m3, m4, and webgl-lessons-ui.
         style="position:relative; top:-23px;">
         <path fill='gray'
             d="M12 0l-11 6v12.131l11 5.869 11-5.869v-12.066l-11-6.065zm9 11.623l-3 1.569v-3.26l3-1.601v3.292zm-13-.654l3 1.625v3.186l-3-1.614v-3.197zm.9-1.799l2.986-1.603 3.132 1.688-3.014 1.608-3.104-1.693zm4.1 3.43l3-1.6v3.238l-3 1.569v-3.207zm4.138-4.475l-3.139-1.691 2.801-1.503 3.11 1.715-2.772 1.479zm-2.424-4.345l-2.825 1.517-2.728-1.47 2.834-1.546 2.719 1.499zm-7.649 1.19l2.711 1.46-2.973 1.596-2.67-1.456 2.932-1.6zm-1.065 4.908v3.204l-3-1.636v-3.216l3 1.648zm-3 3.843l3 1.636v3.185l-3-1.611v-3.21zm5 5.888v-3.169l3 1.614v3.146l-3-1.591zm5-1.545l3-1.569v3.104l-3 1.601v-3.136zm5 .468v-3.083l3-1.569v3.051l-3 1.601z" /></svg></div>
-<script type="text/javascript">
-    "use strict"; var vertexShaderSource = `#version 300 es
+<script>
+
+"use strict";
+var vertexShaderSource = `#version 300 es
      // an attribute is an input (in) to a vertex shader.
 // It will receive data from a buffer
 in vec2 a_position;
@@ -182,7 +172,9 @@ vec2 clipSpace = zeroToTwo - 1.0;gl_Position = vec4(clipSpace * vec2(1, -1), 0, 
 // The GPU will interpolate this value between points.
 v_texCoord = a_texCoord;
 }
-`; var fragmentShaderSource = `#version 300 es
+`;
+
+var fragmentShaderSource = `#version 300 es
 // fragment shaders don't have a default precision so we need
 // to pick one. highp is a good default. It means "high precision"
 precision highp float;float rand(vec2 co) {
@@ -660,6 +652,7 @@ out vec4 outColor;void main()
         'lum': gl.getUniformLocation(program, "lum"),
         'res': gl.getUniformLocation(program, "res")
     };
+
     function resizeCanvas(image, multiplier) {
         const maxWidth = Math.min(600, screen.width * 0.85);
         multiplier = multiplier || 1;
@@ -672,6 +665,7 @@ out vec4 outColor;void main()
         }
         return false;
     }
+
     function render(time) {
         time = time || 0;
         gl.uniform1f(locs.time, time * 0.001);
@@ -682,6 +676,7 @@ out vec4 outColor;void main()
         gl.drawArrays(gl.TRIANGLES, 0, 6);
         if (!toggle) requestAnimationFrame(render);
     }
+
 	function firstRender(time) {
     	// it (2 triangles)
     	var positionBuffer = gl.createBuffer();            // Turn on the attribute
@@ -720,6 +715,7 @@ out vec4 outColor;void main()
     	setRectangle(gl, 0, 0, image.width, image.height);            // Draw the rectangle.
     	gl.drawArrays(gl.TRIANGLES, 0, 6);
 	}
+
     function setRectangle(gl, x, y, width, height) {
         var x1 = x;
         var x2 = x + width;
@@ -734,13 +730,16 @@ out vec4 outColor;void main()
             x2, y2,
         ]), gl.STATIC_DRAW);
     }
+
     function componentToHex(c) {
         var hex = c.toString(16);
         return hex.length == 1 ? "0" + hex : hex;
     }
+
     function rgbToHex(r, g, b) {
         return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
     }
+
     function hexToRgb(hex) {
         var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
         return result ? {
@@ -749,6 +748,7 @@ out vec4 outColor;void main()
             b: parseInt(result[3], 16)
         } : null;
     }
+
     function hslToRgb(h, s, l) {
         var r, g, b;
         if (s == 0) {
@@ -770,6 +770,7 @@ out vec4 outColor;void main()
         }
         return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
     }
+
     function rgbToHsl(r, g, b) {
         r /= 255, g /= 255, b /= 255;
         var max = Math.max(r, g, b), min = Math.min(r, g, b);
@@ -788,8 +789,10 @@ out vec4 outColor;void main()
         }
         return [h, s, l];
     }
+
     var colors = ['#d60071', '#d7006d', '#d7006a', '#d80066', '#d80063', '#d9005f', '#da005b', '#da0058', '#da0054', '#db0050', '#db004c', '#dc0048', '#dc0043', '#dd003f', '#dd003a', '#dd0035', '#de002f', '#de0029', '#de0022', '#df001a', '#df000e', '#de0700', '#db1c00', '#d72700', '#d42f00', '#d13500', '#ce3b00', '#cc3f00', '#c94300', '#c74600', '#c54900', '#c24c00', '#c04e00', '#be5100', '#bc5300', '#bb5500', '#b95600', '#b75800', '#b55a00', '#b45b00', '#b25c00', '#b05e00', '#af5f00', '#ad6000', '#ac6100', '#aa6300', '#a96400', '#a86500', '#a66600', '#a56700', '#a46700', '#a26800', '#a16900', '#a06a00', '#9e6b00', '#9d6c00', '#9c6d00', '#9a6d00', '#996e00', '#986f00', '#967000', '#957000', '#947100', '#927200', '#917200', '#907300', '#8e7400', '#8d7400', '#8c7500', '#8a7600', '#897600', '#877700', '#867800', '#847800', '#837900', '#817a00', '#7f7a00', '#7e7b00', '#7c7c00', '#7a7d00', '#787d00', '#767e00', '#747f00', '#727f00', '#708000', '#6e8100', '#6b8200', '#698200', '#668300', '#638400', '#608500', '#5d8600', '#598700', '#558800', '#518800', '#4c8900', '#468a00', '#408b00', '#398d00', '#308e00', '#238f00', '#0e9000', '#009014', '#009023', '#00902e', '#008f36', '#008f3c', '#008f42', '#008e47', '#008e4b', '#008e4f', '#008e53', '#008d56', '#008d59', '#008d5c', '#008d5f', '#008c61', '#008c64', '#008c66', '#008c68', '#008c6a', '#008b6c', '#008b6e', '#008b70', '#008b72', '#008b74', '#008a76', '#008a77', '#008a79', '#008a7a', '#008a7c', '#00897d', '#00897f', '#008980', '#008982', '#008983', '#008885', '#008886', '#008887', '#008889', '#00888a', '#00878b', '#00878d', '#00878e', '#00878f', '#008791', '#008692', '#008693', '#008695', '#008696', '#008697', '#008599', '#00859a', '#00859b', '#00859d', '#00849e', '#0084a0', '#0084a1', '#0084a3', '#0083a4', '#0083a6', '#0083a8', '#0082a9', '#0082ab', '#0082ad', '#0081af', '#0081b1', '#0080b3', '#0080b5', '#007fb7', '#007fb9', '#007ebc', '#007ebe', '#007dc1', '#007cc4', '#007cc7', '#007bca', '#007acd', '#0079d1', '#0077d5', '#0076da', '#0074df', '#0073e5', '#0070eb', '#006df3', '#0069fc', '#1467fe', '#2266ff', '#2c65ff', '#3363ff', '#3a62ff', '#4060ff', '#465fff', '#4b5dff', '#505cff', '#545aff', '#5859ff', '#5c57ff', '#6055ff', '#6453ff', '#6851ff', '#6c4fff', '#6f4dff', '#734bff', '#7649ff', '#7946ff', '#7d43ff', '#8040ff', '#833dff', '#873aff', '#8a36fe', '#8e32fe', '#912dfe', '#9427fe', '#9820fe', '#9b16ff', '#9f06fe', '#a101fc', '#a400f8', '#a600f5', '#a800f1', '#aa00ee', '#ac00ea', '#af00e7', '#b000e3', '#b200df', '#b400dc', '#b600d8', '#b800d4', '#b900d1', '#bb00cd', '#bd00ca', '#be00c6', '#c000c2', '#c100bf', '#c200bb', '#c400b7', '#c500b4', '#c600b0', '#c800ad', '#c900a9', '#ca00a5', '#cb00a2', '#cc009e', '#cd009b', '#ce0097', '#cf0094', '#d00090', '#d0008d', '#d10089', '#d20086', '#d30082', '#d4007f', '#d4007b', '#d50078', '#d60074'];
     var grays = ['#000000', '#010101', '#020202', '#030303', '#040404', '#050505', '#060606', '#070707', '#080808', '#090909', '#0a0a0a', '#0b0b0b', '#0c0c0c', '#0d0d0d', '#0e0e0e', '#0f0f0f', '#101010', '#111111', '#121212', '#131313', '#141414', '#151515', '#161616', '#171717', '#181818', '#191919', '#1a1a1a', '#1b1b1b', '#1c1c1c', '#1d1d1d', '#1e1e1e', '#1f1f1f', '#202020', '#212121', '#222222', '#232323', '#242424', '#252525', '#262626', '#272727', '#282828', '#292929', '#2a2a2a', '#2b2b2b', '#2c2c2c', '#2d2d2d', '#2e2e2e', '#2f2f2f', '#303030', '#313131', '#323232', '#333333', '#343434', '#353535', '#363636', '#373737', '#383838', '#393939', '#3a3a3a', '#3b3b3b', '#3c3c3c', '#3d3d3d', '#3e3e3e', '#3f3f3f', '#404040', '#414141', '#424242', '#434343', '#444444', '#454545', '#464646', '#474747', '#484848', '#494949', '#4a4a4a', '#4b4b4b', '#4c4c4c', '#4d4d4d', '#4e4e4e', '#4f4f4f', '#505050', '#515151', '#525252', '#535353', '#545454', '#555555', '#565656', '#575757', '#585858', '#595959', '#5a5a5a', '#5b5b5b', '#5c5c5c', '#5d5d5d', '#5e5e5e', '#5f5f5f', '#606060', '#616161', '#626262', '#636363', '#646464', '#656565', '#666666', '#676767', '#686868', '#696969', '#6a6a6a', '#6b6b6b', '#6c6c6c', '#6d6d6d', '#6e6e6e', '#6f6f6f', '#707070', '#717171', '#727272', '#737373', '#747474', '#757575', '#767676', '#777777', '#787878', '#797979', '#7a7a7a', '#7b7b7b', '#7c7c7c', '#7d7d7d', '#7e7e7e', '#7f7f7f', '#808080', '#818181', '#828282', '#838383', '#848484', '#858585', '#868686', '#878787', '#888888', '#898989', '#8a8a8a', '#8b8b8b', '#8c8c8c', '#8d8d8d', '#8e8e8e', '#8f8f8f', '#909090', '#919191', '#929292', '#939393', '#949494', '#959595', '#969696', '#979797', '#989898', '#999999', '#9a9a9a', '#9b9b9b', '#9c9c9c', '#9d9d9d', '#9e9e9e', '#9f9f9f', '#a0a0a0', '#a1a1a1', '#a2a2a2', '#a3a3a3', '#a4a4a4', '#a5a5a5', '#a6a6a6', '#a7a7a7', '#a8a8a8', '#a9a9a9', '#aaaaaa', '#ababab', '#acacac', '#adadad', '#aeaeae', '#afafaf', '#b0b0b0', '#b1b1b1', '#b2b2b2', '#b3b3b3', '#b4b4b4', '#b5b5b5', '#b6b6b6', '#b7b7b7', '#b8b8b8', '#b9b9b9', '#bababa', '#bbbbbb', '#bcbcbc', '#bdbdbd', '#bebebe', '#bfbfbf', '#c0c0c0', '#c1c1c1', '#c2c2c2', '#c3c3c3', '#c4c4c4', '#c5c5c5', '#c6c6c6', '#c7c7c7', '#c8c8c8', '#c9c9c9', '#cacaca', '#cbcbcb', '#cccccc', '#cdcdcd', '#cecece', '#cfcfcf', '#d0d0d0', '#d1d1d1', '#d2d2d2', '#d3d3d3', '#d4d4d4', '#d5d5d5', '#d6d6d6', '#d7d7d7', '#d8d8d8', '#d9d9d9', '#dadada', '#dbdbdb', '#dcdcdc', '#dddddd', '#dedede', '#dfdfdf', '#e0e0e0', '#e1e1e1', '#e2e2e2', '#e3e3e3', '#e4e4e4', '#e5e5e5', '#e6e6e6', '#e7e7e7', '#e8e8e8', '#e9e9e9', '#eaeaea', '#ebebeb', '#ececec', '#ededed', '#eeeeee', '#efefef', '#f0f0f0', '#f1f1f1', '#f2f2f2', '#f3f3f3', '#f4f4f4', '#f5f5f5', '#f6f6f6', '#f7f7f7', '#f8f8f8', '#f9f9f9', '#fafafa', '#fbfbfb', '#fcfcfc', '#fdfdfd', '#fefefe', '#ffffff'];
+
     function sliderColor(origin, s, l, color_data) {
         var index = (s > 0.5) ? parseInt((origin * 255 + 128) % 256) : parseInt(origin * 255);
         var rgb = hexToRgb(color_data[index]);
@@ -800,6 +803,7 @@ out vec4 outColor;void main()
         var ncolor = rgbToHex(nrgb[0], nrgb[1], nrgb[2])
         return ncolor;
     }
+
     var data = [0, 1.0];
     var sliderFill = d3
         .sliderBottom()
@@ -822,6 +826,7 @@ out vec4 outColor;void main()
                 .attr("fill", sliderColor(val, sliderFill2.value(), sliderFill3.value(), colors));
             if (toggle) render();
         });
+
     var gFill = d3
         .select('div#slider-fill')
         .append('svg')
@@ -831,6 +836,7 @@ out vec4 outColor;void main()
         .attr('transform', 'translate(30,30)')
         .attr('fill', '#aaaaaa')
     gFill.call(sliderFill);
+
     var sliderFill2 = d3
         .sliderBottom()
         .min(d3.min(data))
@@ -856,6 +862,7 @@ out vec4 outColor;void main()
                 .attr("fill", sliderColor(sliderFill.value(), val, sliderFill3.value(), colors));
             if (toggle) render();
         });
+
     var gFill2 = d3
         .select('div#slider-fill2')
         .append('svg')
@@ -865,6 +872,7 @@ out vec4 outColor;void main()
         .attr('transform', 'translate(30,30)')
         .attr('fill', '#aaaaaa');
     gFill2.call(sliderFill2);
+
     var sliderFill3 = d3
         .sliderBottom()
         .min(d3.min(data))
@@ -890,6 +898,7 @@ out vec4 outColor;void main()
                 .attr("fill", sliderColor(sliderFill.value(), sliderFill2.value(), val, colors));
             if (toggle) render();
         });
+
     var gFill3 = d3
         .select('div#slider-fill3')
         .append('svg')
@@ -899,6 +908,7 @@ out vec4 outColor;void main()
         .attr('transform', 'translate(30,30)')
         .attr('fill', '#aaaaaa');
     gFill3.call(sliderFill3);
+
     var sliderFill4 = d3
         .sliderBottom()
         .min(d3.min(data))
@@ -917,6 +927,7 @@ out vec4 outColor;void main()
         .on('onchange', val => {
             if (toggle) render();
         });
+
     var gFill4 = d3
         .select('div#slider-fill4')
         .append('svg')
@@ -926,12 +937,14 @@ out vec4 outColor;void main()
         .attr('transform', 'translate(30,30)')
         .attr('fill', '#aaaaaa');
     gFill4.call(sliderFill4);
+
     gFill.select('.handle')
         .attr("fill", sliderColor(sliderFill.value(), sliderFill2.value(), sliderFill3.value(), colors));
     gFill2.select('.handle')
         .attr("fill", grays[parseInt(sliderFill2.value() * 255)]);
     gFill3.select('.handle')
         .attr("fill", grays[parseInt(sliderFill3.value() * 255)]);
+        
     window.onload = function () {
         btn.addEventListener('click', function handleClick() {
             toggle = !toggle;
@@ -942,7 +955,6 @@ out vec4 outColor;void main()
 		firstRender();
     }
 </script>
-</html>
 <h1 id="controls">Controls</h1>
 <ul>
 <li>▶️/⏸ Button: Controls time, causes noisiness to evolve over time and smoothens dither</li>
