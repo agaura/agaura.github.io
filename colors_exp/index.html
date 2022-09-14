@@ -45,11 +45,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1663177071.css">
+  <link rel="stylesheet" href="/minima.1663179224.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1663177071.js"></script>
+  <script defer type="text/javascript" src="/minima.1663179224.js"></script>
 </head>
 <script>
   
@@ -11830,11 +11830,11 @@ function specToColor(l) {
 
 var svg = d3.select("#graph");
 const maxWidth = Math.min(600, screen.width * 0.85);
-        const nwidth = Math.min(svg.width, maxWidth) | 0;
-        const nheight = Math.min(svg.height, svg.height / svg.width * maxWidth) | 0;
-        if (svg.width !== nwidth || svg.height !== nheight) {
-            svg.width = nwidth;
-            svg.height = nheight;
+const nwidth = Math.min(svg.attr("width"), maxWidth) | 0;
+const nheight = Math.min(svg.attr("height"), svg.attr("height") / svg.attr("width") * maxWidth) | 0;
+        if (svg.attr("width") !== nwidth || svg.attr("height") !== nheight) {
+            document.getElementById('graph').setAttribute("width", nwidth);
+            document.getElementById('graph').setAttribute("height", nheight);
         }
 var margin = {top: 20, right: 20, bottom: 30, left: 50},
   width = +svg.attr("width") - margin.left - margin.right,
