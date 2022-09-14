@@ -15,7 +15,7 @@
       
       <guid>https://agaura.github.io/colors_exp/</guid>
       <description>Experimental stuff   @font-face { font-family: &#39;Znamenny&#39;; src: url(&#39;../fonts/MezenetsUnicode.otf&#39;) format(&#34;opentype&#34;); }      Sjødd dskuss wi blu iz natrly dark! 1
-It’s quite common to see an image or to want to have an image in grayscale. What is it that we are doing when we have a grayscale image? We are deleting two dimensions—hue and saturation—from the color space representing our image. However, why cannot/why don’t we delete the other dimensions?</description>
+ It’s quite common to see an image or to want to have an image in grayscale. What is it that we are doing when we have a grayscale image? We are deleting two dimensions—hue and saturation—from the color space representing our image. However, why cannot/why don’t we delete the other dimensions?</description>
     </item>
     
     <item>
