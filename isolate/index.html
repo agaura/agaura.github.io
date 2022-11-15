@@ -45,11 +45,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1663183578.css">
+  <link rel="stylesheet" href="/minima.1668519761.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1663183578.js"></script>
+  <script defer type="text/javascript" src="/minima.1668519761.js"></script>
 </head>
 <script>
   
@@ -108,9 +108,9 @@ if (!doNotTrack) {
 	
 	<div class="sm:mt-4">
 		
-		<a class="not-first:ml-3" href="/tags/shader" style="color: #a469c3;">#shader</a>
+		<a class="not-first:ml-3" href="/tags/shader" style="color: #2ca3c7;">#shader</a>
 		
-		<a class="not-first:ml-3" href="/tags/dither" style="color: #a469c3;">#dither</a>
+		<a class="not-first:ml-3" href="/tags/dither" style="color: #2ca3c7;">#dither</a>
 		
 	</div>
 	
@@ -127,14 +127,14 @@ if (!doNotTrack) {
 <p>where $\hat c_x, \hat c_y$ are displayed colors with $x$ and $y$ being the value of $X$ in the displayed color, then $X$ is not a relevant dimension. In other words, if you can&rsquo;t tell what value one of a color&rsquo;s dimensions is supposed to have, then that dimension doesn&rsquo;t exist.</p>
 <p>   In fact, this gives us a way to have fractional dimensions too, as we can gradually remove the confidence someone has of something being of a certain value within its dimension. Thus, we have are able to build a shader with sliders!</p>
 <h1 id="shader">Shader</h1>
-<html>
  <!-- D3.js -->
-    <script src="https://d3js.org/d3.v6.min.js"></script>
-    <script src="https://unpkg.com/d3-simple-slider"></script>    <!-- topojson -->
-    <script src="https://unpkg.com/topojson@3"></script>    <!-- WebGL -->
-    <script src="https://webgl2fundamentals.org/webgl/resources/webgl-utils.js"></script>
-	<b style="font-size:30px" id='btn' onmouseover="this.style.cursor='pointer';" width = 20px>▶️</b>
-    <style>
+<script src="https://d3js.org/d3.v6.min.js"/></script>
+<script src="https://unpkg.com/d3-simple-slider"></script>    <!-- topojson -->
+<script src="https://unpkg.com/topojson@3"></script>    <!-- WebGL -->
+<script src="https://webgl2fundamentals.org/webgl/resources/webgl-utils.js"></script>
+<script src="https://unpkg.com/jquery@3.5.1"></script>
+<p><b style="font-size:30px" id='btn' onmouseover="this.style.cursor='pointer';" width = 20px>▶️</b></p>
+<style>
         input[type="file"] {
             display: none;
         }        .custom-file-upload {
@@ -143,12 +143,14 @@ if (!doNotTrack) {
             padding: 6px 12px;
             cursor: pointer;
         }
-    </style>    <div align="center">
+</style>
+<div align="center">
         <label class="custom-file-upload">
-            <input id="uploadImage" type="file" name="myPhoto" onchange="PreviewImage();" />
+            <input id="upload" type="file" name="myPhoto" onchange="preview();" />
             <i class="fa fa-cloud-upload"></i>  Upload
         </label>
-    </div>    <div align="center" style="padding-top: 20px">
+    </div>
+	<div align="center" style="padding-top: 20px">
         <canvas id="canvas"></canvas>
         <!--
 for most samples webgl-utils only provides shader compiling/linking and
@@ -184,8 +186,9 @@ for webgl-utils, m3, m4, and webgl-lessons-ui.
         style="position:relative; top:-23px;">
         <path fill='gray'
             d="M12 0l-11 6v12.131l11 5.869 11-5.869v-12.066l-11-6.065zm9 11.623l-3 1.569v-3.26l3-1.601v3.292zm-13-.654l3 1.625v3.186l-3-1.614v-3.197zm.9-1.799l2.986-1.603 3.132 1.688-3.014 1.608-3.104-1.693zm4.1 3.43l3-1.6v3.238l-3 1.569v-3.207zm4.138-4.475l-3.139-1.691 2.801-1.503 3.11 1.715-2.772 1.479zm-2.424-4.345l-2.825 1.517-2.728-1.47 2.834-1.546 2.719 1.499zm-7.649 1.19l2.711 1.46-2.973 1.596-2.67-1.456 2.932-1.6zm-1.065 4.908v3.204l-3-1.636v-3.216l3 1.648zm-3 3.843l3 1.636v3.185l-3-1.611v-3.21zm5 5.888v-3.169l3 1.614v3.146l-3-1.591zm5-1.545l3-1.569v3.104l-3 1.601v-3.136zm5 .468v-3.083l3-1.569v3.051l-3 1.601z" /></svg></div>
-    <script type="text/javascript">
-        "use strict";        var vertexShaderSource = `#version 300 es
+<script type="text/javascript">
+        "use strict";
+		var vertexShaderSource = `#version 300 es
         // an attribute is an input (in) to a vertex shader.
 // It will receive data from a buffer
 in vec2 a_position;
@@ -202,7 +205,8 @@ v_texCoord = a_texCoord;
 `;        var fragmentShaderSource = `#version 300 es
 // fragment shaders don't have a default precision so we need
 // to pick one. highp is a good default. It means "high precision"
-precision highp float;float rand(vec2 co) {
+precision highp float;
+float rand(vec2 co) {
     return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
 }// Copyright(c) 2021 Björn Ottosson
 //
@@ -609,29 +613,36 @@ vec3 okhsv_to_srgb(vec3 hsv)
 	}
 	return vec3( h, s, l );
 }
+float circleMix(float mix1, float mix2, float a) {
+	float res = mix(mix1, mix2, a);
+	if (distance(mix1, mix2) > 0.5) {(mix1 == min(mix1, mix2)) ? res =  mix(mix1 + 1.0, mix2, a) : res =  mix(mix1, mix2 + 1.0, a);}
+	return res;
+}
 bool inDither( float h, float antiHue, float antiRad) {
 	return (((h > antiHue - antiRad) && (h < antiHue + antiRad))) ||
 	(((h - 1.0f > antiHue - antiRad) && (h - 1.0f < antiHue + antiRad))) ||
 	(((1.0f + h > antiHue - antiRad) && (1.0f + h < antiHue + antiRad)));
 }
-float ditherHue( float h, float r, float rp, float antiRad) {
-	float rightBound = h - antiRad * rp;
-    if (rightBound < -0.5f) rightBound = rightBound + 1.0f;
-    float leftBound = h + antiRad * rp;
-    if (leftBound > 0.5f) leftBound = leftBound - 1.0f;
+float ditherHue( float h, float r1, float r2, float r3, float antiRad, float ts) {
+	float rightBound = h - antiRad * r2;
+    if (rightBound < -0.5) rightBound = rightBound + 1.0;
+    float leftBound = h + antiRad * r2;
+    if (leftBound > 0.5) leftBound = leftBound - 1.0;
 	if ((h > h - antiRad) && (h < h + antiRad))
-        if (((h - (h - antiRad)) / (2.0f * antiRad)) < r)
+        if (((h - (h - antiRad)) / (2.0f * antiRad)) < r1)
             h = rightBound;
         else h = leftBound;
-    else if ((h - 1.0f > h - antiRad) && (h - 1.0f < h + antiRad))
-        if (((h - 1.0f - (h - antiRad)) / (2.0f * antiRad)) < r)
+    else if ((h - 1.0 > h - antiRad) && (h - 1.0 < h + antiRad))
+        if (((h - 1.0 - (h - antiRad)) / (2.0 * antiRad)) < r1)
             h = rightBound;
         else h = leftBound;
-    else if ((1.0f + h > h - antiRad) && (1.0f + h < h + antiRad))
-        if (((1.0f + h - (h - antiRad)) / (2.0f * antiRad)) < r)
+    else if ((1.0 + h > h - antiRad) && (1.0 + h < h + antiRad))
+        if (((1.0 + h - (h - antiRad)) / (2.0 * antiRad)) < r1)
             h = rightBound;
         else h = leftBound;
 	if (h < 0.0) h = h + 1.0;
+	if (ts < 0.05) h = circleMix(r3, h, 25.0*(ts - 0.01)); // h is based on r, so you really should put in a new r!!!
+	if (ts < 0.01) h = r3;
 	return h;
 }
 float dither( float v, float r, float antiRad, float lim) {
@@ -663,6 +674,14 @@ out vec4 outColor;void main()
     float r2 = rand(vec2(uv.x, uv.y));
     r2 = rand(vec2(r2, time));
     float r3 = rand(vec2(r1, r2));
+
+	vec3 lab = linear_srgb_to_oklab(vec3(
+		srgb_transfer_function_inv(tex.r),
+		srgb_transfer_function_inv(tex.g),
+		srgb_transfer_function_inv(tex.b)
+		));
+	float ts = length(vec2(lab.y,lab.z));
+		
     //vec3 col = okhsl_to_srgb(vec3(ditherHue(hsl.x, r1, rand(vec2(r1, r2 * r3 * 100.0)), 0.5 - hue / 2.0),
     //    dither(hsl.y, r2, 1.0 - sat, 0.0),
     //    dither(hsl.z, r3, 1.0 - lum, lim)));
@@ -681,20 +700,25 @@ out vec4 outColor;void main()
     //vec3 col = okhsl_to_srgb(vec3(ditherHue(((hsl.z > 0.85) || (hsl.z < 0.15)) ? 0.0 : hsl.x, r1, rand(vec2(r1, r2 * r3 * 100.0)), 0.5 - hue / 2.0),
     //   dither(((hsl.z > 0.85) || (hsl.z < 0.15)) ? 0.0 : hsl.y, r2, 1.0 - sat, 0.0),
     //   dither(hsl.z, r3, 1.0 - lum, lim)));
-	vec3 col = okhsl_to_srgb(vec3(ditherHue(hsl.x, r1, rand(vec2(r1, r2 * r3 * 100.0)), 0.5 - hue / 2.0),
+	vec3 col = okhsl_to_srgb(vec3(ditherHue(hsl.x, r1, rand(vec2(r1, r2 * r3 * 100.0)), rand(vec2(r3 * 10.0, time)), 0.5 - hue / 2.0, ts),
        dither(hsl.y, r2, 1.0 - sat, 0.0),
        dither(hsl.z, r3, 1.0 - lum, lim)));
-    outColor = vec4(col,tex.w);
+    outColor = vec4(col,min(1.0,(pow(0.5,64.0) - (pow(abs(0.5 - v_texCoord.x),64.0) + pow(abs(0.5 - v_texCoord.y),64.0)))/pow(0.5,64.0)));
 }`;        // Get A WebGL context
         /** @type {HTMLCanvasElement} */
 		var toggle = true;
 		const btn = document.getElementById('btn');
         var canvas = document.querySelector("canvas");
-        var gl = canvas.getContext("webgl2");        // setup GLSL program
+        const gl = canvas.getContext("webgl2", {
+  			premultipliedAlpha: false
+			});        // setup GLSL program
+		var texture = gl.createTexture();
         var program = webglUtils.createProgramFromSources(gl,
             [vertexShaderSource, fragmentShaderSource]);        // look up where the vertex data needs to go.
         var positionAttributeLocation = gl.getAttribLocation(program, "a_position");
         var texCoordAttributeLocation = gl.getAttribLocation(program, "a_texCoord");
+		var isImage = false;
+		var isVideo = false;
 		var locs = {
         'time': gl.getUniformLocation(program, "time"),
         'hue': gl.getUniformLocation(program, "hue"),
@@ -707,11 +731,29 @@ out vec4 outColor;void main()
         var hueLocation = gl.getUniformLocation(program, "antiHue");
         var radLocation = gl.getUniformLocation(program, "antiRad");
         var image = new Image();
-		function resizeCanvas(image, multiplier) {
-			const maxWidth = Math.min(600, screen.width * 0.85);
+		var video = document.createElement('video');
+		video.addEventListener('loadedmetadata', function() {
+    		console.log("Loaded the video's data!");
+			video.loop = true;
+			video.muted = true;
+			video.play();
+			video.width = video.videoWidth;
+			video.height = video.videoHeight;
+			//console.log(video.width);
+			//console.log(video.height);
+			firstRender(video);
+			if (toggle) {
+				toggle = !toggle;
+				btn.textContent = '⏸';
+				render();
+			}
+		}, false);
+		function resizeCanvas(frame, multiplier) {
+			const maxHeight = Math.max(350, screen.availHeight - 450);
+			const maxWidth = Math.min(Math.min(600, screen.width * 0.85), frame.width/frame.height * maxHeight);
             multiplier = multiplier || 1;
-            const width = Math.min(image.width, maxWidth) | 0;
-            const height = Math.min(image.height, image.height/image.width * maxWidth) | 0;
+            const width = Math.min(frame.width, maxWidth) | 0;
+            const height = Math.min(frame.height, frame.height/frame.width * maxWidth) | 0;
             if (canvas.width !== width || canvas.height !== height) {
                 canvas.width = width;
                 canvas.height = height;
@@ -719,7 +761,7 @@ out vec4 outColor;void main()
             }
             return false;
         }
-		function firstRender(time) {
+		function firstRender(frame, time) {
             time = time || 0;            // lookup uniforms
             var resolutionLocation = gl.getUniformLocation(program, "u_resolution");
             var imageLocation = gl.getUniformLocation(program, "u_image");
@@ -745,7 +787,7 @@ out vec4 outColor;void main()
             gl.enableVertexAttribArray(texCoordAttributeLocation);            // Tell the attribute how to get data out of texCoordBuffer (ARRAY_BUFFER)
             gl.vertexAttribPointer(
                 texCoordAttributeLocation, 2, gl.FLOAT, false, 0, 0);            // Create a texture.
-            var texture = gl.createTexture();            // make unit 0 the active texture uint
+                        // make unit 0 the active texture uint
             // (ie, the unit all other texture commands will affect
             gl.bindTexture(gl.TEXTURE_2D, texture);            // Set the parameters so we don't need mips and so we're not filtering
             // and we don't repeat
@@ -755,22 +797,22 @@ out vec4 outColor;void main()
                 gl.RGBA,
                 gl.RGBA,
                 gl.UNSIGNED_BYTE,
-                image);
-			resizeCanvas(image);            // Tell WebGL how to convert from clip space to pixels
+                frame);
+			resizeCanvas(frame);            // Tell WebGL how to convert from clip space to pixels
             gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);            // Clear the canvas
             gl.useProgram(program);            // Bind the attribute/buffer set we want.
             // pixels to clipspace in the shader
-            gl.uniform2f(resolutionLocation, image.width, image.height);            // Tell the shader to get the texture from texture unit 0
+            gl.uniform2f(resolutionLocation, frame.width, frame.height);            // Tell the shader to get the texture from texture unit 0
             gl.uniform1i(imageLocation, 0);            // Update the time
             gl.uniform1f(locs.time, time * 0.001);
             gl.uniform1f(locs.hue, sliderFill.value());
             gl.uniform1f(locs.sat, sliderFill2.value());
             gl.uniform1f(locs.lum, sliderFill3.value());
-            gl.uniform2f(locs.res, image.width*Math.pow(1 - sliderFill4.value(), 4) + 1, image.height*Math.pow(1 - sliderFill4.value(), 4) + 1);
+            gl.uniform2f(locs.res, gl.canvas.width*Math.pow(1 - sliderFill4.value(), 4) + 1, gl.canvas.height*Math.pow(1 - sliderFill4.value(), 4) + 1);
             gl.uniform1f(locs.lim, sliderFill5.value() / 2.0);
             // in setRectangle puts data in the position buffer
             gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);            // Set a rectangle the same size as the image.
-            setRectangle(gl, 0, 0, image.width, image.height);            // Draw the rectangle.
+            setRectangle(gl, 0, 0, frame.width, frame.height);            // Draw the rectangle.
             gl.drawArrays(gl.TRIANGLES, 0, 6);
         }
 		function render(time) {
@@ -779,8 +821,17 @@ out vec4 outColor;void main()
             gl.uniform1f(locs.hue, sliderFill.value());
             gl.uniform1f(locs.sat, sliderFill2.value());
             gl.uniform1f(locs.lum, sliderFill3.value());
-            gl.uniform2f(locs.res, image.width*Math.pow(1 - sliderFill4.value(), 4) + 1,image.height*Math.pow(1 - sliderFill4.value(), 4) + 1);
+            gl.uniform2f(locs.res, gl.canvas.width*Math.pow(1 - sliderFill4.value(), 4) + 1, gl.canvas.height*Math.pow(1 - sliderFill4.value(), 4) + 1);
             gl.uniform1f(locs.lim, sliderFill5.value() / 2.0);
+			if (isVideo) {
+				gl.bindTexture(gl.TEXTURE_2D, texture);
+  				gl.texImage2D(gl.TEXTURE_2D,
+                	0,
+                	gl.RGBA,
+                	gl.RGBA,
+                	gl.UNSIGNED_BYTE,
+                	video);
+			}
         	gl.drawArrays(gl.TRIANGLES, 0, 6);
         	if (!toggle) requestAnimationFrame(render);
     	}
@@ -798,15 +849,24 @@ out vec4 outColor;void main()
                 x2, y2,
             ]), gl.STATIC_DRAW);
         }
-		function PreviewImage() {
+		function preview() {
             var oFReader = new FileReader();
-            oFReader.readAsDataURL(document.getElementById("uploadImage").files[0]);
+            oFReader.readAsDataURL(document.getElementById("upload").files[0]);
 			oFReader.onload = function (oFREvent) {
-                image.src = oFREvent.target.result;
+				var match = oFReader.result.match(/^data:([^/]+)\/([^;]+);/) || [];
+				var type = match[1];
+                if (type === "image") {
+					isImage = true;
+					isVideo = false;
+					image.src = oFREvent.target.result;
+					image.onload = function () {firstRender(image)};
+				}
+				else if (type === "video") {
+					isImage = false;
+					isVideo = true;
+					video.src = oFREvent.target.result;
+				}
             };
-			image.onload = function () {
-                firstRender();
-			};
         }
 		function componentToHex(c) {
 			var hex = c.toString(16);
@@ -886,10 +946,11 @@ out vec4 outColor;void main()
         .append('svg')
         .attr('width', Math.min(350,screen.width*0.7))
         .attr('height', 65)
+	var gFillg = gFill
         .append('g')
         .attr('transform', 'translate(30,30)')
         .attr('fill', '#aaaaaa')
-    gFill.call(sliderFill);
+    gFillg.call(sliderFill);
     var sliderFill2 = d3
         .sliderBottom()
         .min(d3.min(data))
@@ -913,10 +974,10 @@ out vec4 outColor;void main()
         .append('svg')
         .attr('width', Math.min(350,screen.width*0.7))
         .attr('height', 65)
-        .append('g')
+    var gFillg2 = gFill2.append('g')
         .attr('transform', 'translate(30,30)')
         .attr('fill', '#aaaaaa');
-    gFill2.call(sliderFill2);
+    gFillg2.call(sliderFill2);
     var sliderFill3 = d3
         .sliderBottom()
         .min(d3.min(data))
@@ -940,10 +1001,10 @@ out vec4 outColor;void main()
         .append('svg')
         .attr('width', Math.min(350,screen.width*0.7))
         .attr('height', 65)
-        .append('g')
+    var gFillg3 = gFill3.append('g')
         .attr('transform', 'translate(30,30)')
         .attr('fill', '#aaaaaa');
-    gFill3.call(sliderFill3);
+    gFillg3.call(sliderFill3);
     var sliderFill4 = d3
         .sliderBottom()
         .min(d3.min(data))
@@ -967,15 +1028,21 @@ out vec4 outColor;void main()
         .append('svg')
         .attr('width', Math.min(350,screen.width*0.7))
         .attr('height', 65)
-        .append('g')
+    var gFillg4 = gFill4.append('g')
         .attr('transform', 'translate(30,30)')
         .attr('fill', '#aaaaaa');
-    gFill4.call(sliderFill4);
+    gFillg4.call(sliderFill4);
 		window.onload=function(){
   			btn.addEventListener('click', function handleClick() {
 				toggle = !toggle;
-				if (toggle) btn.textContent = '▶️';
-				else btn.textContent = '⏸';
+				if (toggle) {
+					btn.textContent = '▶️';
+					if (isVideo) {video.pause()};
+				}
+				else {
+					btn.textContent = '⏸';
+					if (isVideo) {video.play()};
+				}
 				render();
 			});
 		}
@@ -998,18 +1065,38 @@ out vec4 outColor;void main()
 				if (toggle) render();
             });
 		var gFill5 = d3
-            .select('div#slider-fill5')
-            .append('svg')
+			.select('div#slider-fill5')
+			.append('svg')
             .attr('width', Math.min(350,screen.width*0.7))
             .attr('height', 65)
-            .append('g')
-            .attr('transform', 'translate(30,30)')
-			.attr('fill', '#aaaaaa');
-		gFill5.call(sliderFill5);
+        var gFillg5 = gFill5.append('g')
+        	.attr('transform', 'translate(30,30)')
+        	.attr('fill', '#aaaaaa');
+    	gFillg5.call(sliderFill5);
 	image.src = "/oklab.jpg";
-	image.onload = function() {firstRender();}
-		</script>
-</html>
+	image.onload = function() {firstRender(image);}
+
+	function updateWindow(){
+		firstRender(image);
+    	sliderFill.width(Math.min(300,screen.width*0.55));
+		gFill.attr('width', Math.min(350,screen.width*0.7));
+		gFillg.call(sliderFill);
+		sliderFill2.width(Math.min(300,screen.width*0.55));
+		gFill2.attr('width', Math.min(350,screen.width*0.7));
+		gFillg2.call(sliderFill2);
+		sliderFill3.width(Math.min(300,screen.width*0.55));
+		gFill3.attr('width', Math.min(350,screen.width*0.7));
+		gFillg3.call(sliderFill3);
+		sliderFill4.width(Math.min(300,screen.width*0.55));
+		gFill4.attr('width', Math.min(350,screen.width*0.7));
+		gFillg4.call(sliderFill4);
+		sliderFill5.width(Math.min(300,screen.width*0.55));
+		gFill5.attr('width', Math.min(350,screen.width*0.7));
+		gFillg5.call(sliderFill5);
+	}
+	d3.select(window).on('resize.updatesvg', updateWindow);
+
+</script>
 <h1 id="controls">Controls</h1>
 <ul>
 <li>▶️/⏸ Button: Controls time, causes noisiness to evolve over time and smoothens dither</li>
