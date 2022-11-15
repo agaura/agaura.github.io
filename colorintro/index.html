@@ -43,11 +43,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1668522802.css">
+  <link rel="stylesheet" href="/minima.1668526570.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1668522802.js"></script>
+  <script defer type="text/javascript" src="/minima.1668526570.js"></script>
 </head>
 <script>
   
@@ -132,15 +132,15 @@ if (!doNotTrack) {
 
     var π = Math.PI;
 
-    const width = 600;
-    const height = 300;
+    const height = Math.min(300, screen.availHeight - 450);
+    const width = Math.min(height, 0.75 * screen.width);
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(100, width/height, 0.1, 1000);
 
     const renderer = new THREE.WebGLRenderer({canvas: document.querySelector("canvas"), alpha: true});
     renderer.setSize(width, height);
-    renderer.setClearColor( 0xffffff, 0);
+    renderer.setClearColor( 0xffffff, 0.0);
     document.getElementById('div').appendChild(renderer.domElement);
     //let controls = new OrbitControls(camera, renderer.domElement);
     const canvas = renderer.domElement;
@@ -212,7 +212,7 @@ if (!doNotTrack) {
 
     scene.add(sphere);
     scene.add(point);
-    scene.add(back_wall);
+    //scene.add(back_wall);
 
     var mouseDown = false,
     mouseX = 0,
@@ -326,6 +326,13 @@ if (!doNotTrack) {
     makeSlider('div#slider8', val => {sphere.material.reflectivity = val;});
     makeSlider('div#slider9', val => {sphere.material.sheen = val;});
     makeSlider('div#slider10', val => {sphere.material.sheenRoughness = val;});
+
+    function updateWindow(){
+        const maxHeight = Math.min(300, screen.availHeight - 450);
+		const maxWidth = Math.min(maxHeight, 0.75 * screen.width);
+		renderer.setSize(Math.min(maxHeight, maxWidth), Math.min(maxHeight, maxWidth));
+	}
+	d3.select(window).on('resize.updatesvg', updateWindow);
 
   </script>
 <p>Bla</p>
