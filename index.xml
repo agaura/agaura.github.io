@@ -9,25 +9,6 @@
     <copyright>TH ↔ Þ</copyright>
     <lastBuildDate>Thu, 26 May 2022 13:56:21 +0200</lastBuildDate><atom:link href="https://agaura.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Music</title>
-      <link>https://agaura.github.io/music/</link>
-      <pubDate>Wed, 26 Oct 2022 00:17:44 +0200</pubDate>
-      
-      <guid>https://agaura.github.io/music/</guid>
-      <description>$(&#39;head&#39;).append(&#39;&#39;);  Here we have a score:
- @font-face { font-family: &#39;Bravura&#39;; src: url(&#39;/fonts/Bravura.otf&#39;) format(&#39;opentype&#39;) } @font-face { font-family: &#39;Open Sans&#39;; src: url(&#39;/fonts/OpenSans-Regular.ttf&#39;) format(&#39;truetype&#39;) }                                                          5                                      9                                                    13                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             Play  Stop                $(document).</description>
-    </item>
-    
-    <item>
-      <title>Color: A Linguistic View</title>
-      <link>https://agaura.github.io/colorintro/</link>
-      <pubDate>Fri, 09 Sep 2022 11:48:32 +0200</pubDate>
-      
-      <guid>https://agaura.github.io/colorintro/</guid>
-      <description>Introduction  Color is a fundamental experience shared by all those who&amp;rsquo;re able to see, and in our languages we&amp;rsquo;ve developed many ways to talk about it. However, words are imprecise, and unfortunately for the word color, it is a term that is used by quite a decent number of fields while having a different meaning in each of them. When a physicist talkes about color, do they mean the same thing as an artist does?</description>
-    </item>
-    
-    <item>
       <title>Dimension Isolating Shader</title>
       <link>https://agaura.github.io/isolate/</link>
       <pubDate>Thu, 26 May 2022 13:56:21 +0200</pubDate>
