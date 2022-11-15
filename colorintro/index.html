@@ -43,11 +43,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1668521684.css">
+  <link rel="stylesheet" href="/minima.1668522135.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1668521684.js"></script>
+  <script defer type="text/javascript" src="/minima.1668522135.js"></script>
 </head>
 <script>
   
@@ -222,15 +222,7 @@ if (!doNotTrack) {
     totalY = 0,
     momentumID;
 
-    canvas.addEventListener('mousedown', function (event) {
-        event.preventDefault();
-        events = 0;
-        mouseDown = true;
-        mouseX = event.clientX;
-        mouseY = event.clientY;
-    }, false);
-
-    canvas.addEventListener('touchstart', function (event) {
+    canvas.addEventListener('pointerdown', function (event) {
         event.preventDefault();
         events = 0;
         mouseDown = true;
@@ -252,31 +244,7 @@ if (!doNotTrack) {
             point.rotation.x += deltaY * 0.01;
         }, false);
 
-    canvas.addEventListener('touchmove', function (event) {
-        if (!mouseDown) {return} // is the button pressed?
-            event.preventDefault();
-            var deltaX = event.clientX - mouseX,
-                deltaY = event.clientY - mouseY;
-            mouseX = event.clientX;
-            mouseY = event.clientY;
-            totalX += deltaX;
-            totalY += deltaY;
-            events++;
-            point.rotation.y += deltaX * 0.01;
-            point.rotation.x += deltaY * 0.01;
-        }, false);
-
-    canvas.addEventListener('mouseup', function (event) {
-        event.preventDefault();
-        mouseDown = false;
-        var deltaX = event.clientX - mouseX,
-            deltaY = event.clientY - mouseY;
-        var avgX = totalX / events,
-            avgY = totalY / events;
-        beginMomentumTracking();
-    }, false);
-
-    canvas.addEventListener('touchend', function (event) {
+    canvas.addEventListener('pointerup', function (event) {
         event.preventDefault();
         mouseDown = false;
         var deltaX = event.clientX - mouseX,
