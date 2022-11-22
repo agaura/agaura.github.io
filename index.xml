@@ -7,7 +7,17 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>TH ↔ Þ</copyright>
-    <lastBuildDate>Thu, 26 May 2022 13:56:21 +0200</lastBuildDate><atom:link href="https://agaura.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 31 Oct 2022 14:25:41 +0100</lastBuildDate><atom:link href="https://agaura.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>From Light to Sight</title>
+      <link>https://agaura.github.io/colors/</link>
+      <pubDate>Mon, 31 Oct 2022 14:25:41 +0100</pubDate>
+      
+      <guid>https://agaura.github.io/colors/</guid>
+      <description>Experimental stuff $f$( ⬤ , ⬤ , ⬤ ) = ⬤
+    .line { fill: none; stroke: steelblue; stroke-width: 2px; } .axis line{ stroke: #808080; } .axis path{ stroke: #808080; } .axis text{ fill: #808080; }    function nearest_color(d, index) { left = Math.floor(index); right = Math.ceil(index); dL = index - left; return d[left].kW*(1-dL) + d[right].kW*dL;} function decimalToHex(d, padding) { var hex = Number(d).toString(16); padding = typeof (padding) === &#34;</description>
+    </item>
+    
     <item>
       <title>Dimension Isolating Shader</title>
       <link>https://agaura.github.io/isolate/</link>

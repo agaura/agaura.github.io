@@ -45,11 +45,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1669104966.css">
+  <link rel="stylesheet" href="/minima.1669107362.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1669104966.js"></script>
+  <script defer type="text/javascript" src="/minima.1669107362.js"></script>
 </head>
 <script>
   
@@ -1032,8 +1032,7 @@ out vec4 outColor;void main()
         .attr('transform', 'translate(30,30)')
         .attr('fill', '#aaaaaa');
     gFillg4.call(sliderFill4);
-		window.onload=function(){
-  			btn.addEventListener('click', function handleClick() {
+		btn.addEventListener('click', function () {
 				toggle = !toggle;
 				if (toggle) {
 					btn.textContent = '▶️';
@@ -1045,7 +1044,6 @@ out vec4 outColor;void main()
 				}
 				render();
 			});
-		}
     var sliderFill5 = d3
             .sliderBottom()
             .min(d3.min(data))
