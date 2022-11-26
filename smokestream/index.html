@@ -47,11 +47,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1669486976.css">
+  <link rel="stylesheet" href="/minima.1669501498.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1669486976.js"></script>
+  <script defer type="text/javascript" src="/minima.1669501498.js"></script>
 </head>
 <script>
   
@@ -914,7 +914,6 @@ vec3 luvToRgb(vec3 tuple){
 }
 </script>
 <script type = "text" id = "advection">
-
 uniform float deltaT;
 uniform sampler2D u_image;
 uniform sampler2D velocity;
@@ -924,6 +923,10 @@ uniform vec2 change;
 uniform vec2 center;
 uniform vec2 radius;
 uniform float time;
+
+uniform vec2 spriteChange;
+uniform vec2 spriteCenter;
+
 in vec2 v_texCoord;
 out vec4 outColor;
 
@@ -947,6 +950,12 @@ vec2 scale2(vec2 val) {
     return sign(val) * (1.0 - pow(1.0 - abs(val), vec2(60.0))) / 45.0;
 }
 
+vec2 scale3(vec2 val) {
+
+    // these two values technically effect each other, so play around with it to get ideal results
+    return sign(val) * (1.0 - pow(1.0 - abs(val), vec2(100.0))) / 45.0;
+}
+
 void main() {
 
     vec2 u = texture(velocity, v_texCoord).xy;
@@ -957,18 +966,28 @@ void main() {
     if (paint) {
         if (mouseDown) {
 
-        float dx = center.x - v_texCoord.x;
-        float dy = center.y - v_texCoord.y;
-
-        vec2 effect = 50. * scale2(change) * exp(-(dx * dx + dy * dy) / (radius * .5)); // this is nearly perfect, we can try a function that makes small values bigger and large values smaller
-        float mag = (effect.x * effect.x + effect.y * effect.y) / 2.0;
-        vec4 color = vec4(0.3,0.,1.,1.0); // make a random color
-        //color = vec4(hsl2rgb(vec3(time / 4.0, 1.0, 0.5)), 1.0); // oil slick color
-        color = vec4(hsl2rgb(vec3(time / 1024.0, 0.25, 0.5)), 1.0); // gentle rainbow
-        result = result + mix(vec4(0.0), color, mag);
-        if ((result.a == 0.0) || (result.a == 1.0)) {outColor = vec4(0.0);} // the 1.0 case is just to get rid of the default
-        else {outColor = result + mix(vec4(0.0), color, mag);}
+            float dx = center.x - v_texCoord.x;
+            float dy = center.y - v_texCoord.y;
+            
+            vec2 effect = 50. * scale2(change) * exp(-(dx * dx + dy * dy) / (radius * .5)); // this is nearly perfect, we can try a function that makes small values bigger and large values smaller
+            float mag = (effect.x * effect.x + effect.y * effect.y) / 2.0;
+            vec4 color = vec4(0.3,0.,1.,1.0); // make a random color
+            //color = vec4(hsl2rgb(vec3(time / 4.0, 1.0, 0.5)), 1.0); // oil slick color
+            color = vec4(hsl2rgb(vec3(time / 1024.0, 0.25, 0.5)), 1.0); // gentle rainbow
+            result = result + mix(vec4(0.0), color, mag);
+            if ((result.a == 0.0) || (result.a == 1.0)) {outColor = vec4(0.0);} // the 1.0 case is just to get rid of the default
+            else {outColor = result + mix(vec4(0.0), color, mag);}
         }
+
+        float dxp = spriteCenter.x - v_texCoord.x;
+        float dyp = spriteCenter.y - v_texCoord.y;
+        
+        vec2 effectp = 50. * scale3(spriteChange) * exp(-(dxp * dxp + dyp * dyp) / (radius * .5));
+        float magp = (effectp.x * effectp.x + effectp.y * effectp.y) / 2.0;
+        vec4 newColor = vec4(hsl2rgb(vec3(time / 17.0, 1.0, 0.5)), 1.0); // oil slick color
+        // vec4 newColor = vec4(hsl2rgb(vec3(time / 17.0, 1.0, 0.5)), 1.0); // oil slick color, looks great with a small radius
+        result = result + mix(vec4(0.0), newColor, magp);
+        outColor = result + mix(vec4(0.0), newColor, magp);
 
         if ((result.a == 1.0)) {outColor = vec4(0.0);}
         if ((result.a < 1.0)) {outColor = mix(vec4(0.0), result, 0.99);}
@@ -1058,6 +1077,9 @@ uniform bool mouseDown;
 uniform vec2 change;
 uniform vec2 center;
 uniform vec2 radius;
+
+uniform vec2 spriteChange;
+uniform vec2 spriteCenter;
       
 in vec2 v_texCoord;
 out vec4 outColor;
@@ -1083,8 +1105,12 @@ void main() {
     if (mouseDown) {
         float dx = center.x - v_texCoord.x;
         float dy = center.y - v_texCoord.y;
-        outColor = vec4(vec2(u_x, u_y) + 25. * change * exp(-(dx * dx + dy * dy) / (radius * 0.1)), 0.0, 1.0);
+        outColor = outColor + vec4(25. * change * exp(-(dx * dx + dy * dy) / (radius * 0.1)), 0.0, 1.0);
     }
+
+    float dxp = spriteCenter.x - v_texCoord.x;
+    float dyp = spriteCenter.y - v_texCoord.y;
+    outColor = outColor + vec4(25. * spriteChange * exp(-(dxp * dxp + dyp * dyp) / (radius * 0.1)), 0.0, 1.0);
 }
 </script>
 <script type = "text" id = "output">
@@ -1165,6 +1191,76 @@ canvas.addEventListener('pointermove', function (event) {
         event.preventDefault();
     }, false);
 
+function initializeCoord(x, y) {
+    return {'x': x ? x : Math.random(), 'y': y ? y : Math.random()}
+}
+
+// create sprites
+function initializeSprite(location, velocity, velocityPreference, direction, start, limits) {
+    var sprite = {
+        'location': location ? location : initializeCoord(),
+        'velocity': velocity ? velocity : Math.random(),
+        'velocityPreference': velocityPreference ? velocityPreference : Math.random(),
+        'direction': direction ? direction : 2.0 * Math.random() * Math.PI,
+        'start': start ? start : Math. random(),
+        'limits': limits ? limits : initializeCoord()
+    }
+    sprite = {...sprite,...{
+        'lastLocation': sprite.location
+        }
+    }
+    sprite = {...sprite,...{
+        'update': function() {
+            sprite.lastLocation = sprite.location;
+            var dx = sprite.velocity * Math.cos(sprite.direction);
+            var dy = sprite.velocity * Math.sin(sprite.direction);
+            sprite.location.x = (sprite.location.x + dx) % 1.0;
+            sprite.location.y = (sprite.location.y + dy) % 1.0;
+            sprite.velocity = 0.8 * sprite.velocity + 0.1 * sprite.velocityPreference + 0.1 * Math.random(),
+            sprite.direction = (Math.pow(Math.random() * 2.0 - 1.0, 100.0) * Math.PI + sprite.direction)
+            }
+        }
+    }
+    return sprite;
+}
+
+// nice, very polite
+/*function update(sprite) {
+    return {...sprite,...{
+        'lastLocation' : sprite.location,
+        'location' : initializeCoord(
+            (((sprite.location.x + sprite.velocity * Math.cos(sprite.direction) / 300) % 1.0) + 1.0) % 1.0,
+            (((sprite.location.y + sprite.velocity * Math.sin(sprite.direction) / 300) % 1.0) + 1.0) % 1.0),
+        'velocity' : 0.5 * sprite.velocity + 0.1 * sprite.velocityPreference + 0.4 * Math.random(),
+        'direction' : (Math.pow(Math.random() * 2.0 - 1.0, 9.0) * Math.PI / 10.0 + sprite.direction)
+    }}
+}*/
+
+/*
+function update(sprite) {
+    return {...sprite,...{
+        'lastLocation' : sprite.location,
+        'location' : initializeCoord(
+            (((sprite.location.x + sprite.velocity * Math.cos(sprite.direction) / 100) % 1.0) + 1.0) % 1.0,
+            (((sprite.location.y + sprite.velocity * Math.sin(sprite.direction) / 100) % 1.0) + 1.0) % 1.0),
+        'velocity' : 0.5 * sprite.velocity + 0.1 * sprite.velocityPreference + 0.4 * Math.random(),
+        'direction' : (Math.pow(Math.random() * 2.0 - 1.0, 1.0) * Math.PI / 10.0 + sprite.direction)
+    }}
+}*/
+
+function update(sprite) {
+    return {...sprite,...{
+        'lastLocation' : sprite.location,
+        'location' : initializeCoord(
+            (((sprite.location.x + sprite.velocity * Math.cos(sprite.direction) / 300) % 1.0) + 1.0) % 1.0,
+            (((sprite.location.y + sprite.velocity * Math.sin(sprite.direction) / 300) % 1.0) + 1.0) % 1.0),
+        'velocity' : 0.5 * sprite.velocity + 0.1 * sprite.velocityPreference + 0.4 * Math.random(),
+        'direction' : (Math.pow(Math.random() * 2.0 - 1.0, 51.0) * Math.PI + sprite.direction) // very fly-like, in a bad way lol
+    }}
+}
+
+var sprite1 = initializeSprite();
+
 // create shaders
 const vertexShaderSource = '#version 300 es' + document.getElementById('vertex').text;;
 const advectFragShader = '#version 300 es \n precision highp float;' + document.getElementById('colors').text + document.getElementById('advection').text;
@@ -1173,22 +1269,6 @@ const divergenceFragShader = '#version 300 es \n precision highp float;' + docum
 const jacobiFragShader = '#version 300 es \n precision highp float;' + document.getElementById('jacobi').text;
 const pressureFragShader = '#version 300 es \n precision highp float;' + document.getElementById('pressure').text;
 const outputFragShader = '#version 300 es \n precision highp float;' + document.getElementById('output').text;
-
-var advectionShader1 = {
-    'program': webglUtils.createProgramFromSources(gl,[vertexShaderSource, advectFragShader1])
-}
-advectionShader1 = {...advectionShader1,...{
-    'attributes': {
-        'a_position': gl.getAttribLocation(advectionShader1.program, "a_position"),
-        'a_texCoord': gl.getAttribLocation(advectionShader1.program, "a_texCoord")
-    },
-    'uniforms': {
-        'deltaT': gl.getUniformLocation(advectionShader1.program, "deltaT"),
-        'u_resolution': gl.getUniformLocation(advectionShader1.program, "u_resolution"),
-        'u_image': gl.getUniformLocation(advectionShader1.program, "u_image"),
-        'velocity': gl.getUniformLocation(advectionShader1.program, "velocity")
-        }
-}}
 
 var advectionShader = {
     'program': webglUtils.createProgramFromSources(gl,[vertexShaderSource, advectFragShader])
@@ -1208,7 +1288,9 @@ advectionShader = {...advectionShader,...{
         'change': gl.getUniformLocation(advectionShader.program, "change"),
         'center': gl.getUniformLocation(advectionShader.program, "center"),
         'radius': gl.getUniformLocation(advectionShader.program, "radius"),
-        'time': gl.getUniformLocation(advectionShader.program, "time")
+        'time': gl.getUniformLocation(advectionShader.program, "time"),
+        'spriteChange': gl.getUniformLocation(advectionShader.program, "spriteChange"),
+        'spriteCenter': gl.getUniformLocation(advectionShader.program, "spriteCenter")
         }
 }}
 
@@ -1263,7 +1345,9 @@ pressureShader = {...pressureShader,...{
         'mouseDown': gl.getUniformLocation(pressureShader.program, "mouseDown"),
         'change': gl.getUniformLocation(pressureShader.program, "change"),
         'center': gl.getUniformLocation(pressureShader.program, "center"),
-        'radius': gl.getUniformLocation(pressureShader.program, "radius")
+        'radius': gl.getUniformLocation(pressureShader.program, "radius"),
+        'spriteChange': gl.getUniformLocation(pressureShader.program, "spriteChange"),
+        'spriteCenter': gl.getUniformLocation(pressureShader.program, "spriteCenter")
         }
 }}
 
@@ -1413,7 +1497,7 @@ function init(time) {
         1.0, 1.0,
     ]), gl.STATIC_DRAW);
     gl.vertexAttribPointer(                                             // Tell the attribute how to get data out of texCoordBuffer (ARRAY_BUFFER)
-        advectionShader1.attributes.a_texCoord, 2, gl.FLOAT, false, 0, 0);
+        advectionShader.attributes.a_texCoord, 2, gl.FLOAT, false, 0, 0);
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
     setRectangle(gl, 0, 0, width, height);
     gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuffer);
@@ -1488,11 +1572,6 @@ function init(time) {
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
     gl.drawArrays(gl.TRIANGLES, 0, 6);
 
-    // remove framebuffer, allowing the latest output to render to canvas, 
-    //gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-    //gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-    //gl.drawArrays(gl.TRIANGLES, 0, 6);
-
     temp = realOutput;
     realOutput = realOutput2;
     realOutput2 = temp;
@@ -1504,6 +1583,8 @@ var oldTime = 0;
 var dt = 1 / 120;
 
 function render(time) {
+
+    sprite1 = update(sprite1);
 
     //console.log(dt);
     
@@ -1544,6 +1625,8 @@ function render(time) {
     gl.uniform1f(pressureShader.uniforms.mouseDown, mouseDown);
     gl.uniform2f(pressureShader.uniforms.change, deltaX, deltaY);
     gl.uniform2f(pressureShader.uniforms.center, mouseX, mouseY);
+    gl.uniform2f(pressureShader.uniforms.spriteChange, sprite1.location.x - sprite1.lastLocation.x, sprite1.location.y - sprite1.lastLocation.y);
+    gl.uniform2f(pressureShader.uniforms.spriteCenter, sprite1.location.x, sprite1.location.y);
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
     gl.drawArrays(gl.TRIANGLES, 0, 6);
 
@@ -1555,6 +1638,8 @@ function render(time) {
     gl.uniform2f(advectionShader.uniforms.center, mouseX, mouseY);
     gl.uniform2f(advectionShader.uniforms.radius, 1.0/canvas.width, 1.0/canvas.height);
     gl.uniform1f(advectionShader.uniforms.time, time);
+    gl.uniform2f(advectionShader.uniforms.spriteChange, sprite1.location.x - sprite1.lastLocation.x, sprite1.location.y - sprite1.lastLocation.y);
+    gl.uniform2f(advectionShader.uniforms.spriteCenter, sprite1.location.x, sprite1.location.y);
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
     gl.drawArrays(gl.TRIANGLES, 0, 6);
 
@@ -1642,7 +1727,7 @@ gFillg.call(sliderFill);
 var sliderFill2 = d3
 .sliderBottom()
 .min(d3.min(data))
-.max(d3.max(data))
+.max(2.0)
 .width(Math.min(300,screen.width*0.55))
 .tickFormat(d3.format('.0%'))
 .ticks(5)
@@ -1745,30 +1830,6 @@ d3.select(window).on('resize.updatesvg', function() {
   </p>
 </footer>
 
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css"
-  integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
-
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"
-  integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp" crossorigin="anonymous"></script>
-
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"
-  integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous"></script>
-
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    renderMathInElement(document.body, {
-      
-      
-      delimiters: [
-        { left: '$$', right: '$$', display: true },
-        { left: '$', right: '$', display: false },
-        { left: '\\(', right: '\\)', display: false },
-        { left: '\\[', right: '\\]', display: true }
-      ],
-      
-      throwOnError: false
-    });
-  });
-</script>
+  
 </body>
 </html>
