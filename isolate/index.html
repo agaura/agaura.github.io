@@ -45,11 +45,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1669115037.css">
+  <link rel="stylesheet" href="/minima.1669426959.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1669115037.js"></script>
+  <script defer type="text/javascript" src="/minima.1669426959.js"></script>
 </head>
 <script>
   
@@ -704,14 +704,17 @@ out vec4 outColor;void main()
 	vec3 col = okhsl_to_srgb(vec3(ditherHue(hsl.x, r1, rand(vec2(r1, r2 * r3 * 100.0)), rand(vec2(r3 * 10.0, time)), 0.5 - hue / 2.0, ts),
        dither(hsl.y, r2, 1.0 - sat, 0.0),
        dither(hsl.z, r3, 1.0 - lum, lim)));
-    outColor = vec4(col,min(1.0,(pow(0.5,64.0) - (pow(abs(0.5 - v_texCoord.x),64.0) + pow(abs(0.5 - v_texCoord.y),64.0)))/pow(0.5,64.0)));
+	vec4 almost = vec4(col,min(1.0,(pow(0.5,64.0) - (pow(abs(0.5 - v_texCoord.x),64.0) + pow(abs(0.5 - v_texCoord.y),64.0)))/pow(0.5,64.0)));
+	outColor = vec4(almost.rgb*almost.a, almost.a); // see https://stackoverflow.com/questions/39341564/webgl-how-to-correctly-blend-alpha-channel-png for why I did this, I get issues with safari otherwise
+    //outColor = vec4(col,min(1.0,(pow(0.5,64.0) - (pow(abs(0.5 - v_texCoord.x),64.0) + pow(abs(0.5 - v_texCoord.y),64.0)))/pow(0.5,64.0)));
 }`;        // Get A WebGL context
         /** @type {HTMLCanvasElement} */
 		var toggle = true;
 		const btn = document.getElementById('btn');
         var canvas = document.querySelector("canvas");
         const gl = canvas.getContext("webgl2", {
-  			premultipliedAlpha: false
+  			premultipliedAlpha: true,
+			alpha: true
 			});        // setup GLSL program
 		var texture = gl.createTexture();
         var program = webglUtils.createProgramFromSources(gl,
@@ -728,9 +731,6 @@ out vec4 outColor;void main()
         'res': gl.getUniformLocation(program, "res"),
         'lim': gl.getUniformLocation(program, "lim")
     };
-        var timeLocation = gl.getUniformLocation(program, "time");
-        var hueLocation = gl.getUniformLocation(program, "antiHue");
-        var radLocation = gl.getUniformLocation(program, "antiRad");
         var image = new Image();
 		var video = document.createElement('video');
 		video.addEventListener('loadedmetadata', function() {
@@ -776,6 +776,7 @@ out vec4 outColor;void main()
             gl.vertexAttribPointer(
                 positionAttributeLocation, 2, gl.FLOAT, false, 0, 0);            // provide texture coordinates for the rectangle.
             var texCoordBuffer = gl.createBuffer();
+			gl.enableVertexAttribArray(texCoordAttributeLocation);            // Tell the attribute how to get data out of texCoordBuffer (ARRAY_BUFFER)
             gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
             gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
                 0.0, 0.0,
@@ -785,7 +786,6 @@ out vec4 outColor;void main()
                 1.0, 0.0,
                 1.0, 1.0,
             ]), gl.STATIC_DRAW);            // Turn on the attribute
-            gl.enableVertexAttribArray(texCoordAttributeLocation);            // Tell the attribute how to get data out of texCoordBuffer (ARRAY_BUFFER)
             gl.vertexAttribPointer(
                 texCoordAttributeLocation, 2, gl.FLOAT, false, 0, 0);            // Create a texture.
                         // make unit 0 the active texture uint
@@ -1076,7 +1076,8 @@ out vec4 outColor;void main()
 	image.onload = function() {firstRender(image);}
 
 	function updateWindow(){
-		firstRender(image);
+		if (isImage) firstRender(image);
+        else firstRender(video);
     	sliderFill.width(Math.min(300,screen.width*0.55));
 		gFill.attr('width', Math.min(350,screen.width*0.7));
 		gFillg.call(sliderFill);
