@@ -7,7 +7,18 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>TH ↔ Þ</copyright>
-    <lastBuildDate>Thu, 26 May 2022 13:56:21 +0200</lastBuildDate><atom:link href="https://agaura.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 22 Nov 2022 23:06:06 +0100</lastBuildDate><atom:link href="https://agaura.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Smokestream</title>
+      <link>https://agaura.github.io/smokestream/</link>
+      <pubDate>Tue, 22 Nov 2022 23:06:06 +0100</pubDate>
+      
+      <guid>https://agaura.github.io/smokestream/</guid>
+      <description>Shader      ⏸
+
+// an attribute is an input (in) to a vertex shader. // It will receive data from a buffer in vec2 a_position; in vec2 a_texCoord; uniform vec2 u_resolution; out vec2 v_texCoord; void main() { vec2 zeroToOne = a_position / u_resolution; vec2 zeroToTwo = zeroToOne * 2.0; // convert from 0-1 to 0-2 vec2 clipSpace = zeroToTwo - 1.0; // convert from 0-2 to -1-+1 (clipspace) gl_Position = vec4(clipSpace * vec2(1, 1), 0, 1); // pass the texCoord to the fragment shader v_texCoord = a_texCoord; }  // Copyright(c) 2021 Björn Ottosson // // Permission is hereby granted, free of charge, to any person obtaining a copy of // this softwareand associated documentation files(the &#34;</description>
+    </item>
+    
     <item>
       <title>Dimension Isolating Shader</title>
       <link>https://agaura.github.io/isolate/</link>

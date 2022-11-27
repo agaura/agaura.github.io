@@ -47,11 +47,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1669501498.css">
+  <link rel="stylesheet" href="/minima.1669582258.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1669501498.js"></script>
+  <script defer type="text/javascript" src="/minima.1669582258.js"></script>
 </head>
 <script>
   
@@ -997,21 +997,6 @@ void main() {
     }
 }
 </script>
-<script type = "text" id = "advection1">
-uniform float deltaT;
-uniform sampler2D u_image;
-uniform sampler2D velocity;
-in vec2 v_texCoord;
-out vec4 outColor;
-
-void main() {
-    vec2 u = texture(velocity, v_texCoord).xy * 2.0 - 1.0;
-    //vec2 u = sin(2.0 * 3.1415 * v_texCoord);
-    vec2 pastCoord = fract(v_texCoord - (0.5 * deltaT * u));
-    outColor = texture(u_image, pastCoord) * 2.0 - 1.0;
-    //outColor = vec4(sin(2.0 * 3.1415 * pastCoord),0.0,1.0);
-}
-</script>
 <script type = "text" id = "divergence">
 uniform float deltaT;         // Time between steps
 uniform float rho;            // Density
@@ -1264,7 +1249,6 @@ var sprite1 = initializeSprite();
 // create shaders
 const vertexShaderSource = '#version 300 es' + document.getElementById('vertex').text;;
 const advectFragShader = '#version 300 es \n precision highp float;' + document.getElementById('colors').text + document.getElementById('advection').text;
-const advectFragShader1 = '#version 300 es \n precision highp float;' + document.getElementById('advection1').text;
 const divergenceFragShader = '#version 300 es \n precision highp float;' + document.getElementById('divergence').text;
 const jacobiFragShader = '#version 300 es \n precision highp float;' + document.getElementById('jacobi').text;
 const pressureFragShader = '#version 300 es \n precision highp float;' + document.getElementById('pressure').text;
@@ -1568,6 +1552,7 @@ function init(time) {
     gl.uniform2f(advectionShader.uniforms.change, deltaX, deltaY);
     gl.uniform2f(advectionShader.uniforms.center, mouseX, mouseY);
     gl.uniform2f(advectionShader.uniforms.radius, 1.0/canvas.width, 1.0/canvas.height);
+    //canvas.width/1000000, canvas.height/1000000); // these might fix some things
     gl.uniform1f(advectionShader.uniforms.time, time);
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
     gl.drawArrays(gl.TRIANGLES, 0, 6);
@@ -1636,7 +1621,6 @@ function render(time) {
     gl.uniform1f(advectionShader.uniforms.mouseDown, mouseDown);
     gl.uniform2f(advectionShader.uniforms.change, deltaX, deltaY);
     gl.uniform2f(advectionShader.uniforms.center, mouseX, mouseY);
-    gl.uniform2f(advectionShader.uniforms.radius, 1.0/canvas.width, 1.0/canvas.height);
     gl.uniform1f(advectionShader.uniforms.time, time);
     gl.uniform2f(advectionShader.uniforms.spriteChange, sprite1.location.x - sprite1.lastLocation.x, sprite1.location.y - sprite1.lastLocation.y);
     gl.uniform2f(advectionShader.uniforms.spriteCenter, sprite1.location.x, sprite1.location.y);
@@ -1785,7 +1769,6 @@ d3.select(window).on('resize.updatesvg', function() {
     ;
 
 </script>
-<p>You just gotta have text on the bottom to remove that blue line</p>
 
 	</article>
 </main>
