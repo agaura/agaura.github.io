@@ -45,11 +45,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1669683105.css">
+  <link rel="stylesheet" href="/minima.1669733388.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1669683105.js"></script>
+  <script defer type="text/javascript" src="/minima.1669733388.js"></script>
 </head>
 <script>
   
@@ -614,7 +614,7 @@ void main()
 
     //outColor = vec4(okhsl_to_srgb(vec3(texture(u_image, vec2(1.0,0.0) - uv.yx).r + 0.4, 1.0, 0.5)),sqrt(texture(u_image, vec2(1.0,0.0) - uv.yx).r));
     if (uv.x < 1.0 - pixel.x) {outColor = texture(prev_image, uv + vec2(pixel.x,0.0));}
-    else {outColor = vec4(okhsl_to_srgb(vec3(texture(u_image, uv.yx).r * 0.7 + 0.65, 1.0, 0.4)),pow(texture(u_image, uv.yx).r, 0.9));}
+    else {outColor = vec4(okhsl_to_srgb(vec3(texture(u_image, uv.yx).r * 0.5 + 0.65, 1.0, 0.4)),pow(texture(u_image, uv.yx).r, 0.9));}
 }`;
 
 var toggle = false;
@@ -663,9 +663,14 @@ var x = d3.scaleLinear().range([0, width]),
     z = color;
 x.domain([-10,0]);
 y.domain([0,1.0]);
-const foreignObject = g.append('foreignObject')
+//const foreignObject = g.append('foreignObject')
+//    .attr('width', width)
+//    .attr('height', height)
+const foreignObject = svg.append('foreignObject')
     .attr('width', width)
-    .attr('height', height);
+    .attr('height', height)
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+//const foreignBody = foreignObject.append('body');
 const canvas_space = foreignObject.append("xhtml:canvas")
     .attr("id", "spectral_canvas")
     .attr("width", width)
@@ -874,12 +879,19 @@ const frameBuffer = gl.createFramebuffer();
 
 //window.onload = function() {firstRender(0.075, 1.0, 0.5);}
 
-navigator.getUserMedia = navigator.getUserMedia
-                        || navigator.webkitGetUserMedia
-                        || navigator.mozGetUserMedia;
+navigator.getUserMedia = ( navigator.getUserMedia ||
+                       navigator.webkitGetUserMedia ||
+                       navigator.mozGetUserMedia ||
+                       navigator.msGetUserMedia);
 
-navigator.getUserMedia({ video : false, audio : true }, callback, console.log);
+//navigator.getUserMedia({ video : false, audio : true }, callback, console.log);
 firstRender(0.075, 1.0, 0.5);
+
+navigator.mediaDevices.getUserMedia({ video : false, audio : true })
+  .then(callback)
+  .catch((err) => {
+    /* handle the error */
+  });
 
 var data;  
 function callback(stream) {
@@ -888,11 +900,11 @@ function callback(stream) {
     var analyser = ctx.createAnalyser();
     mic.connect(analyser);
     data = new Uint8Array(analyser.frequencyBinCount);  
-    console.log(data);
+    //console.log(data);
     firstRender(0.075, 1.0, 0.5);
     function play() {
         analyser.getByteFrequencyData(data);    
-        console.log(data);
+        //console.log(data);
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuffer);
         gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, targetTex2, 0);
