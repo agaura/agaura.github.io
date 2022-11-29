@@ -4,9 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta property="og:title" content="Audio Spectrum" />
-<meta property="og:description" content="Audio Graph 
- .line { fill: none; stroke: steelblue; stroke-width: 2px; } .axis line{ stroke: #808080; } .axis path{ stroke: #808080; } .axis text{ fill: #808080; }      ▶️
- var vertexShaderSource = `#version 300 es // an attribute is an input (in) to a vertex shader. // It will receive data from a buffer in vec2 a_position; in vec2 a_texCoord;// Used to pass in the resolution of the canvas uniform vec2 u_resolution;// Used to pass the texture coordinates to the fragment shader out vec2 v_texCoord;// all shaders have a main function void main() {// convert the position from pixels to 0." />
+<meta property="og:description" content="Audio Graph ▶️ 
+ .line { fill: none; stroke: steelblue; stroke-width: 2px; } .axis line{ stroke: #808080; } .axis path{ stroke: #808080; } .axis text{ fill: #808080; }       var vertexShaderSource = `#version 300 es // an attribute is an input (in) to a vertex shader. // It will receive data from a buffer in vec2 a_position; in vec2 a_texCoord;// Used to pass in the resolution of the canvas uniform vec2 u_resolution;// Used to pass the texture coordinates to the fragment shader out vec2 v_texCoord;// all shaders have a main function void main() {// convert the position from pixels to 0." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://agaura.github.io/audiospectrum/" /><meta property="article:section" content="" />
 <meta property="article:published_time" content="2022-11-28T12:06:38+01:00" />
@@ -15,9 +14,8 @@
 
   <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Audio Spectrum"/>
-<meta name="twitter:description" content="Audio Graph 
- .line { fill: none; stroke: steelblue; stroke-width: 2px; } .axis line{ stroke: #808080; } .axis path{ stroke: #808080; } .axis text{ fill: #808080; }      ▶️
- var vertexShaderSource = `#version 300 es // an attribute is an input (in) to a vertex shader. // It will receive data from a buffer in vec2 a_position; in vec2 a_texCoord;// Used to pass in the resolution of the canvas uniform vec2 u_resolution;// Used to pass the texture coordinates to the fragment shader out vec2 v_texCoord;// all shaders have a main function void main() {// convert the position from pixels to 0."/>
+<meta name="twitter:description" content="Audio Graph ▶️ 
+ .line { fill: none; stroke: steelblue; stroke-width: 2px; } .axis line{ stroke: #808080; } .axis path{ stroke: #808080; } .axis text{ fill: #808080; }       var vertexShaderSource = `#version 300 es // an attribute is an input (in) to a vertex shader. // It will receive data from a buffer in vec2 a_position; in vec2 a_texCoord;// Used to pass in the resolution of the canvas uniform vec2 u_resolution;// Used to pass the texture coordinates to the fragment shader out vec2 v_texCoord;// all shaders have a main function void main() {// convert the position from pixels to 0."/>
 
   
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-BBWS173BMQ"></script>
@@ -47,11 +45,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1669682691.css">
+  <link rel="stylesheet" href="/minima.1669683105.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1669682691.js"></script>
+  <script defer type="text/javascript" src="/minima.1669683105.js"></script>
 </head>
 <script>
   
@@ -113,7 +111,8 @@ if (!doNotTrack) {
 	<p></p>
 	<article class="md">
 		<h1 id="audio-graph">Audio Graph</h1>
-<p><svg id = "graph" width="640" height="350"></svg></p>
+<p><b style="font-size:30px" id='btn' onmouseover="this.style.cursor='pointer';" width = 20px>▶️</b>
+<svg id = "graph" width="640" height="350"></svg></p>
 <style>
 .line {
   fill: none;
@@ -134,7 +133,6 @@ if (!doNotTrack) {
 <script src="https://unpkg.com/d3-simple-slider"></script>
 <script src="https://unpkg.com/topojson@3"></script>
 <script src="https://webgl2fundamentals.org/webgl/resources/webgl-utils.js"></script>
-<p><b style="font-size:30px" id='btn' onmouseover="this.style.cursor='pointer';" width = 20px>▶️</b></p>
 <script>
 var vertexShaderSource = `#version 300 es
      // an attribute is an input (in) to a vertex shader.
@@ -663,7 +661,7 @@ var color = d3.scaleOrdinal()
 var x = d3.scaleLinear().range([0, width]),
     y = d3.scaleLinear().range([height, 0]),
     z = color;
-x.domain(d3.extent([-10,0]));
+x.domain([-10,0]);
 y.domain([0,1.0]);
 const foreignObject = g.append('foreignObject')
     .attr('width', width)
@@ -763,6 +761,7 @@ const frameBuffer = gl.createFramebuffer();
         canvas.width = width;
         canvas.height = height;
         x = d3.scaleLinear().range([0, width]);
+        x.domain([-width/60,0]) // 60 is the normal frame rate
         y = d3.scaleLinear().range([height, 0]);
         foreignObject.attr('width', width)
             .attr('height', height);
@@ -932,6 +931,8 @@ function callback(stream) {
     else btn.textContent = '▶️';
     play();
 });
+
+window.onload = function() {firstRender(0.075, 1.0, 0.5);}
 
 }
 
