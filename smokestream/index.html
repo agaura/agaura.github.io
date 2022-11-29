@@ -47,11 +47,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1669582258.css">
+  <link rel="stylesheet" href="/minima.1669682691.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1669582258.js"></script>
+  <script defer type="text/javascript" src="/minima.1669682691.js"></script>
 </head>
 <script>
   
@@ -121,7 +121,6 @@ if (!doNotTrack) {
 	<p></p>
 	<article class="md">
 		<h1 id="shader">Shader</h1>
- <!-- D3.js -->
 <script src="https://d3js.org/d3.v6.min.js"/></script>
 <script src="https://unpkg.com/d3-simple-slider"></script>    <!-- topojson -->
 <script src="https://unpkg.com/topojson@3"></script>    <!-- WebGL -->
@@ -984,8 +983,9 @@ void main() {
         
         vec2 effectp = 50. * scale3(spriteChange) * exp(-(dxp * dxp + dyp * dyp) / (radius * .5));
         float magp = (effectp.x * effectp.x + effectp.y * effectp.y) / 2.0;
-        vec4 newColor = vec4(hsl2rgb(vec3(time / 17.0, 1.0, 0.5)), 1.0); // oil slick color
-        // vec4 newColor = vec4(hsl2rgb(vec3(time / 17.0, 1.0, 0.5)), 1.0); // oil slick color, looks great with a small radius
+        //vec4 newColor = vec4(hsl2rgb(vec3(time / 17.0, 1.0, 0.5)), 1.0); // oil slick color
+        //vec4 newColor = vec4(hsl2rgb(vec3(time/1024., 1.0, 0.5)), 1.0);
+        vec4 newColor = vec4(hsl2rgb(vec3(time / 17.0, 1.0, 0.5)), 1.0); // oil slick color, looks great with a small radius
         result = result + mix(vec4(0.0), newColor, magp);
         outColor = result + mix(vec4(0.0), newColor, magp);
 
@@ -1418,7 +1418,7 @@ function initShader(shader, inTex, outTex, isActive) {
      gl.activeTexture(gl.TEXTURE0 + 0);
     }
 
-function initTexture(internalFormat, format, type,) {
+function initTexture(internalFormat, format, type) {
 
     // Create a texture to render to
     var targetTexWidth = gl.canvas.width;
@@ -1765,8 +1765,7 @@ d3.select(window).on('resize.updatesvg', function() {
     toggle = false; // make sure it's not trying to render while updating the rendering settings
     updateWindow();
     toggle = true;
-    })
-    ;
+    });
 
 </script>
 

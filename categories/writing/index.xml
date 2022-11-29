@@ -7,15 +7,26 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>TH ↔ Þ</copyright>
-    <lastBuildDate>Mon, 31 Oct 2022 14:25:41 +0100</lastBuildDate><atom:link href="https://agaura.github.io/categories/writing/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 28 Nov 2022 12:06:38 +0100</lastBuildDate><atom:link href="https://agaura.github.io/categories/writing/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>From Light to Sight</title>
-      <link>https://agaura.github.io/colors/</link>
-      <pubDate>Mon, 31 Oct 2022 14:25:41 +0100</pubDate>
+      <title>Audio Spectrum</title>
+      <link>https://agaura.github.io/audiospectrum/</link>
+      <pubDate>Mon, 28 Nov 2022 12:06:38 +0100</pubDate>
       
-      <guid>https://agaura.github.io/colors/</guid>
-      <description>Experimental stuff $f$( ⬤ , ⬤ , ⬤ ) = ⬤
-    .line { fill: none; stroke: steelblue; stroke-width: 2px; } .axis line{ stroke: #808080; } .axis path{ stroke: #808080; } .axis text{ fill: #808080; }    function nearest_color(d, index) { left = Math.floor(index); right = Math.ceil(index); dL = index - left; return d[left].kW*(1-dL) + d[right].kW*dL;} function decimalToHex(d, padding) { var hex = Number(d).toString(16); padding = typeof (padding) === &#34;</description>
+      <guid>https://agaura.github.io/audiospectrum/</guid>
+      <description>Audio Graph 
+ .line { fill: none; stroke: steelblue; stroke-width: 2px; } .axis line{ stroke: #808080; } .axis path{ stroke: #808080; } .axis text{ fill: #808080; }      ▶️
+ var vertexShaderSource = `#version 300 es // an attribute is an input (in) to a vertex shader. // It will receive data from a buffer in vec2 a_position; in vec2 a_texCoord;// Used to pass in the resolution of the canvas uniform vec2 u_resolution;// Used to pass the texture coordinates to the fragment shader out vec2 v_texCoord;// all shaders have a main function void main() {// convert the position from pixels to 0.</description>
+    </item>
+    
+    <item>
+      <title>Experimental</title>
+      <link>https://agaura.github.io/colors_exp/</link>
+      <pubDate>Sat, 10 Sep 2022 17:24:45 +0200</pubDate>
+      
+      <guid>https://agaura.github.io/colors_exp/</guid>
+      <description>Experimental stuff   @font-face { font-family: &#39;Znamenny&#39;; src: url(&#39;../fonts/MezenetsUnicode.otf&#39;) format(&#34;opentype&#34;); }      ---    Sjødd dskuss wi blu iz natrly dark! 1
+ It’s quite common to see an image or to want to have an image in grayscale. What is it that we are doing when we have a grayscale image? We are deleting two dimensions—hue and saturation—from the color space representing our image.</description>
     </item>
     
   </channel>
