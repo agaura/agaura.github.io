@@ -15,17 +15,7 @@
       
       <guid>https://agaura.github.io/audiospectrum/</guid>
       <description>Audio Graph ▶️ 
- .line { fill: none; stroke: steelblue; stroke-width: 2px; } .axis line{ stroke: #808080; } .axis path{ stroke: #808080; } .axis text{ fill: #808080; }       var vertexShaderSource = `#version 300 es // an attribute is an input (in) to a vertex shader. // It will receive data from a buffer in vec2 a_position; in vec2 a_texCoord;// Used to pass in the resolution of the canvas uniform vec2 u_resolution;// Used to pass the texture coordinates to the fragment shader out vec2 v_texCoord;// all shaders have a main function void main() {// convert the position from pixels to 0.</description>
-    </item>
-    
-    <item>
-      <title>Experimental</title>
-      <link>https://agaura.github.io/colors_exp/</link>
-      <pubDate>Sat, 10 Sep 2022 17:24:45 +0200</pubDate>
-      
-      <guid>https://agaura.github.io/colors_exp/</guid>
-      <description>Experimental stuff   @font-face { font-family: &#39;Znamenny&#39;; src: url(&#39;../fonts/MezenetsUnicode.otf&#39;) format(&#34;opentype&#34;); }      ---    Sjødd dskuss wi blu iz natrly dark! 1
- It’s quite common to see an image or to want to have an image in grayscale. What is it that we are doing when we have a grayscale image? We are deleting two dimensions—hue and saturation—from the color space representing our image.</description>
+ .line { fill: none; stroke: steelblue; stroke-width: 2px; } .axis line{ stroke: #808080; } .axis path{ stroke: #808080; } .axis text{ fill: #808080; } .axis-grid line{ stroke: #80808020; } .axis-grid path{ stroke: #80808020; }       var vertexShaderSource = `#version 300 es // an attribute is an input (in) to a vertex shader. // It will receive data from a buffer in vec2 a_position; in vec2 a_texCoord;// Used to pass in the resolution of the canvas uniform vec2 u_resolution;// Used to pass the texture coordinates to the fragment shader out vec2 v_texCoord;// all shaders have a main function void main() {// convert the position from pixels to 0.</description>
     </item>
     
   </channel>

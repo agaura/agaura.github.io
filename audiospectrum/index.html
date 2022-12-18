@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta property="og:title" content="Audio Spectrum" />
 <meta property="og:description" content="Audio Graph ▶️ 
- .line { fill: none; stroke: steelblue; stroke-width: 2px; } .axis line{ stroke: #808080; } .axis path{ stroke: #808080; } .axis text{ fill: #808080; }       var vertexShaderSource = `#version 300 es // an attribute is an input (in) to a vertex shader. // It will receive data from a buffer in vec2 a_position; in vec2 a_texCoord;// Used to pass in the resolution of the canvas uniform vec2 u_resolution;// Used to pass the texture coordinates to the fragment shader out vec2 v_texCoord;// all shaders have a main function void main() {// convert the position from pixels to 0." />
+ .line { fill: none; stroke: steelblue; stroke-width: 2px; } .axis line{ stroke: #808080; } .axis path{ stroke: #808080; } .axis text{ fill: #808080; } .axis-grid line{ stroke: #80808020; } .axis-grid path{ stroke: #80808020; }       var vertexShaderSource = `#version 300 es // an attribute is an input (in) to a vertex shader. // It will receive data from a buffer in vec2 a_position; in vec2 a_texCoord;// Used to pass in the resolution of the canvas uniform vec2 u_resolution;// Used to pass the texture coordinates to the fragment shader out vec2 v_texCoord;// all shaders have a main function void main() {// convert the position from pixels to 0." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://agaura.github.io/audiospectrum/" /><meta property="article:section" content="" />
 <meta property="article:published_time" content="2022-11-28T12:06:38+01:00" />
@@ -15,7 +15,7 @@
   <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Audio Spectrum"/>
 <meta name="twitter:description" content="Audio Graph ▶️ 
- .line { fill: none; stroke: steelblue; stroke-width: 2px; } .axis line{ stroke: #808080; } .axis path{ stroke: #808080; } .axis text{ fill: #808080; }       var vertexShaderSource = `#version 300 es // an attribute is an input (in) to a vertex shader. // It will receive data from a buffer in vec2 a_position; in vec2 a_texCoord;// Used to pass in the resolution of the canvas uniform vec2 u_resolution;// Used to pass the texture coordinates to the fragment shader out vec2 v_texCoord;// all shaders have a main function void main() {// convert the position from pixels to 0."/>
+ .line { fill: none; stroke: steelblue; stroke-width: 2px; } .axis line{ stroke: #808080; } .axis path{ stroke: #808080; } .axis text{ fill: #808080; } .axis-grid line{ stroke: #80808020; } .axis-grid path{ stroke: #80808020; }       var vertexShaderSource = `#version 300 es // an attribute is an input (in) to a vertex shader. // It will receive data from a buffer in vec2 a_position; in vec2 a_texCoord;// Used to pass in the resolution of the canvas uniform vec2 u_resolution;// Used to pass the texture coordinates to the fragment shader out vec2 v_texCoord;// all shaders have a main function void main() {// convert the position from pixels to 0."/>
 
   
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-BBWS173BMQ"></script>
@@ -45,11 +45,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1669733388.css">
+  <link rel="stylesheet" href="/minima.1671391448.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1669733388.js"></script>
+  <script defer type="text/javascript" src="/minima.1671391448.js"></script>
 </head>
 <script>
   
@@ -112,7 +112,7 @@ if (!doNotTrack) {
 	<article class="md">
 		<h1 id="audio-graph">Audio Graph</h1>
 <p><b style="font-size:30px" id='btn' onmouseover="this.style.cursor='pointer';" width = 20px>▶️</b>
-<svg id = "graph" width="640" height="350"></svg></p>
+<svg id = "graph" width="640" height="360"></svg></p>
 <style>
 .line {
   fill: none;
@@ -128,6 +128,12 @@ if (!doNotTrack) {
 .axis text{
   fill: #808080;
 }  
+.axis-grid line{
+  stroke: #80808020;
+}
+.axis-grid path{
+  stroke: #80808020;
+}
 </style>
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="https://unpkg.com/d3-simple-slider"></script>
@@ -144,13 +150,82 @@ out vec2 v_texCoord;// all shaders have a main function
 void main() {// convert the position from pixels to 0.0 to 1.0
 vec2 zeroToOne = a_position / u_resolution;// convert from 0->1 to 0->2
 vec2 zeroToTwo = zeroToOne * 2.0;// convert from 0->2 to -1->+1 (clipspace)
-vec2 clipSpace = zeroToTwo - 1.0;gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);// pass the texCoord to the fragment shader
+vec2 clipSpace = zeroToTwo - 1.0;
+gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);// pass the texCoord to the fragment shader
 // The GPU will interpolate this value between points.
 v_texCoord = a_texCoord * vec2(1.0,-1.0) + vec2(0.0,1.0);
 }
 `;
 
-var fragmentShaderSource = `#version 300 es
+var scaleVert = `#version 300 es
+     // an attribute is an input (in) to a vertex shader.
+// It will receive data from a buffer
+in vec2 a_position;
+in vec2 a_texCoord;// Used to pass in the resolution of the canvas
+uniform vec2 u_resolution;// Used to pass the texture coordinates to the fragment shader
+uniform float k;
+uniform float tx;
+uniform float ty;
+out vec2 v_texCoord;// all shaders have a main function
+void main() {// convert the position from pixels to 0.0 to 1.0
+vec2 zeroToOne = a_position / u_resolution;// convert from 0->1 to 0->2
+vec2 zeroToTwo = zeroToOne * 2.0;// convert from 0->2 to -1->+1 (clipspace)
+vec2 clipSpace = zeroToTwo - 1.0;
+gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);// pass the texCoord to the fragment shader
+// The GPU will interpolate this value between points.
+//v_texCoord = a_texCoord * vec2(1.0,-1.0) + vec2(0.0,1.0);
+//v_texCoord = vec2(-tx / (k * 1950.),ty / (k * 1024.)) + 1./k * (a_texCoord * vec2(1.0,-1.0) + vec2(0.015,0.675)) + vec2(1.0 - 600./1950. - 0.015, 1.0 - 0.675);
+v_texCoord = vec2(-tx / (k * 1950.),ty / (k * 1024.)) + 1./k * (a_texCoord * vec2(1.0,-1.0) + vec2(0.0,0.691)) + vec2(1.0 - 600./1950., 1.0 - 0.684);
+// I have no idea why the vec2(0.0,0.691) is necessary, but if I don't have it then the vertical zoom translates away from the cursor
+}
+`;
+
+var iterFrag = `#version 300 es
+// fragment shaders don't have a default precision so we need
+// to pick one. highp is a good default. It means "high precision"
+precision highp float;float rand(vec2 co) {
+    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+}// Copyright(c) 2021 Björn Ottosson
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy of
+// this softwareand associated documentation files(the "Software"), to deal in
+// the Software without restriction, including without limitation the rights to
+// use, copy, modify, merge, publish, distribute, sublicense, and /or sell copies
+// of the Software, and to permit persons to whom the Software is furnished to do
+// so, subject to the following conditions :
+// The above copyright noticeand this permission notice shall be included in all
+// copies or substantial portions of the Software.
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
+uniform sampler2D u_image;
+uniform sampler2D prev_image;
+uniform float time;
+uniform vec2 res;
+uniform vec3 hue;
+// the texCoords passed in from the vertex shader.
+in vec2 v_texCoord;// we need to declare an output for the fragment shader
+out vec4 outColor;
+
+void main()
+{
+    vec2 uv = v_texCoord;
+    vec3 hsl = hue;
+
+    vec2 pixel = 1.0 / res;
+
+    if (uv.x < 1.0 - pixel.x) {outColor = texture(prev_image, uv + vec2(pixel.x,0.0));}
+    else {outColor = vec4(texture(u_image, uv.yx).r, 0.0, 0.0, 1.0);}
+
+    //outColor = vec4(1.0,0.0,0.0,1.0);
+}`;
+
+var colorFrag = `#version 300 es
 // fragment shaders don't have a default precision so we need
 // to pick one. highp is a good default. It means "high precision"
 precision highp float;float rand(vec2 co) {
@@ -612,12 +687,11 @@ void main()
 
     vec2 pixel = 1.0 / res;
 
-    //outColor = vec4(okhsl_to_srgb(vec3(texture(u_image, vec2(1.0,0.0) - uv.yx).r + 0.4, 1.0, 0.5)),sqrt(texture(u_image, vec2(1.0,0.0) - uv.yx).r));
-    if (uv.x < 1.0 - pixel.x) {outColor = texture(prev_image, uv + vec2(pixel.x,0.0));}
-    else {outColor = vec4(okhsl_to_srgb(vec3(texture(u_image, uv.yx).r * 0.5 + 0.65, 1.0, 0.4)),pow(texture(u_image, uv.yx).r, 0.9));}
+    outColor = vec4(okhsl_to_srgb(vec3(texture(prev_image, uv).r * 0.5 + 0.65, 1.0, 0.5)),pow(texture(prev_image, uv).r, 0.9));
 }`;
 
 var toggle = false;
+var k = 1, tx = 0, ty = 0;
 
 function nearest_color(d, index) {
   left = Math.floor(index);
@@ -652,50 +726,98 @@ function specToColor(l) {
 // now from http://www.cvrl.org/
 var svg = d3.select("#graph"),
     margin = {top: 15, right: 15, bottom: 30, left: 25},
-    width = svg.attr("width") - margin.left - margin.right,
-    height = svg.attr("height") - margin.top - margin.bottom,
+    graph = {width: svg.attr("width") - margin.left - margin.right, height: svg.attr("height") - margin.top - margin.bottom}
     g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 var color = d3.scaleOrdinal()
     .domain(["Blue", "Green", "Red"])
     .range(["rgba(255, 0, 0, 0.30)", "rgba(0, 255, 0, 0.30)", "rgba(50, 50, 255, 0.30)"]);
-var x = d3.scaleLinear().range([0, width]),
-    y = d3.scaleLinear().range([height, 0]),
+var x = d3.scaleLinear()
+        .range([0, graph.width])
+        .domain([-10,0]),
+    y = d3.scaleLinear()
+        .range([graph.height, 0])
+        .domain([0,24]),
     z = color;
-x.domain([-10,0]);
-y.domain([0,1.0]);
+var xaxis = d3.axisBottom(x);
+var yaxis = d3.axisLeft(y);
+var xgrid = d3.axisBottom(x).tickSize(-graph.height).tickFormat('');
+var ygrid = d3.axisLeft(y).tickSize(-graph.width).tickFormat('');
 //const foreignObject = g.append('foreignObject')
 //    .attr('width', width)
 //    .attr('height', height)
 const foreignObject = svg.append('foreignObject')
-    .attr('width', width)
-    .attr('height', height)
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    .attr('width', graph.width)
+    .attr('height', graph.height)
+	.attr('x', margin.left)
+	.attr('y', margin.top)
+    //.attr("transform", "translate(" + margin.left + "," + margin.top + ")"); // this doesn't seem to work in safari
 //const foreignBody = foreignObject.append('body');
-const canvas_space = foreignObject.append("xhtml:canvas")
-    .attr("id", "spectral_canvas")
-    .attr("width", width)
-    .attr("height", height);
-const xaxis = g.append("g")
+const vertGrid = g.append('g')
+    .attr('class', 'axis-grid')
+    .attr('transform', 'translate(0,' + graph.height + ')')
+    .call(xgrid);
+const horGrid = g.append('g')
+    .attr('class', 'axis-grid')
+    .call(ygrid);
+const bottomAxis = g.append("g")
     .attr("class", "axis")
-    .attr("transform", "translate(0," + height + ")")
-    .call(d3.axisBottom(x));
-const xlabel = xaxis.append("text")
+    .attr("transform", "translate(0," + graph.height + ")")
+    .call(xaxis);
+const xlabel = bottomAxis.append("text")
     .attr("text-anchor", "end")
-    .attr("x", width)
     .attr("y", - 4)
     .attr("fill", "#808080B0")
     .text("Time (s)")
     .attr("fill", "#AA0000");
-const yaxis = g.append("g")
+const zoomlabel = bottomAxis.append("text")
+    .attr("text-anchor", "beginning")
+    .attr("x", graph.width - 29)
+    .attr("y", - 304)
+    .attr("fill", "#808080B0")
+    .text("Zoom: " + d3.format(".2f")(1 / (graph.width/(1024 * graph.width/graph.height))))
+    .attr("fill", "#AA0000");
+const leftAxis = g.append("g")
     .attr("class", "axis")
-    .call(d3.axisLeft(y));
-const ylabel = yaxis.append("text")
+    .call(yaxis);
+const ylabel = leftAxis.append("text")
     .attr("transform", "rotate(-90)")
-    .attr("y", 6)
-    .attr("x", -1)
+    .attr("y", 7)
+    .attr("x", -3)
     .attr("dy", "0.71em")
     .attr("fill", "#808080B0")
-    .text("Frequency (Hz)");
+    .text("Frequency (kHz)");
+const canvas_space = foreignObject.append("xhtml:canvas")
+    .call(d3.zoom()
+        //.extent([[0, 0], [1950, 1024]])
+        .extent([[0, 0], [graph.width, graph.height]])
+        .scaleExtent([graph.width / (1024 * graph.width/graph.height), 8 * graph.width/(1024 * graph.width/graph.height)])
+        .translateExtent([[graph.width-(1024 * graph.width/graph.height), graph.height-1024], [graph.width, graph.height]])
+        //.extent([[0, 0], [600, 370]])
+        //.scaleExtent([600/1950, 2])
+        //.translateExtent([[-1060, -654], [600, 370]])
+        .on("zoom", function () {
+            vertGrid.call(xgrid.scale(d3.event.transform.rescaleX(x)));
+            horGrid.call(ygrid.scale(d3.event.transform.rescaleY(y)));
+            bottomAxis.call(xaxis.scale(d3.event.transform.rescaleX(x)));
+            leftAxis.call(yaxis.scale(d3.event.transform.rescaleY(y)));
+            //bottomAxis.call(bottomAxis.scale(transform.rescaleX(x)))
+       		//svg.attr("transform", d3.event.transform);
+       		k = d3.event.transform['k'];
+       		tx = d3.event.transform['x'];
+       		ty = d3.event.transform['y'];
+	   		console.log(d3.event.transform);
+			console.log(graph.width, graph.height);
+			zoomlabel.text("Zoom: " + d3.format(".2f")(k / (graph.width/(1024 * graph.width/graph.height))));
+       		//console.log(screen.height);
+       		//console.log(screen.width);
+       		//console.log(window.innerWidth);
+       	if (!toggle) {
+            display();
+       }
+    }))
+    .attr("id", "spectral_canvas")
+    .attr("width", 1024 * graph.width/graph.height) // to match graph ratio
+    .attr("height", 1024);
 var vertical = g.append("line")
     .attr("y1", 0)
     .attr("y2", 305)
@@ -713,11 +835,11 @@ var final_color = g.append('circle')
            //console.log("moved");
            mousex = d3.mouse(this);
            mousex = mousex[0] - margin.left;
-           if (mousex > 0 && mousex < width)
+           if (mousex > 0 && mousex < graph.width)
             {vertical.attr("x2", mousex);
             vertical.attr("x1", mousex);
             final_color.attr("cx", mousex);
-            rgb = specToColor(mousex*330/width+390);
+            rgb = specToColor(mousex*330/graph.width+390);
             d3.select("#color").attr("style","color: #" + decimalToHex(parseInt(rgb.r*255)) + decimalToHex(parseInt(rgb.g*255)) + decimalToHex(parseInt(rgb.b*255)));
             final_color.attr("fill","#" + decimalToHex(parseInt(rgb.r*255)) + decimalToHex(parseInt(rgb.g*255)) + decimalToHex(parseInt(rgb.b*255)));
             vertical.attr("stroke","#" + decimalToHex(parseInt(rgb.r*255)) + decimalToHex(parseInt(rgb.g*255)) + decimalToHex(parseInt(rgb.b*255)));
@@ -727,7 +849,7 @@ var final_color = g.append('circle')
            //console.log("moved");
             mousex = d3.mouse(this);
             mousex = mousex[0];
-            if (mousex > margin.left && mousex < width + margin.left)
+            if (mousex > margin.left && mousex < graph.width + margin.left)
             {
                 vertical.attr("x2", mousex - margin.left);
                 vertical.attr("x1", mousex - margin.left)
@@ -739,45 +861,72 @@ var canvas = canvas_space.node();
 var gl = canvas.getContext("webgl2", {
   			premultipliedAlpha: false
 			});
-var image = new Image();
-image.src = canvas.toDataURL();
-var program = webglUtils.createProgramFromSources(gl,
-    [vertexShaderSource, fragmentShaderSource]);        // look up where the vertex data needs to go.
-var positionAttributeLocation = gl.getAttribLocation(program, "a_position");
-var texCoordAttributeLocation = gl.getAttribLocation(program, "a_texCoord");
-var locs = {
-    'time': gl.getUniformLocation(program, "time"),
-    'hue': gl.getUniformLocation(program, "hue"),
-    'res': gl.getUniformLocation(program, "res")
+gl.getExtension(gl.EXT_color_buffer_float);
+gl.getExtension(gl.EXT_float_blend);
+gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+var inProgram = webglUtils.createProgramFromSources(gl,
+    [vertexShaderSource, iterFrag]);        // look up where the vertex data needs to go.
+var posAttributeLocation = gl.getAttribLocation(inProgram, "a_position");
+var texAttributeLocation = gl.getAttribLocation(inProgram, "a_texCoord");
+var inLocs = {
+    'time': gl.getUniformLocation(inProgram, "time"),
+    'hue': gl.getUniformLocation(inProgram, "hue"),
+    'res': gl.getUniformLocation(inProgram, "res")
 };
+
+var outProgram = webglUtils.createProgramFromSources(gl,
+    [scaleVert, colorFrag]);        // look up where the vertex data needs to go.
+var positionAttributeLocation = gl.getAttribLocation(outProgram, "a_position");
+var texCoordAttributeLocation = gl.getAttribLocation(outProgram, "a_texCoord");
+var outLocs = {
+    'time': gl.getUniformLocation(outProgram, "time"),
+    'k': gl.getUniformLocation(outProgram, "k"),
+    'tx': gl.getUniformLocation(outProgram, "tx"),
+    'ty': gl.getUniformLocation(outProgram, "ty"),
+    'hue': gl.getUniformLocation(outProgram, "hue"),
+    'res': gl.getUniformLocation(outProgram, "res")
+};
+
 var tex = gl.createTexture();
 var targetTex = gl.createTexture();
 var targetTex2 = gl.createTexture();
 var temp = gl.createTexture();
 var positionBuffer = gl.createBuffer(); 
 const frameBuffer = gl.createFramebuffer();
+const texCoordBuffer = gl.createBuffer();
 
     function resizeCanvas() {
-        const maxWidth = Math.min(640, screen.width - 40);
+		console.log("resize");
+        const maxWidth = Math.min(640, screen.width);
         svg.attr("width", maxWidth);
-        svg.attr("height", maxWidth * 0.5625);
-        width = svg.attr("width") - margin.left - margin.right,
-        height = svg.attr("height") - margin.top - margin.bottom,
-        canvas.width = width;
-        canvas.height = height;
-        x = d3.scaleLinear().range([0, width]);
-        x.domain([-width/60,0]) // 60 is the normal frame rate
-        y = d3.scaleLinear().range([height, 0]);
-        foreignObject.attr('width', width)
-            .attr('height', height);
-        canvas_space.attr('width', width)
-            .attr('height', height);
-        xaxis.attr("transform", "translate(0," + height + ")")
-            .call(d3.axisBottom(x));
-        xlabel.attr("x", width);
-        yaxis.call(d3.axisLeft(y));
+        svg.attr("height", maxWidth * 360 / 640);
+        graph.width = svg.attr("width") - margin.left - margin.right,
+        graph.height = svg.attr("height") - margin.top - margin.bottom,
+		console.log("HERE");
+		console.log(graph.width, graph.height);
+        //canvas.style.width = width;
+        //canvas.style.height = height;
+        x = d3.scaleLinear().range([0, graph.width]);
+        x.domain([-graph.width/60,0]) // 60 is the normal frame rate
+        y = d3.scaleLinear().range([graph.height, 0]);
+        y.domain([0,24 * graph.height / 1024]);
+        foreignObject.attr('width', graph.width)
+            .attr('height', graph.height);
+        canvas_space.attr('width', graph.width)
+            .attr('height', graph.height);
+        bottomAxis.attr("transform", "translate(0," + graph.height + ")")
+            .call(xaxis);
+		vertGrid.attr("transform", "translate(0," + graph.height + ")")
+            .call(xgrid);
+        xlabel.attr("x", graph.width - 3);
+        leftAxis.call(yaxis);
+		horGrid.attr(ygrid);
         ylabel.attr("y", 6);
-        vertical.attr("y2", height);
+        vertical.attr("y2", graph.height);
+		width = 1024 *  graph.width / graph.height;
+		height = 1024;
     }
 
     function setRectangle(gl, x, y, width, height) {
@@ -830,11 +979,11 @@ const frameBuffer = gl.createFramebuffer();
 
         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
 
-    	gl.enableVertexAttribArray(gl.getAttribLocation(program, "a_position"));
+
+
+        gl.enableVertexAttribArray(gl.getAttribLocation(inProgram, "a_position"));
     	gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-    	gl.vertexAttribPointer(
-        gl.getAttribLocation(program, "a_position"), 2, gl.FLOAT, false, 0, 0);
-    	var texCoordBuffer = gl.createBuffer();
+    	gl.vertexAttribPointer(gl.getAttribLocation(inProgram, "a_position"), 2, gl.FLOAT, false, 0, 0);
     	gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
     	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
     	    0.0, 0.0,
@@ -844,35 +993,68 @@ const frameBuffer = gl.createFramebuffer();
     	    1.0, 0.0,
     	    1.0, 1.0,
     	]), gl.STATIC_DRAW);
-    	gl.enableVertexAttribArray(gl.getAttribLocation(program, "a_texCoord"));
-    	gl.vertexAttribPointer(
-    	    gl.getAttribLocation(program, "a_texCoord"), 2, gl.FLOAT, false, 0, 0);
+    	gl.enableVertexAttribArray(gl.getAttribLocation(inProgram, "a_texCoord"));
+    	gl.vertexAttribPointer(gl.getAttribLocation(inProgram, "a_texCoord"), 2, gl.FLOAT, false, 0, 0);
 
-    	gl.useProgram(program);
-
-        //targetTex2 = targetTex;
+        gl.useProgram(inProgram);
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuffer);
         gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, targetTex2, 0);
-    	gl.uniform2f(gl.getUniformLocation(program, "u_resolution"), width, height); 
-        gl.uniform2f(gl.getUniformLocation(program, "res"), width, height);
-    	gl.uniform1i(gl.getUniformLocation(program, "u_image"), 0);            // Update the time
-        gl.uniform1i(gl.getUniformLocation(program, "prev_image"), 1);
-    	gl.uniform1f(locs.time, 0.0 * 0.001);
+    	gl.uniform2f(gl.getUniformLocation(inProgram, "u_resolution"), width, height); 
+        gl.uniform2f(gl.getUniformLocation(inProgram, "res"), width, height);
+    	gl.uniform1i(gl.getUniformLocation(inProgram, "u_image"), 0);            // Update the time
+        gl.uniform1i(gl.getUniformLocation(inProgram, "prev_image"), 1);
+    	gl.uniform1f(inLocs.time, 0.0 * 0.001);
     	// in setRectangle puts data in the position buffer
     	gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);            // Set a rectangle the same size as the image.
     	setRectangle(gl, 0, 0, width, height);            // Draw the rectangle.
 
-        gl.uniform3f(locs.hue, h, s, l);
+        gl.uniform3f(inLocs.hue, h, s, l);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-        gl.drawArrays(gl.TRIANGLES, 0, 6);
 
         temp = targetTex2;
         targetTex2 = targetTex;
-        targetTex = temp;
+        targetTex = temp; // these should be switching between tex and targetTex eventually
+
+
+
+    	gl.enableVertexAttribArray(gl.getAttribLocation(outProgram, "a_position"));
+    	gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+    	gl.vertexAttribPointer(gl.getAttribLocation(outProgram, "a_position"), 2, gl.FLOAT, false, 0, 0);
+    	gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
+    	gl.enableVertexAttribArray(gl.getAttribLocation(outProgram, "a_texCoord"));
+    	gl.vertexAttribPointer(gl.getAttribLocation(outProgram, "a_texCoord"), 2, gl.FLOAT, false, 0, 0);
+
+        gl.activeTexture(gl.TEXTURE0+1);
+        gl.bindTexture(gl.TEXTURE_2D, targetTex);
+
+    	gl.useProgram(outProgram);
+
+        //gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuffer);
+        //gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, targetTex2, 0);
+    	gl.uniform2f(gl.getUniformLocation(outProgram, "u_resolution"), width, height); 
+        gl.uniform2f(gl.getUniformLocation(outProgram, "res"), width, height);
+        gl.uniform1f(gl.getUniformLocation(outProgram, "k"), k);
+        gl.uniform1f(gl.getUniformLocation(outProgram, "tx"), tx);
+        gl.uniform1f(gl.getUniformLocation(outProgram, "ty"), ty);
+    	gl.uniform1i(gl.getUniformLocation(outProgram, "u_image"), 0);            // Update the time
+        gl.uniform1i(gl.getUniformLocation(outProgram, "prev_image"), 1);
+    	gl.uniform1f(outLocs.time, 0.0 * 0.001);
+    	// in setRectangle puts data in the position buffer
+    	gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);            // Set a rectangle the same size as the image.
+    	setRectangle(gl, 0, 0, width, height);            // Draw the rectangle.
+
+        gl.uniform3f(outLocs.hue, h, s, l);
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+        //temp = targetTex2;
+        //targetTex2 = targetTex;
+        //targetTex = temp;
 
         //canvas.style.display="none";
 	}
@@ -893,21 +1075,53 @@ navigator.mediaDevices.getUserMedia({ video : false, audio : true })
     /* handle the error */
   });
 
+function display() {
+    gl.enableVertexAttribArray(gl.getAttribLocation(outProgram, "a_position"));
+    	gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+    	gl.vertexAttribPointer(gl.getAttribLocation(outProgram, "a_position"), 2, gl.FLOAT, false, 0, 0);
+    	gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
+    	gl.enableVertexAttribArray(gl.getAttribLocation(outProgram, "a_texCoord"));
+    	gl.vertexAttribPointer(gl.getAttribLocation(outProgram, "a_texCoord"), 2, gl.FLOAT, false, 0, 0);
+
+        gl.activeTexture(gl.TEXTURE0+1);
+        gl.bindTexture(gl.TEXTURE_2D, targetTex);
+
+    	gl.useProgram(outProgram);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer); // I think this isn't necessary
+        gl.uniform1i(gl.getUniformLocation(outProgram, "u_image"), 0);
+        gl.uniform1i(gl.getUniformLocation(outProgram, "prev_image"), 1);
+        gl.uniform1f(gl.getUniformLocation(outProgram, "k"), k);
+        gl.uniform1f(gl.getUniformLocation(outProgram, "tx"), tx);
+        gl.uniform1f(gl.getUniformLocation(outProgram, "ty"), ty);
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+}
+
 var data;  
+var data2;
 function callback(stream) {
     var ctx = new AudioContext();
     var mic = ctx.createMediaStreamSource(stream);
     var analyser = ctx.createAnalyser();
     mic.connect(analyser);
-    data = new Uint8Array(analyser.frequencyBinCount);  
+    data = new Uint8Array(analyser.frequencyBinCount);
+    data2 = new Float32Array(analyser.frequencyBinCount);  
     //console.log(data);
     firstRender(0.075, 1.0, 0.5);
     function play() {
-        analyser.getByteFrequencyData(data);    
+        analyser.getByteFrequencyData(data);   
+        console.log(analyser.minDecibels);
+        console.log(analyser.maxDecibels);
+        //analyser.getFloatFrequencyData(data2);
+        console.log(data2);
         //console.log(data);
 
-        gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuffer);
-        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, targetTex2, 0);
+        gl.enableVertexAttribArray(gl.getAttribLocation(inProgram, "a_position"));
+    	gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+    	gl.vertexAttribPointer(gl.getAttribLocation(inProgram, "a_position"), 2, gl.FLOAT, false, 0, 0);
+    	gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
+    	gl.enableVertexAttribArray(gl.getAttribLocation(inProgram, "a_texCoord"));
+    	gl.vertexAttribPointer(gl.getAttribLocation(inProgram, "a_texCoord"), 2, gl.FLOAT, false, 0, 0);
 
         gl.activeTexture(gl.TEXTURE0+0);
         gl.bindTexture(gl.TEXTURE_2D, tex);
@@ -916,22 +1130,25 @@ function callback(stream) {
         gl.activeTexture(gl.TEXTURE0+1);
         gl.bindTexture(gl.TEXTURE_2D, targetTex);
 
-        //gl.activeTexture(gl.TEXTURE0+2);
-        //gl.bindTexture(gl.TEXTURE_2D, targetTex2);
+    	gl.useProgram(inProgram);
 
-        gl.activeTexture(gl.TEXTURE0+0);
-        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-        gl.uniform1i(gl.getUniformLocation(program, "u_image"), 0);
-        gl.uniform1i(gl.getUniformLocation(program, "prev_image"), 1);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuffer);
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, targetTex2, 0);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer); // I think this isn't necessary
+        gl.uniform1i(gl.getUniformLocation(inProgram, "u_image"), 0);
+        gl.uniform1i(gl.getUniformLocation(inProgram, "prev_image"), 1);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-        gl.drawArrays(gl.TRIANGLES, 0, 6);
 
         temp = targetTex2;
         targetTex2 = targetTex;
         targetTex = temp;
+
+
+
+        display();
 
         if (toggle) {requestAnimationFrame(play);}
     }   

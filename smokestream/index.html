@@ -47,11 +47,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1669733388.css">
+  <link rel="stylesheet" href="/minima.1671391448.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1669733388.js"></script>
+  <script defer type="text/javascript" src="/minima.1671391448.js"></script>
 </head>
 <script>
   
@@ -121,7 +121,7 @@ if (!doNotTrack) {
 	<p></p>
 	<article class="md">
 		<h1 id="shader">Shader</h1>
-<script src="https://d3js.org/d3.v6.min.js"/></script>
+<script src="https://d3js.org/d3.v6.min.js"></script>
 <script src="https://unpkg.com/d3-simple-slider"></script>    <!-- topojson -->
 <script src="https://unpkg.com/topojson@3"></script>    <!-- WebGL -->
 <script src="https://webgl2fundamentals.org/webgl/resources/webgl-utils.js"></script>
@@ -913,7 +913,8 @@ vec3 luvToRgb(vec3 tuple){
 }
 </script>
 <script type = "text" id = "advection">
-uniform float deltaT;
+uniform float deltaT; // this one is really just the frame rate
+uniform float dt; // the actual deltaT
 uniform sampler2D u_image;
 uniform sampler2D velocity;
 uniform bool mouseDown;
@@ -932,7 +933,7 @@ out vec4 outColor;
 // for future, we can try to add a uniform that represents the background color of the page
 
 float rand(vec2 co) {
-    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+    return fract(sin(dot(co.xy, vec2(12.9898,78.233))) * 43758.5453);
 }
 
 vec2 scale(vec2 val) {
@@ -955,42 +956,82 @@ vec2 scale3(vec2 val) {
     return sign(val) * (1.0 - pow(1.0 - abs(val), vec2(100.0))) / 45.0;
 }
 
+vec3 closestPoint(vec2 delta, vec2 end, vec2 current) {
+
+    if (delta == vec2(0.0)) {return vec3(end, 0.0);}
+
+    else {
+        vec2 initial = end - delta;
+        float t = clamp(dot(current - initial, delta) / (delta.x * delta.x + delta.y * delta.y), 0.0, 1.0);
+        vec2 closest = initial + t * delta;
+        //vec2 closest = initial + t * delta + sin(t * 6.*M_PI) * vec2(-delta.y, delta.x); // kinda freaky, looks centipede-like
+
+        return vec3(closest, t);
+    }
+    
+}
+
 void main() {
 
     vec2 u = texture(velocity, v_texCoord).xy;
-    vec2 pastCoord = fract(v_texCoord - (0.5 * deltaT * u));
+    //vec2 pastCoord = fract(v_texCoord - (0.5 * deltaT * u));
+    vec2 pastCoord = fract(v_texCoord - (0.5 * deltaT * u * vec2(radius.x/radius.y, 1.0)));
     vec4 result = texture(u_image, pastCoord);
     outColor = texture(u_image, pastCoord);
+
+    float ratio = radius.y / radius.x;
 
     if (paint) {
         if (mouseDown) {
 
+            // sees how close a pixel is to the center, i.e. determines which pixels get affected
             float dx = center.x - v_texCoord.x;
-            float dy = center.y - v_texCoord.y;
-            
-            vec2 effect = 50. * scale2(change) * exp(-(dx * dx + dy * dy) / (radius * .5)); // this is nearly perfect, we can try a function that makes small values bigger and large values smaller
+            float dy = center.y - v_texCoord.y; // float dy = (center.y - v_texCoord.y)*0.0; // gives a really cool effect
+
+            vec3 closest = closestPoint(change, center, v_texCoord);
+            vec2 close = closest.xy;
+            float t = closest.z;
+            dx = (close.x - v_texCoord.x) * ratio;
+            dy = (close.y - v_texCoord.y);
+
+            vec2 effect = 50. * scale2(change) * exp(-(dx * dx + dy * dy) / .001);
+            //effect = 50. * (scale2(change) + vec2(0.0,-0.005)) * exp(-(dx * dx + dy * dy) / (radius * .5)); // for the aurora
+            //effect = 50. * (scale2(change) + vec2(0.0,-0.002)) * exp(-(dx * dx + dy * dy) / (radius * .5)); // gives an interesting effect
             float mag = (effect.x * effect.x + effect.y * effect.y) / 2.0;
             vec4 color = vec4(0.3,0.,1.,1.0); // make a random color
-            //color = vec4(hsl2rgb(vec3(time / 4.0, 1.0, 0.5)), 1.0); // oil slick color
-            color = vec4(hsl2rgb(vec3(time / 1024.0, 0.25, 0.5)), 1.0); // gentle rainbow
-            result = result + mix(vec4(0.0), color, mag);
+            //color = vec4(hsl2rgb(vec3((time + t * dt) / 128.0, 1.0, 0.5)), 1.0); // oil slick color
+            //color = vec4(hsl2rgb(vec3((time + t * dt) / 4.0, 1.0, 0.5)), 1.0); // oil slick color
+            //color = vec4(hsl2rgb(vec3(time / 1024.0, 0.25, 0.5)), 1.0); // gentle rainbow
+            color = vec4(okhsl_to_srgb(vec3(time / 1024.0, 0.5, 0.5)), 1.0); // gentle and smooth rainbow
+            //color = vec4(hsl2rgb(vec3(time / 1024.0 + (time + t * dt) * mag / (2.* 8192.0), 0.25, 0.5)), 1.0); // reaaaally cool oil slick
+            //color = vec4(okhsl_to_srgb(vec3(time / 1024.0 + (time + t * dt) * pow(mag, 0.5) / (.5* 8192.0), 0.75, 0.5)), 1.0); // reaaaally cool oil slick (I think something is wrong with the time, it is pretty when it starts but it seems like it gets stronger over time)
+            result = result + mix(vec4(0.0), color, mag); // if you want to add summing to white effects
+            //result = mix(result, color, mag);
             if ((result.a == 0.0) || (result.a == 1.0)) {outColor = vec4(0.0);} // the 1.0 case is just to get rid of the default
-            else {outColor = result + mix(vec4(0.0), color, mag);}
+            else {outColor = result;}
+
+            //result = vec4(0.1*sin(close * 200000.0), 0.0, 0.99); // really useful
+            //result = vec4(0.1*cos((close - 1.0) * 100.0), 0.0, 0.99); // really useful
+            //result = vec4((ratio - 1.) * 125., - (ratio - 1.) * 125., 0.0, 0.99);
+            //result = vec4(hsl2rgb(vec3(1.0, (ratio - 1.), 0.5)), 1.0);
+            //if (dx*dx < 0.001) {if (dy*dy < 0.001) {result = vec4(0.5, 0.5, 0.0, 0.99);}}
         }
 
-        float dxp = spriteCenter.x - v_texCoord.x;
+        float dxp = (spriteCenter.x - v_texCoord.x) * ratio;
         float dyp = spriteCenter.y - v_texCoord.y;
         
-        vec2 effectp = 50. * scale3(spriteChange) * exp(-(dxp * dxp + dyp * dyp) / (radius * .5));
+        vec2 effectp = 50. * scale3(spriteChange) * exp(-(dxp * dxp + dyp * dyp) / .001);
         float magp = (effectp.x * effectp.x + effectp.y * effectp.y) / 2.0;
         //vec4 newColor = vec4(hsl2rgb(vec3(time / 17.0, 1.0, 0.5)), 1.0); // oil slick color
         //vec4 newColor = vec4(hsl2rgb(vec3(time/1024., 1.0, 0.5)), 1.0);
         vec4 newColor = vec4(hsl2rgb(vec3(time / 17.0, 1.0, 0.5)), 1.0); // oil slick color, looks great with a small radius
-        result = result + mix(vec4(0.0), newColor, magp);
-        outColor = result + mix(vec4(0.0), newColor, magp);
+        result = mix(result, newColor, magp);
+        outColor = result;
 
-        if ((result.a == 1.0)) {outColor = vec4(0.0);}
-        if ((result.a < 1.0)) {outColor = mix(vec4(0.0), result, 0.99);}
+        outColor = mix(vec4(0.0), result, 0.99);
+
+        //if ((result.a == 1.0)) {outColor = vec4(0.0);}
+        //if ((result.a < 1.0)) {outColor = mix(vec4(0.0), result, 0.99);}
 
         //outColor = vec4(1.0*change,0.0,1.0);
         
@@ -1052,6 +1093,9 @@ void main() {
 }
 </script>
 <script type = "text" id = "pressure">
+
+#define M_PI 3.1415926535897932384626433832795
+
 uniform float deltaT;         // Time between steps
 uniform float rho;            // Density 
 uniform vec2 epsilon;        // Distance between grid units 
@@ -1072,6 +1116,27 @@ out vec4 outColor;
 float p(vec2 coord) { 
     return texture(pressure, fract(coord)).x; 
 } 
+
+float rand(vec2 co) {
+    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+}
+
+// THIS FUNCTION NEEDS TO BE UPDATED TO BE CONSIDERATE OF THE WINDOW'S DIMENSIONS!!! XXXXX
+vec2 closestPoint(vec2 delta, vec2 end, vec2 current) {
+
+    if (delta == vec2(0.0)) {return end;}
+
+    else {
+
+        vec2 initial = end - delta;
+        float t = clamp(dot(current - initial, delta) / (delta.x * delta.x + delta.y * delta.y), 0.0, 1.0);
+        //vec2 closest = initial + t * delta;
+        vec2 closest = initial + t * delta + (sin(t * 6. * M_PI) + 1.0 * rand(vec2(t*100.0,deltaT))) * 0.025 * normalize(vec2(-delta.y, delta.x));
+
+        return closest;
+    }
+    
+}
       
 void main() { 
     vec2 u_a = texture(velocity, v_texCoord).xy; 
@@ -1087,15 +1152,22 @@ void main() {
     outColor = vec4(u_x, u_y, 0.0, 0.0);
     //outColor = texture(velocity, v_texCoord);
 
+    float ratio = epsilon.y / epsilon.x;
+
     if (mouseDown) {
         float dx = center.x - v_texCoord.x;
         float dy = center.y - v_texCoord.y;
-        outColor = outColor + vec4(25. * change * exp(-(dx * dx + dy * dy) / (radius * 0.1)), 0.0, 1.0);
+
+        vec2 close = closestPoint(change, center, v_texCoord);
+        dx = (close.x - v_texCoord.x) * ratio;
+        dy = close.y - v_texCoord.y;
+        //outColor = outColor + vec4(25. * (change + vec2(0.0,-0.0025)) * exp(-(dx * dx + dy * dy) / (radius * 0.1)), 0.0, 1.0); // this could help for aurora
+        outColor = outColor + vec4(25. * change * exp(-(dx * dx + dy * dy) / 0.00025), 0.0, 1.0);
     }
 
-    float dxp = spriteCenter.x - v_texCoord.x;
+    float dxp = (spriteCenter.x - v_texCoord.x) * ratio;
     float dyp = spriteCenter.y - v_texCoord.y;
-    outColor = outColor + vec4(25. * spriteChange * exp(-(dxp * dxp + dyp * dyp) / (radius * 0.1)), 0.0, 1.0);
+    outColor = outColor + vec4(25. * spriteChange * exp(-(dxp * dxp + dyp * dyp) / (0.00025)), 0.0, 1.0);
 }
 </script>
 <script type = "text" id = "output">
@@ -1127,6 +1199,11 @@ void main() {
 <script type="text/javascript">
 "use strict";
 
+// based on: https://jamie-wong.com/2016/08/05/webgl-fluid-simulation/#divergent-fields
+// this also helped: https://gpfault.net/posts/webgl2-particles.txt.html
+// this one too for the wind: https://blog.mapbox.com/how-i-built-a-wind-map-with-webgl-b63022b5537f 
+// this can help with gradients: https://iquilezles.org/articles/palettes/ 
+
 // Get A WebGL context
 var toggle = true;
 const btn = document.getElementById('btn');
@@ -1137,6 +1214,10 @@ const gl = canvas.getContext("webgl2", {
     });
 gl.getExtension('EXT_color_buffer_float'); // allows for float textures (instead of 256 colors like regular)
 gl.getExtension('OES_texture_float_linear'); // does automatic bilinear interpolation (or at least I assume it's bilinear)
+
+// size
+var width = window.innerWidth;
+var height = window.innerHeight;
 
 // important for interacting with the canvas
 var mouseDown = false,
@@ -1163,8 +1244,9 @@ window.addEventListener('pointermove', function (event) {
 
 window.addEventListener('pointerup', function (event) {
     mouseDown = false;
-    deltaX = event.clientX / canvas.width - mouseX;
-    deltaY = 1.0 - (event.clientY / canvas.height) - mouseY;
+    //deltaX = event.clientX / canvas.width - mouseX;
+    //deltaY = 1.0 - (event.clientY / canvas.height) - mouseY;
+    console.log(mouseX, mouseY, deltaX, deltaY);
 }, false);
 
 canvas.addEventListener('pointerdown', function (event) {
@@ -1187,7 +1269,7 @@ function initializeSprite(location, velocity, velocityPreference, direction, sta
         'velocity': velocity ? velocity : Math.random(),
         'velocityPreference': velocityPreference ? velocityPreference : Math.random(),
         'direction': direction ? direction : 2.0 * Math.random() * Math.PI,
-        'start': start ? start : Math. random(),
+        'start': start ? start : Math.random(),
         'limits': limits ? limits : initializeCoord()
     }
     sprite = {...sprite,...{
@@ -1237,8 +1319,8 @@ function update(sprite) {
     return {...sprite,...{
         'lastLocation' : sprite.location,
         'location' : initializeCoord(
-            (((sprite.location.x + sprite.velocity * Math.cos(sprite.direction) / 300) % 1.0) + 1.0) % 1.0,
-            (((sprite.location.y + sprite.velocity * Math.sin(sprite.direction) / 300) % 1.0) + 1.0) % 1.0),
+            (((sprite.location.x + 2. * sprite.velocity * Math.cos(sprite.direction) * ((height / width)/(1 + height / width)) / 300) % 1.0) + 1.0) % 1.0,
+            (((sprite.location.y + 2. * sprite.velocity * Math.sin(sprite.direction) * (1 /(1 + height / width)) / 300) % 1.0) + 1.0) % 1.0),
         'velocity' : 0.5 * sprite.velocity + 0.1 * sprite.velocityPreference + 0.4 * Math.random(),
         'direction' : (Math.pow(Math.random() * 2.0 - 1.0, 51.0) * Math.PI + sprite.direction) // very fly-like, in a bad way lol
     }}
@@ -1264,6 +1346,7 @@ advectionShader = {...advectionShader,...{
     },
     'uniforms': {
         'deltaT': gl.getUniformLocation(advectionShader.program, "deltaT"),
+        'dt': gl.getUniformLocation(advectionShader.program, "dt"),
         'u_resolution': gl.getUniformLocation(advectionShader.program, "u_resolution"),
         'u_image': gl.getUniformLocation(advectionShader.program, "u_image"),
         'velocity': gl.getUniformLocation(advectionShader.program, "velocity"),
@@ -1455,9 +1538,8 @@ pressure,
 pressurep,
 temp;
 
-// size
-var width = 0;
-var height = 0;
+var oldTime = 0;
+var dt = 0;
 
 function init(time) {
     time = time || 0;            
@@ -1491,7 +1573,9 @@ function init(time) {
 
     initShader(advectionShader, [texture, texture], targetVelocity);
     gl.uniform1f(advectionShader.uniforms.deltaT, sliderFill.value() / 60);
+    gl.uniform1f(advectionShader.uniforms.dt, dt);
     gl.uniform1f(advectionShader.uniforms.paint, false);
+    gl.uniform2f(advectionShader.uniforms.radius, 1.0/width, 1.0/height);
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
     gl.drawArrays(gl.TRIANGLES, 0, 6);
@@ -1500,14 +1584,14 @@ function init(time) {
     initShader(divergenceShader, [targetVelocity], divergence);
     gl.uniform2f(divergenceShader.uniforms.u_resolution, width, height);
     gl.uniform1f(divergenceShader.uniforms.deltaT, sliderFill.value() / 60);
-    gl.uniform2f(divergenceShader.uniforms.epsilon, 1.0/canvas.width, 1.0/canvas.height);
+    gl.uniform2f(divergenceShader.uniforms.epsilon, 1.0/width, 1.0/height);
     gl.uniform1f(divergenceShader.uniforms.rho, sliderFill2.value());
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
     gl.drawArrays(gl.TRIANGLES, 0, 6);
 
     initShader(jacobiShader, [divergence, pressure], pressurep);
     gl.uniform2f(jacobiShader.uniforms.u_resolution, width, height);
-    gl.uniform2f(jacobiShader.uniforms.epsilon, 1.0/canvas.width, 1.0/canvas.height);
+    gl.uniform2f(jacobiShader.uniforms.epsilon, 1.0/width, 1.0/height);
     gl.uniform1i(jacobiShader.uniforms.divergence, 0);
     gl.uniform1i(jacobiShader.uniforms.pressure, 1);
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
@@ -1521,7 +1605,7 @@ function init(time) {
 
         initShader(jacobiShader, [divergence, pressure], pressurep, true);
         gl.uniform2f(jacobiShader.uniforms.u_resolution, width, height);
-        gl.uniform2f(jacobiShader.uniforms.epsilon, 1.0/canvas.width, 1.0/canvas.height);
+        gl.uniform2f(jacobiShader.uniforms.epsilon, 1.0/width, 1.0/height);
         gl.uniform1i(jacobiShader.uniforms.divergence, 0);
         gl.uniform1i(jacobiShader.uniforms.pressure, 1);
         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
@@ -1530,7 +1614,7 @@ function init(time) {
 
     initShader(pressureShader, [targetVelocity, pressurep], newInitialVelocity);
     gl.uniform2f(pressureShader.uniforms.u_resolution, width, height);
-    gl.uniform2f(pressureShader.uniforms.epsilon, 1.0/canvas.width, 1.0/canvas.height); 
+    gl.uniform2f(pressureShader.uniforms.epsilon, 1.0/width, 1.0/height); 
     gl.uniform1f(pressureShader.uniforms.rho, 1.);
     gl.uniform1f(pressureShader.uniforms.deltaT, sliderFill.value() / 60);
     gl.uniform1i(pressureShader.uniforms.velocity, 0);
@@ -1538,20 +1622,20 @@ function init(time) {
     gl.uniform1f(pressureShader.uniforms.mouseDown, mouseDown);
     gl.uniform2f(pressureShader.uniforms.change, deltaX, deltaY);
     gl.uniform2f(pressureShader.uniforms.center, mouseX, mouseY);
-    gl.uniform2f(pressureShader.uniforms.radius, 1.0/canvas.width, 1.0/canvas.height);
+    gl.uniform2f(pressureShader.uniforms.radius, 1.0/width, 1.0/height);
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
     gl.drawArrays(gl.TRIANGLES, 0, 6);
 
     initShader(advectionShader, [initialImage, newInitialVelocity], realOutput);
     gl.uniform2f(advectionShader.uniforms.u_resolution, width, height);
     gl.uniform1f(advectionShader.uniforms.deltaT, sliderFill.value() / 60);
+    gl.uniform1f(advectionShader.uniforms.dt, dt);
     gl.uniform1i(advectionShader.uniforms.u_image, 0);
     gl.uniform1i(advectionShader.uniforms.velocity, 1);
     gl.uniform1f(advectionShader.uniforms.paint, true);
     gl.uniform1f(advectionShader.uniforms.mouseDown, mouseDown);
     gl.uniform2f(advectionShader.uniforms.change, deltaX, deltaY);
     gl.uniform2f(advectionShader.uniforms.center, mouseX, mouseY);
-    gl.uniform2f(advectionShader.uniforms.radius, 1.0/canvas.width, 1.0/canvas.height);
     //canvas.width/1000000, canvas.height/1000000); // these might fix some things
     gl.uniform1f(advectionShader.uniforms.time, time);
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
@@ -1564,9 +1648,6 @@ function init(time) {
     if (toggle) {render();}
 }
 
-var oldTime = 0;
-var dt = 1 / 120;
-
 function render(time) {
 
     sprite1 = update(sprite1);
@@ -1574,13 +1655,16 @@ function render(time) {
     //console.log(dt);
     
     // 1 / 60 is the regular frame rate... don't use dt for deltaT, it doesn't help slow computers, it's just makes the rendering wacky
-    dt = (time - oldTime) / 1000 || 1 / 60;
+    dt = time - oldTime;
     oldTime = time;
+
+    //console.log(time);
 
     gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuffer);
 
     initShader(advectionShader, [newInitialVelocity, newInitialVelocity], targetVelocity);
     gl.uniform1f(advectionShader.uniforms.deltaT, sliderFill.value() / 60);
+    gl.uniform1f(advectionShader.uniforms.dt, dt);
     gl.uniform1f(advectionShader.uniforms.paint, false);
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
