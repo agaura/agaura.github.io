@@ -47,11 +47,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1671391448.css">
+  <link rel="stylesheet" href="/minima.1671481881.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1671391448.js"></script>
+  <script defer type="text/javascript" src="/minima.1671481881.js"></script>
 </head>
 <script>
   
@@ -628,7 +628,8 @@ vec3 srgb_to_okhsv(vec3 rgb)
 
 vec3 hsl2rgb( in vec3 c )
 {
- vec3 rgb = clamp( abs(mod(c.x*6.0+vec3(0.0,4.0,2.0),6.0)-3.0)-1.0, 0.0, 1.0 );    return c.z + c.y * (rgb-0.5)*(1.0-abs(2.0*c.z-1.0));
+    vec3 rgb = clamp( abs(mod(c.x*6.0+vec3(0.0,4.0,2.0),6.0)-3.0)-1.0, 0.0, 1.0 );
+    return c.z + c.y * (rgb-0.5)*(1.0-abs(2.0*c.z-1.0));
 }
 
 vec3 rgb2hsl( in vec3 c ){
@@ -919,6 +920,7 @@ uniform sampler2D u_image;
 uniform sampler2D velocity;
 uniform bool mouseDown;
 uniform bool paint;
+uniform bool dark;
 uniform vec2 change;
 uniform vec2 center;
 uniform vec2 radius;
@@ -984,20 +986,20 @@ void main() {
     if (paint) {
         if (mouseDown) {
 
-            // sees how close a pixel is to the center, i.e. determines which pixels get affected
-            float dx = center.x - v_texCoord.x;
-            float dy = center.y - v_texCoord.y; // float dy = (center.y - v_texCoord.y)*0.0; // gives a really cool effect
-
+            // sees how close a pixel is to the closest point on the line traced by the last two points registered from the cursor
             vec3 closest = closestPoint(change, center, v_texCoord);
             vec2 close = closest.xy;
             float t = closest.z;
-            dx = (close.x - v_texCoord.x) * ratio;
-            dy = (close.y - v_texCoord.y);
+            float dx = (close.x - v_texCoord.x) * ratio;
+            float dy = (close.y - v_texCoord.y); // dy = 0.; // interesting effect
 
+            // find out how affected a pixel should be due to its distance as well as the velocity (numbers chosen by experimentation)
             vec2 effect = 50. * scale2(change) * exp(-(dx * dx + dy * dy) / .001);
             //effect = 50. * (scale2(change) + vec2(0.0,-0.005)) * exp(-(dx * dx + dy * dy) / (radius * .5)); // for the aurora
             //effect = 50. * (scale2(change) + vec2(0.0,-0.002)) * exp(-(dx * dx + dy * dy) / (radius * .5)); // gives an interesting effect
             float mag = (effect.x * effect.x + effect.y * effect.y) / 2.0;
+
+            // determine the color
             vec4 color = vec4(0.3,0.,1.,1.0); // make a random color
             //color = vec4(hsl2rgb(vec3((time + t * dt) / 128.0, 1.0, 0.5)), 1.0); // oil slick color
             //color = vec4(hsl2rgb(vec3((time + t * dt) / 4.0, 1.0, 0.5)), 1.0); // oil slick color
@@ -1005,8 +1007,14 @@ void main() {
             color = vec4(okhsl_to_srgb(vec3(time / 1024.0, 0.5, 0.5)), 1.0); // gentle and smooth rainbow
             //color = vec4(hsl2rgb(vec3(time / 1024.0 + (time + t * dt) * mag / (2.* 8192.0), 0.25, 0.5)), 1.0); // reaaaally cool oil slick
             //color = vec4(okhsl_to_srgb(vec3(time / 1024.0 + (time + t * dt) * pow(mag, 0.5) / (.5* 8192.0), 0.75, 0.5)), 1.0); // reaaaally cool oil slick (I think something is wrong with the time, it is pretty when it starts but it seems like it gets stronger over time)
-            result = result + mix(vec4(0.0), color, mag); // if you want to add summing to white effects
-            //result = mix(result, color, mag);
+
+            // if dark mode is on, add the color to the background, which will cause brightening (like a glow)
+            if (dark) {result = result + mix(vec4(0.0), color, mag);} // if you want to add summing-to-white effects
+
+            // colors are mixed in light mode as it seems more natural (kinda like subtractive color mixing)
+            else {result = mix(result, color, mag);}
+
+            // makes sure that all color data is removed once transparency is reached, and that 
             if ((result.a == 0.0) || (result.a == 1.0)) {outColor = vec4(0.0);} // the 1.0 case is just to get rid of the default
             else {outColor = result;}
 
@@ -1025,10 +1033,11 @@ void main() {
         //vec4 newColor = vec4(hsl2rgb(vec3(time / 17.0, 1.0, 0.5)), 1.0); // oil slick color
         //vec4 newColor = vec4(hsl2rgb(vec3(time/1024., 1.0, 0.5)), 1.0);
         vec4 newColor = vec4(hsl2rgb(vec3(time / 17.0, 1.0, 0.5)), 1.0); // oil slick color, looks great with a small radius
-        result = mix(result, newColor, magp);
-        outColor = result;
+        if (dark) {result = result + newColor * magp;}
+        else {result = mix(result, newColor, magp);}
+        result = mix(vec4(0.0), result, 0.99);
 
-        outColor = mix(vec4(0.0), result, 0.99);
+        outColor = result;
 
         //if ((result.a == 1.0)) {outColor = vec4(0.0);}
         //if ((result.a < 1.0)) {outColor = mix(vec4(0.0), result, 0.99);}
@@ -1170,6 +1179,227 @@ void main() {
     outColor = outColor + vec4(25. * spriteChange * exp(-(dxp * dxp + dyp * dyp) / (0.00025)), 0.0, 1.0);
 }
 </script>
+<script type = "text" id = "deband">
+uniform sampler2D u_image;
+uniform float time;
+in vec2 v_texCoord;
+out vec4 outColor;
+
+float rand(vec2 co) {
+    return fract(sin(dot(co.xy, vec2(12.9898,78.233))) * 43758.5453);
+}
+
+float interleavedGradientNoise(vec2 co){
+    return fract(52.9829189 * (0.06711056 * co.x + 0.00583715 * co.y));
+}
+
+vec4 trigGradient(float co){
+    float rot = cos(abs(co) * 128.);
+
+    float neg_color_grad = rot * 0.04 + 0.11; // in okhsl, warm colors shift more rapidly than cool ones
+    float pos_color_grad = rot * 0.08 + 0.68;
+
+    float color_grad = 0.0;
+    if (sign(co) > 0.) {color_grad = pos_color_grad;}
+    else {color_grad = neg_color_grad;}
+
+    float sat_grad = pow(clamp(abs(co * 8.),-1.,1.),0.5);
+    float lum_grad = mix(0.5,0.8,clamp(abs(co * 2.),0.0,1.0));
+
+    vec4 newcolor = vec4(okhsl_to_srgb(vec3(color_grad, sat_grad, lum_grad)), 1.0);
+
+    vec4 vividcolor = vec4(okhsl_to_srgb(vec3(color_grad, sat_grad, lum_grad)), 1.0);
+    vec4 graycolor = vec4(okhsl_to_srgb(vec3(color_grad, 0.0, lum_grad)), 1.0);
+
+    if (sign(co) > 0.) {newcolor = mix(vividcolor, graycolor, 0.0);}
+    else {newcolor = mix(vividcolor, graycolor, 0.0);}
+
+    float mix_strength = 0.0;
+    if (sin(abs(co) * 128.) < 0.0) {mix_strength = (cos(M_PI * rot) * 0.5 + 0.5) * 0.5;}
+    newcolor = mix(vividcolor, graycolor, mix_strength);
+
+    return mix(vec4(0.0), newcolor, pow(sat_grad,2.0));
+}
+
+vec4 lineGradient(float co, float v, float sat_v, float lum_v){
+
+    //float scale = pow(abs(co),.001);
+
+    float travelled = fract(abs(co) * v) * 3.;
+    //float travelled = fract(scale * v) * 3.;
+    float mix_strength = fract(travelled);
+
+    float sat_grad = pow(clamp(abs(co * sat_v),0.,1.),0.5);
+    float lum_grad = mix(0.5,0.8,clamp(abs(co * lum_v),0.0,1.0));
+
+    float neg_range = 0.10;
+    float pos_range = 0.16;
+
+    float neg_shift = 0.06;
+    float pos_shift = 0.68;
+
+    vec4 graycolor = vec4(0.0);
+    if (sign(co) < 0.0) {graycolor = vec4(okhsl_to_srgb(vec3(neg_range / 2.0 + neg_shift, 0.5, lum_grad)), 1.0);}
+    else {graycolor = vec4(okhsl_to_srgb(vec3(pos_range / 2.0 + pos_shift, 0.5, lum_grad)), 1.0);}
+
+    vec4 newcolor = vec4(0.0);
+    if (travelled < 1.0) {
+        float color_grad = 0.0;
+        if (sign(co) < 0.0) {color_grad = mix_strength * neg_range + neg_shift;}
+        else {color_grad = mix_strength * pos_range + 0.68;}
+
+        newcolor = vec4(okhsl_to_srgb(vec3(color_grad, sat_grad, lum_grad)), 1.0);
+    }
+    else if (travelled < 2.0) {
+        float color_grad = 0.0;
+        if (sign(co) < 0.0) {color_grad = - mix_strength * neg_range / 2.0 + neg_range + neg_shift;}
+        else {color_grad = - mix_strength * pos_range / 2.0 + pos_range + pos_shift;}
+
+        vec4 vividcolor = vec4(okhsl_to_srgb(vec3(color_grad, sat_grad, lum_grad)), 1.0);
+        newcolor = mix(vividcolor, graycolor, mix_strength);
+    }
+    else {
+        float color_grad = 0.0;
+        if (sign(co) < 0.0) {color_grad = - mix_strength * neg_range / 2.0 + neg_range / 2.0 + neg_shift;}
+        else {color_grad = - mix_strength * pos_range / 2.0 + pos_range / 2.0 + pos_shift;}
+
+        vec4 vividcolor = vec4(okhsl_to_srgb(vec3(color_grad, sat_grad, lum_grad)), 1.0);
+        newcolor = mix(graycolor, vividcolor, mix_strength);
+    }
+
+    return mix(vec4(0.0), newcolor, pow(sat_grad,2.0));
+}
+
+vec4 lineGradient2(float co, float thresh, float sat_band_limit, float lum_band_limit){
+
+    float scale = abs(co) / thresh;
+
+    float travelled = fract(scale) * 3.;
+    float mix_strength = fract(travelled);
+
+    float sat_grad = pow(clamp(scale / sat_band_limit,0.,1.),0.5);
+    float lum_grad = mix(0.5,0.8,clamp(scale / lum_band_limit,0.0,1.0));
+
+    float neg_range = 0.10;
+    float pos_range = 0.16;
+
+    float neg_shift = 0.06;
+    float pos_shift = 0.68;
+
+    vec4 graycolor = vec4(0.0);
+    if (sign(co) < 0.0) {graycolor = vec4(okhsl_to_srgb(vec3(neg_range / 2.0 + neg_shift, 0.5, lum_grad)), 1.0);}
+    else {graycolor = vec4(okhsl_to_srgb(vec3(pos_range / 2.0 + pos_shift, 0.5, lum_grad)), 1.0);}
+
+    vec4 newcolor = vec4(0.0);
+    if (travelled < 1.0) {
+        float color_grad = 0.0;
+        if (sign(co) < 0.0) {color_grad = mix_strength * neg_range + neg_shift;}
+        else {color_grad = mix_strength * pos_range + 0.68;}
+
+        newcolor = vec4(okhsl_to_srgb(vec3(color_grad, sat_grad, lum_grad)), 1.0);
+    }
+    else if (travelled < 2.0) {
+        float color_grad = 0.0;
+        if (sign(co) < 0.0) {color_grad = - mix_strength * neg_range / 2.0 + neg_range + neg_shift;}
+        else {color_grad = - mix_strength * pos_range / 2.0 + pos_range + pos_shift;}
+
+        vec4 vividcolor = vec4(okhsl_to_srgb(vec3(color_grad, sat_grad, lum_grad)), 1.0);
+        newcolor = mix(vividcolor, graycolor, mix_strength);
+    }
+    else {
+        float color_grad = 0.0;
+        if (sign(co) < 0.0) {color_grad = - mix_strength * neg_range / 2.0 + neg_range / 2.0 + neg_shift;}
+        else {color_grad = - mix_strength * pos_range / 2.0 + pos_range / 2.0 + pos_shift;}
+
+        vec4 vividcolor = vec4(okhsl_to_srgb(vec3(color_grad, sat_grad, lum_grad)), 1.0);
+        newcolor = mix(graycolor, vividcolor, mix_strength);
+    }
+
+    return mix(vec4(0.0), newcolor, pow(sat_grad,2.0));
+}
+
+vec4 logGradient(float co, float thresh, float v, float sat_band_limit, float lum_band_limit){
+
+    // complete one band cycle by the time the threshold is reached
+    float scale = abs(co) / thresh;
+    if (abs(co) > thresh) {
+        // ex. if v = 2.0, each band cycle represents having 2x the magnitude of the last
+        scale = log(abs(co) / thresh) / log(v) + 1.0;
+        }
+    float travelled = fract(scale) * 3.;
+    float mix_strength = fract(travelled);
+
+    // the band limits determine the number of band cycles until maximum is reached
+    float sat_grad = pow(clamp(scale / sat_band_limit,0.,1.),0.5);
+    float lum_grad = mix(0.5,0.8,clamp(scale / lum_band_limit,0.0,1.0));
+
+    float neg_range = 0.10;
+    float pos_range = 0.16;
+
+    float neg_shift = 0.06;
+    float pos_shift = 0.68;
+
+    vec4 graycolor = vec4(0.0);
+    if (sign(co) < 0.0) {graycolor = vec4(okhsl_to_srgb(vec3(neg_range / 2.0 + neg_shift, 0.5, lum_grad)), 1.0);}
+    else {graycolor = vec4(okhsl_to_srgb(vec3(pos_range / 2.0 + pos_shift, 0.5, lum_grad)), 1.0);}
+
+    vec4 newcolor = vec4(0.0);
+    if (travelled < 1.0) {
+        float color_grad = 0.0;
+        if (sign(co) < 0.0) {color_grad = mix_strength * neg_range + neg_shift;}
+        else {color_grad = mix_strength * pos_range + 0.68;}
+
+        newcolor = vec4(okhsl_to_srgb(vec3(color_grad, sat_grad, lum_grad)), 1.0);
+    }
+    else if (travelled < 2.0) {
+        float color_grad = 0.0;
+        if (sign(co) < 0.0) {color_grad = - mix_strength * neg_range / 2.0 + neg_range + neg_shift;}
+        else {color_grad = - mix_strength * pos_range / 2.0 + pos_range + pos_shift;}
+
+        vec4 vividcolor = vec4(okhsl_to_srgb(vec3(color_grad, sat_grad, lum_grad)), 1.0);
+        newcolor = mix(vividcolor, graycolor, mix_strength);
+    }
+    else {
+        float color_grad = 0.0;
+        if (sign(co) < 0.0) {color_grad = - mix_strength * neg_range / 2.0 + neg_range / 2.0 + neg_shift;}
+        else {color_grad = - mix_strength * pos_range / 2.0 + pos_range / 2.0 + pos_shift;}
+
+        vec4 vividcolor = vec4(okhsl_to_srgb(vec3(color_grad, sat_grad, lum_grad)), 1.0);
+        newcolor = mix(graycolor, vividcolor, mix_strength);
+    }
+
+    return mix(vec4(0.0), newcolor, pow(sat_grad,2.0));
+}
+
+vec4 colorMap(vec2 co){
+    //return vec4(0.0);
+    float angle = atan(co.y, co.x) / (2. * M_PI);
+    float mag = length(co);
+    vec4 newcolor = vec4(okhsl_to_srgb(vec3(angle, mag, 0.5)), 1.0);
+
+    return mix(vec4(0.0), newcolor, mag);
+}
+
+
+
+void main() {
+    vec4 color = texture(u_image, v_texCoord);
+
+    // for when you wanna use this shader to debug other things
+
+    //color = lineGradient(color.r, 32., 4., 2.); // pressure
+    //color = lineGradient2(color.r, 1. / pow(2.,6.), pow(2.,3.), pow(2.,4.)); // pressure
+    //color = lineGradient(color.r, pow(2.,10.), pow(2.,8.), pow(2.,6.)); // divergence
+    //color = logGradient(color.r, 1. / pow(2.,12.), pow(2.,1.), pow(2.,2.), pow(2.,3.)); // divergence
+    //color = colorMap(color.rg); // velocity
+
+    vec4 noise = vec4(rand(vec2(rand(v_texCoord * 100.) * 100., time)) / 255.,
+        rand(vec2(rand((v_texCoord + 0.1) * 100.) * 100., time)) / 255.,
+        rand(vec2(rand((v_texCoord + 0.2) * 100.) * 100., time)) / 255.,
+        rand(vec2(rand((v_texCoord + 0.3) * 100.) * 100., time)) / 255.);
+    outColor = color + 1.0*noise;
+}
+</script>
 <script type = "text" id = "output">
 uniform sampler2D u_image;
 in vec2 v_texCoord;
@@ -1214,10 +1444,11 @@ const gl = canvas.getContext("webgl2", {
     });
 gl.getExtension('EXT_color_buffer_float'); // allows for float textures (instead of 256 colors like regular)
 gl.getExtension('OES_texture_float_linear'); // does automatic bilinear interpolation (or at least I assume it's bilinear)
+var scaleFactor = 2.;
 
 // size
-var width = window.innerWidth;
-var height = window.innerHeight;
+var width = window.innerWidth / scaleFactor;
+var height = window.innerHeight / scaleFactor;
 
 // important for interacting with the canvas
 var mouseDown = false,
@@ -1334,6 +1565,7 @@ const advectFragShader = '#version 300 es \n precision highp float;' + document.
 const divergenceFragShader = '#version 300 es \n precision highp float;' + document.getElementById('divergence').text;
 const jacobiFragShader = '#version 300 es \n precision highp float;' + document.getElementById('jacobi').text;
 const pressureFragShader = '#version 300 es \n precision highp float;' + document.getElementById('pressure').text;
+const debandFragShader = '#version 300 es \n precision highp float;' + document.getElementById('colors').text + document.getElementById('deband').text;
 const outputFragShader = '#version 300 es \n precision highp float;' + document.getElementById('output').text;
 
 var advectionShader = {
@@ -1352,6 +1584,7 @@ advectionShader = {...advectionShader,...{
         'velocity': gl.getUniformLocation(advectionShader.program, "velocity"),
         'mouseDown': gl.getUniformLocation(advectionShader.program, "mouseDown"),
         'paint': gl.getUniformLocation(advectionShader.program, "paint"),
+        'dark': gl.getUniformLocation(advectionShader.program, "dark"),
         'change': gl.getUniformLocation(advectionShader.program, "change"),
         'center': gl.getUniformLocation(advectionShader.program, "center"),
         'radius': gl.getUniformLocation(advectionShader.program, "radius"),
@@ -1418,6 +1651,21 @@ pressureShader = {...pressureShader,...{
         }
 }}
 
+var debandShader = {
+    'program': webglUtils.createProgramFromSources(gl,[vertexShaderSource, debandFragShader])
+}
+debandShader = {...debandShader,...{
+    'attributes': {
+        'a_position': gl.getAttribLocation(debandShader.program, "a_position"),
+        'a_texCoord': gl.getAttribLocation(debandShader.program, "a_texCoord")
+    },
+    'uniforms': {
+        'u_resolution': gl.getUniformLocation(debandShader.program, "u_resolution"),
+        'time': gl.getUniformLocation(debandShader.program, "time")
+        }
+}}
+
+
 var outputShader = {
     'program': webglUtils.createProgramFromSources(gl,[vertexShaderSource, outputFragShader])
 }
@@ -1434,10 +1682,10 @@ outputShader = {...outputShader,...{
 // resizes canvas and textures, as well as initializes them
 function resizeCanvas() {
     
-    width = window.innerWidth;
-    height = window.innerHeight;
-    canvas.width = width;
-    canvas.height = height;
+    width = window.innerWidth / scaleFactor;
+    height = window.innerHeight / scaleFactor;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
     gl.viewport(0, 0, width, height);
 
     targetVelocity = initTexture(gl.RG16F, gl.RG, gl.FLOAT);
@@ -1482,7 +1730,7 @@ function initShader(shader, inTex, outTex, isActive) {
         gl.bindTexture(gl.TEXTURE_2D, inTex[i]);
     }
 
-    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, outTex, 0);
+    if (outTex) gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, outTex, 0);
 
     if (!isActive) {
         gl.useProgram(shader.program);
@@ -1504,8 +1752,8 @@ function initShader(shader, inTex, outTex, isActive) {
 function initTexture(internalFormat, format, type) {
 
     // Create a texture to render to
-    var targetTexWidth = gl.canvas.width;
-    var targetTexHeight = gl.canvas.height;
+    var targetTexWidth = gl.canvas.width / scaleFactor;
+    var targetTexHeight = gl.canvas.height / scaleFactor;
     var targetTex = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, targetTex);
 
@@ -1544,8 +1792,8 @@ var dt = 0;
 function init(time) {
     time = time || 0;            
 
-    width = window.innerWidth;
-    height = window.innerHeight;
+    width = window.innerWidth / scaleFactor;
+    height = window.innerHeight / scaleFactor;
 
     // create a position buffer and put a rectangle that covers the whole space (i.e. make two triangles)
     gl.enableVertexAttribArray(advectionShader.attributes.a_position);              // turn on the attribute
@@ -1633,6 +1881,7 @@ function init(time) {
     gl.uniform1i(advectionShader.uniforms.u_image, 0);
     gl.uniform1i(advectionShader.uniforms.velocity, 1);
     gl.uniform1f(advectionShader.uniforms.paint, true);
+    gl.uniform1f(advectionShader.uniforms.dark, localStorage.theme == "dark");
     gl.uniform1f(advectionShader.uniforms.mouseDown, mouseDown);
     gl.uniform2f(advectionShader.uniforms.change, deltaX, deltaY);
     gl.uniform2f(advectionShader.uniforms.center, mouseX, mouseY);
@@ -1650,7 +1899,11 @@ function init(time) {
 
 function render(time) {
 
+    //console.log(localStorage.theme);
+    //console.log(getComputedStyle(document.documentElement));
+
     sprite1 = update(sprite1);
+    gl.viewport(0, 0, width, height);
 
     //console.log(dt);
     
@@ -1702,6 +1955,7 @@ function render(time) {
     initShader(advectionShader, [realOutput2, newInitialVelocity], realOutput);
     gl.uniform1f(advectionShader.uniforms.deltaT, sliderFill.value() / 60);
     gl.uniform1f(advectionShader.uniforms.paint, true);
+    gl.uniform1f(advectionShader.uniforms.dark, localStorage.theme == "dark");
     gl.uniform1f(advectionShader.uniforms.mouseDown, mouseDown);
     gl.uniform2f(advectionShader.uniforms.change, deltaX, deltaY);
     gl.uniform2f(advectionShader.uniforms.center, mouseX, mouseY);
@@ -1712,6 +1966,13 @@ function render(time) {
     gl.drawArrays(gl.TRIANGLES, 0, 6);
 
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+    initShader(debandShader, [realOutput]);
+    gl.uniform2f(debandShader.uniforms.u_resolution, width, height);
+    gl.uniform1i(debandShader.uniforms.u_image, 0);
+    gl.uniform1f(debandShader.uniforms.time, time);
+
+    gl.viewport(0, 0, canvas.width, canvas.height);
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
     gl.drawArrays(gl.TRIANGLES, 0, 6);
 
@@ -1770,7 +2031,7 @@ var sliderFill = d3
 .width(Math.min(300,screen.width*0.55))
 .tickFormat(d3.format('.0%'))
 .ticks(5)
-.default(0.5)
+.default(1.0)
 .fill('#415794')
 .handle(
     d3
@@ -1779,7 +2040,7 @@ var sliderFill = d3
         .size(250)
 )
 .on('onchange', val => {
-    render(image);
+    render(image); // for some reason it gets weird if it doesn't have something fake in it
 });
 var gFill = d3
 .select('div#slider-fill')
@@ -1799,7 +2060,7 @@ var sliderFill2 = d3
 .width(Math.min(300,screen.width*0.55))
 .tickFormat(d3.format('.0%'))
 .ticks(5)
-.default(0.5)
+.default(1.0)
 .fill('#415794')
 .handle(
     d3
@@ -1809,7 +2070,7 @@ var sliderFill2 = d3
 )
 .on('onchange', val => {
     console.log()
-    if (toggle) render(image);
+    if (toggle) render(image); // for some reason it gets weird if it doesn't have something fake in it
 });
 var gFill2 = d3
 .select('div#slider-fill2')

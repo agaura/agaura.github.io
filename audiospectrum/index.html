@@ -45,11 +45,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1671391448.css">
+  <link rel="stylesheet" href="/minima.1671481881.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1671391448.js"></script>
+  <script defer type="text/javascript" src="/minima.1671481881.js"></script>
 </head>
 <script>
   
@@ -687,7 +687,7 @@ void main()
 
     vec2 pixel = 1.0 / res;
 
-    outColor = vec4(okhsl_to_srgb(vec3(texture(prev_image, uv).r * 0.5 + 0.65, 1.0, 0.5)),pow(texture(prev_image, uv).r, 0.9));
+    outColor = vec4(pow(texture(u_image, uv).r, 0.9)*okhsl_to_srgb(vec3(texture(u_image, uv).r * 0.5 + 0.65, 1.0, 0.5)),pow(texture(u_image, uv).r, 0.9));
 }`;
 
 var toggle = false;
@@ -736,7 +736,7 @@ var x = d3.scaleLinear()
         .domain([-10,0]),
     y = d3.scaleLinear()
         .range([graph.height, 0])
-        .domain([0,24]),
+        .domain([0,24 * graph.height/1024]),
     z = color;
 var xaxis = d3.axisBottom(x);
 var yaxis = d3.axisLeft(y);
@@ -859,7 +859,8 @@ var final_color = g.append('circle')
 var canvas = canvas_space.node();
 
 var gl = canvas.getContext("webgl2", {
-  			premultipliedAlpha: false
+  			premultipliedAlpha: true,
+			alpha: true
 			});
 gl.getExtension(gl.EXT_color_buffer_float);
 gl.getExtension(gl.EXT_float_blend);
@@ -961,7 +962,7 @@ const texCoordBuffer = gl.createBuffer();
 
         gl.activeTexture(gl.TEXTURE0+1);
         gl.bindTexture(gl.TEXTURE_2D, targetTex);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.R8, width, height, 0, gl.RED, gl.UNSIGNED_BYTE, null);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
@@ -969,7 +970,7 @@ const texCoordBuffer = gl.createBuffer();
 
         gl.activeTexture(gl.TEXTURE0+2);
         gl.bindTexture(gl.TEXTURE_2D, targetTex2);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.R8, width, height, 0, gl.RED, gl.UNSIGNED_BYTE, null);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
@@ -995,6 +996,8 @@ const texCoordBuffer = gl.createBuffer();
     	]), gl.STATIC_DRAW);
     	gl.enableVertexAttribArray(gl.getAttribLocation(inProgram, "a_texCoord"));
     	gl.vertexAttribPointer(gl.getAttribLocation(inProgram, "a_texCoord"), 2, gl.FLOAT, false, 0, 0);
+
+
 
         gl.useProgram(inProgram);
 
@@ -1027,7 +1030,7 @@ const texCoordBuffer = gl.createBuffer();
     	gl.enableVertexAttribArray(gl.getAttribLocation(outProgram, "a_texCoord"));
     	gl.vertexAttribPointer(gl.getAttribLocation(outProgram, "a_texCoord"), 2, gl.FLOAT, false, 0, 0);
 
-        gl.activeTexture(gl.TEXTURE0+1);
+        gl.activeTexture(gl.TEXTURE0+0);
         gl.bindTexture(gl.TEXTURE_2D, targetTex);
 
     	gl.useProgram(outProgram);
@@ -1040,16 +1043,12 @@ const texCoordBuffer = gl.createBuffer();
         gl.uniform1f(gl.getUniformLocation(outProgram, "tx"), tx);
         gl.uniform1f(gl.getUniformLocation(outProgram, "ty"), ty);
     	gl.uniform1i(gl.getUniformLocation(outProgram, "u_image"), 0);            // Update the time
-        gl.uniform1i(gl.getUniformLocation(outProgram, "prev_image"), 1);
+		gl.uniform3f(outLocs.hue, h, s, l);
     	gl.uniform1f(outLocs.time, 0.0 * 0.001);
     	// in setRectangle puts data in the position buffer
     	gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);            // Set a rectangle the same size as the image.
     	setRectangle(gl, 0, 0, width, height);            // Draw the rectangle.
 
-        gl.uniform3f(outLocs.hue, h, s, l);
-        gl.drawArrays(gl.TRIANGLES, 0, 6);
-
-        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
 
         //temp = targetTex2;
@@ -1083,14 +1082,13 @@ function display() {
     	gl.enableVertexAttribArray(gl.getAttribLocation(outProgram, "a_texCoord"));
     	gl.vertexAttribPointer(gl.getAttribLocation(outProgram, "a_texCoord"), 2, gl.FLOAT, false, 0, 0);
 
-        gl.activeTexture(gl.TEXTURE0+1);
+        gl.activeTexture(gl.TEXTURE0+0);
         gl.bindTexture(gl.TEXTURE_2D, targetTex);
 
     	gl.useProgram(outProgram);
 
         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer); // I think this isn't necessary
         gl.uniform1i(gl.getUniformLocation(outProgram, "u_image"), 0);
-        gl.uniform1i(gl.getUniformLocation(outProgram, "prev_image"), 1);
         gl.uniform1f(gl.getUniformLocation(outProgram, "k"), k);
         gl.uniform1f(gl.getUniformLocation(outProgram, "tx"), tx);
         gl.uniform1f(gl.getUniformLocation(outProgram, "ty"), ty);
