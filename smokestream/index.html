@@ -47,11 +47,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1671481881.css">
+  <link rel="stylesheet" href="/minima.1671561174.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1671481881.js"></script>
+  <script defer type="text/javascript" src="/minima.1671561174.js"></script>
 </head>
 <script>
   
@@ -1182,6 +1182,7 @@ void main() {
 <script type = "text" id = "deband">
 uniform sampler2D u_image;
 uniform float time;
+uniform int mode;
 in vec2 v_texCoord;
 out vec4 outColor;
 
@@ -1388,7 +1389,11 @@ void main() {
     // for when you wanna use this shader to debug other things
 
     //color = lineGradient(color.r, 32., 4., 2.); // pressure
-    //color = lineGradient2(color.r, 1. / pow(2.,6.), pow(2.,3.), pow(2.,4.)); // pressure
+    // color = lineGradient2(color.r, 1. / pow(2.,6.), pow(2.,3.), pow(2.,4.)); // pressure
+    if (mode == 1) {color = lineGradient2(color.r, 1. / pow(2.,6.), pow(2.,3.), pow(2.,5.));} // pressure
+    if (mode == 2) {color = logGradient(color.r, 1. / pow(2.,12.), pow(2.,0.5), pow(2.,3.), pow(2.,4.));} // divergence
+    //if (mode == 2) {color = logGradient(color.r, 1. / pow(2.,12.), pow(2.,1.), pow(2.,2.), pow(2.,3.));} // divergence
+    if (mode == 3) {color = colorMap(color.rg);} // velocity
     //color = lineGradient(color.r, pow(2.,10.), pow(2.,8.), pow(2.,6.)); // divergence
     //color = logGradient(color.r, 1. / pow(2.,12.), pow(2.,1.), pow(2.,2.), pow(2.,3.)); // divergence
     //color = colorMap(color.rg); // velocity
@@ -1426,6 +1431,17 @@ void main() {
             d="M12 0c-4.87 7.197-8 11.699-8 16.075 0 4.378 3.579 7.925 8 7.925s8-3.547 8-7.925c0-4.376-3.13-8.878-8-16.075zm.462 20.471c2.56-1.049 4.124-4.889 3.021-8.853 3.798 4.909.754 9.393-3.021 8.853z" /></svg>
 </div>
 <div align="center" id="slider-fill2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style = "position:relative; top:-23px;"><path fill='gray' d="M22.266 14.724c-.064.898-.242 1.766-.522 2.586l1.601.675c-.163.461-.353.909-.568 1.344l-1.602-.676c-.383.751-.855 1.448-1.402 2.078l1.229 1.229c-.323.364-.667.709-1.032 1.032l-2.262-2.262c1.874-1.59 3.125-4.039 3.125-6.735 0-4.878-3.954-8.832-8.832-8.832s-8.833 3.954-8.833 8.832c0 2.505 1.107 5.024 3.126 6.735l-2.293 2.27-1.031-1.031 1.259-1.238c-.562-.647-1.046-1.365-1.434-2.139l-1.606.665c-.212-.436-.399-.885-.559-1.348l1.605-.664c-.268-.802-.439-1.646-.5-2.521h-1.735v-1.459h1.734c.063-.897.242-1.765.522-2.585l-1.6-.675c.163-.461.352-.91.567-1.344l1.602.675c.383-.75.855-1.448 1.403-2.078l-1.229-1.229c.323-.365.668-.709 1.032-1.031l1.229 1.229c.647-.562 1.366-1.045 2.141-1.433l-.665-1.606c.435-.212.885-.399 1.347-.558l.665 1.604c.802-.267 1.647-.438 2.522-.5v-1.734h1.459v1.733c.899.063 1.767.242 2.587.522l.675-1.6c.462.162.911.353 1.345.567l-.676 1.602c.751.383 1.449.854 2.08 1.402l1.229-1.229c.365.322.709.666 1.032 1.03l-1.229 1.229c.562.647 1.045 1.366 1.434 2.14l1.606-.665c.212.436.399.885.558 1.348l-1.604.664c.269.802.439 1.646.501 2.521h1.733v1.459h-1.734zm-3.434-.729c0 3.767-3.064 6.832-6.832 6.832s-6.833-3.065-6.833-6.832 3.065-6.832 6.833-6.832 6.832 3.065 6.832 6.832zm-7.36-1.81l-2.158-2.158-1.415 1.413 2.158 2.158 1.415-1.413z"/></svg></div>
+<div align="center">
+<br>
+<input type="radio" id="smoke" name="mode" value="0" checked="checked">
+<label for="0">Smoke</label>
+<input type="radio" id="pressure" name="mode" value="1">
+<label for="1">Pressure</label>
+<input type="radio" id="divergence" name="mode" value="2">
+<label for="2">Divergence</label>
+<input type="radio" id="velocity" name="mode" value="3">
+<label for="3">Velocity</label>
+</div>
 <script type="text/javascript">
 "use strict";
 
@@ -1661,7 +1677,8 @@ debandShader = {...debandShader,...{
     },
     'uniforms': {
         'u_resolution': gl.getUniformLocation(debandShader.program, "u_resolution"),
-        'time': gl.getUniformLocation(debandShader.program, "time")
+        'time': gl.getUniformLocation(debandShader.program, "time"),
+        'mode': gl.getUniformLocation(debandShader.program, "mode")
         }
 }}
 
@@ -1967,9 +1984,19 @@ function render(time) {
 
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
-    initShader(debandShader, [realOutput]);
+    console.log(document.querySelector('input[name="mode"]:checked').value);
+
+    var mode = parseInt(document.querySelector('input[name="mode"]:checked').value);
+
+    switch(mode) {
+        case 0: initShader(debandShader, [realOutput]); break;
+        case 1: initShader(debandShader, [pressure]); break;
+        case 2: initShader(debandShader, [divergence]); break;
+        case 3: initShader(debandShader, [newInitialVelocity]); break;
+    }
     gl.uniform2f(debandShader.uniforms.u_resolution, width, height);
     gl.uniform1i(debandShader.uniforms.u_image, 0);
+    gl.uniform1i(debandShader.uniforms.mode, mode);
     gl.uniform1f(debandShader.uniforms.time, time);
 
     gl.viewport(0, 0, canvas.width, canvas.height);

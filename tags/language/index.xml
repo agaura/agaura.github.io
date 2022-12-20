@@ -9,15 +9,13 @@
     <copyright>TH ↔ Þ</copyright>
     <lastBuildDate>Fri, 24 Jun 2022 10:23:10 +0200</lastBuildDate><atom:link href="https://agaura.github.io/tags/language/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Transcriptor</title>
+      <title>A New Approach to English Spelling</title>
       <link>https://agaura.github.io/transcriptor/</link>
       <pubDate>Fri, 24 Jun 2022 10:23:10 +0200</pubDate>
       
       <guid>https://agaura.github.io/transcriptor/</guid>
-      <description>window.onload = TextToIPA.loadDict(&#39;https://agaura.github.io/text-to-ipa/lib/ipadict.txt&#39;);  Use the following text areas to convert english to it&#39;s IPA equivalent.
-This is NOT case sensitive and punctuation is ignored.
-Note: If you are using chrome and this is being ran locally, the dictionary will not load due to the way Chrome handles XHTTP Requests. It does handle them normally on proper websites. Check out a live example here
- Convert!   This converter will not work unless Javascript is enabled.</description>
+      <description>window.onload = TextToIPA.loadDict(&#39;https://agaura.github.io/text-to-ipa/lib/ipadict.txt&#39;);  Excerpt  Ål hjuumn beingz ar born fre and eicwl in dignody and riits. Ða ar øndoud wiþ reizn and cånsjonts and sjød act tordz wun ønuðr in a spirøt uv bruðrhod.
+Background  Back in high school, I wanted to teach some friends some Polish words and phrases. Since sometimes I was doing this over text (in English, in the US), I needed a way to write Polish sounds into English so they could read it.</description>
     </item>
     
   </channel>

@@ -45,11 +45,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1671481881.css">
+  <link rel="stylesheet" href="/minima.1671561174.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1671481881.js"></script>
+  <script defer type="text/javascript" src="/minima.1671561174.js"></script>
 </head>
 <script>
   
@@ -907,8 +907,8 @@ const texCoordBuffer = gl.createBuffer();
         graph.height = svg.attr("height") - margin.top - margin.bottom,
 		console.log("HERE");
 		console.log(graph.width, graph.height);
-        //canvas.style.width = width;
-        //canvas.style.height = height;
+        canvas.width = graph.width;
+        canvas.height = graph.height;
         x = d3.scaleLinear().range([0, graph.width]);
         x.domain([-graph.width/60,0]) // 60 is the normal frame rate
         y = d3.scaleLinear().range([graph.height, 0]);
@@ -919,6 +919,8 @@ const texCoordBuffer = gl.createBuffer();
             .attr('height', graph.height);
         bottomAxis.attr("transform", "translate(0," + graph.height + ")")
             .call(xaxis);
+		xgrid.tickSize(-graph.height);
+		ygrid.tickSize(-graph.width);
 		vertGrid.attr("transform", "translate(0," + graph.height + ")")
             .call(xgrid);
         xlabel.attr("x", graph.width - 3);
@@ -926,6 +928,7 @@ const texCoordBuffer = gl.createBuffer();
 		horGrid.attr(ygrid);
         ylabel.attr("y", 6);
         vertical.attr("y2", graph.height);
+		zoomlabel.attr("x", graph.width - 29).attr("y", - graph.height + 11)
 		width = 1024 *  graph.width / graph.height;
 		height = 1024;
     }
@@ -1066,7 +1069,7 @@ navigator.getUserMedia = ( navigator.getUserMedia ||
                        navigator.msGetUserMedia);
 
 //navigator.getUserMedia({ video : false, audio : true }, callback, console.log);
-firstRender(0.075, 1.0, 0.5);
+//firstRender(0.075, 1.0, 0.5);
 
 navigator.mediaDevices.getUserMedia({ video : false, audio : true })
   .then(callback)
