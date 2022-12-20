@@ -9,15 +9,6 @@
     <copyright>TH ↔ Þ</copyright>
     <lastBuildDate>Mon, 28 Nov 2022 12:06:38 +0100</lastBuildDate><atom:link href="https://agaura.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Life Analysis</title>
-      <link>https://agaura.github.io/lifeanalysis/</link>
-      <pubDate>Fri, 02 Dec 2022 23:00:59 +0100</pubDate>
-      
-      <guid>https://agaura.github.io/lifeanalysis/</guid>
-      <description>My goals in each part of my life: High school In high school I just wanted to get into a good school. I knew I was smart and capable, and I figured I could sort everything out when I&amp;rsquo;m older. Plus, I have a lot of interests, so it made sense to me to see how intensely I could study everything. Of course, I did gravitate to certain things in particular that took up my time and that I was most interested in:</description>
-    </item>
-    
-    <item>
       <title>Audio Spectrum</title>
       <link>https://agaura.github.io/audiospectrum/</link>
       <pubDate>Mon, 28 Nov 2022 12:06:38 +0100</pubDate>
@@ -36,16 +27,6 @@
       <description>Shader      ⏸
 
 // an attribute is an input (in) to a vertex shader. // It will receive data from a buffer in vec2 a_position; in vec2 a_texCoord; uniform vec2 u_resolution; out vec2 v_texCoord; void main() { vec2 zeroToOne = a_position / u_resolution; vec2 zeroToTwo = zeroToOne * 2.0; // convert from 0-1 to 0-2 vec2 clipSpace = zeroToTwo - 1.0; // convert from 0-2 to -1-+1 (clipspace) gl_Position = vec4(clipSpace * vec2(1, 1), 0, 1); // pass the texCoord to the fragment shader v_texCoord = a_texCoord; }  // Copyright(c) 2021 Björn Ottosson // // Permission is hereby granted, free of charge, to any person obtaining a copy of // this softwareand associated documentation files(the &#34;</description>
-    </item>
-    
-    <item>
-      <title>A New Approach to English Spelling</title>
-      <link>https://agaura.github.io/transcriptor/</link>
-      <pubDate>Fri, 24 Jun 2022 10:23:10 +0200</pubDate>
-      
-      <guid>https://agaura.github.io/transcriptor/</guid>
-      <description>window.onload = TextToIPA.loadDict(&#39;https://agaura.github.io/text-to-ipa/lib/ipadict.txt&#39;);  Excerpt  Ål hjuumn beingz ar born fre and eicwl in dignody and riits. Ða ar øndoud wiþ reizn and cånsjonts and sjød act tordz wun ønuðr in a spirøt uv bruðrhod.
-Background  Back in high school, I wanted to teach some friends some Polish words and phrases. Since sometimes I was doing this over text (in English, in the US), I needed a way to write Polish sounds into English so they could read it.</description>
     </item>
     
     <item>

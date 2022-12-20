@@ -47,11 +47,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1671566621.css">
+  <link rel="stylesheet" href="/minima.1671580701.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1671566621.js"></script>
+  <script defer type="text/javascript" src="/minima.1671580701.js"></script>
 </head>
 <script>
   
@@ -1179,7 +1179,7 @@ void main() {
     outColor = outColor + vec4(25. * spriteChange * exp(-(dxp * dxp + dyp * dyp) / (0.00025)), 0.0, 1.0);
 }
 </script>
-<script type = "text" id = "deband">
+<script type = "text" id = "postprocess">
 uniform sampler2D u_image;
 uniform float time;
 uniform int mode;
@@ -1385,6 +1385,8 @@ vec4 colorMap(vec2 co){
 
 void main() {
     vec4 color = texture(u_image, v_texCoord);
+    //color = texture(u_image, v_texCoord + 0.01 * vec2(rand(v_texCoord),rand(v_texCoord + 0.1)) - 0.005);
+    //color = texture(u_image, v_texCoord + 0.01 * vec2(rand(v_texCoord * time),rand(v_texCoord * time*1.9 + 0.1)) - 0.005);
 
     // for when you wanna use this shader to debug other things
 
@@ -1402,7 +1404,7 @@ void main() {
         rand(vec2(rand((v_texCoord + 0.1) * 100.) * 100., time)) / 255.,
         rand(vec2(rand((v_texCoord + 0.2) * 100.) * 100., time)) / 255.,
         rand(vec2(rand((v_texCoord + 0.3) * 100.) * 100., time)) / 255.);
-    outColor = color + 1.0*noise;
+    outColor = color + 1.0 * noise;
 }
 </script>
 <script type = "text" id = "output">
@@ -1441,12 +1443,9 @@ const btn = document.getElementById('btn');
 const radiobtn = document.getElementById('radiobtn');
 var mode = parseInt(document.querySelector('input[name="mode"]:checked').value);
 var canvas = document.querySelector("canvas");
-const gl = canvas.getContext("webgl2", {
-    premultipliedAlpha: true,
-    alpha: true
-    });
+const gl = canvas.getContext("webgl2", {premultipliedAlpha: true});
 gl.getExtension('EXT_color_buffer_float'); // allows for float textures (instead of 256 colors like regular)
-gl.getExtension('OES_texture_float_linear'); // does automatic bilinear interpolation (or at least I assume it's bilinear)
+//gl.getExtension('OES_texture_float_linear'); // does automatic bilinear interpolation (or at least I assume it's bilinear)
 var scaleFactor = 2.;
 
 // size
@@ -1568,7 +1567,7 @@ const advectFragShader = '#version 300 es \n precision highp float;' + document.
 const divergenceFragShader = '#version 300 es \n precision highp float;' + document.getElementById('divergence').text;
 const jacobiFragShader = '#version 300 es \n precision highp float;' + document.getElementById('jacobi').text;
 const pressureFragShader = '#version 300 es \n precision highp float;' + document.getElementById('pressure').text;
-const debandFragShader = '#version 300 es \n precision highp float;' + document.getElementById('colors').text + document.getElementById('deband').text;
+const postprocessFragShader = '#version 300 es \n precision highp float;' + document.getElementById('colors').text + document.getElementById('postprocess').text;
 const outputFragShader = '#version 300 es \n precision highp float;' + document.getElementById('output').text;
 
 var advectionShader = {
@@ -1654,18 +1653,18 @@ pressureShader = {...pressureShader,...{
         }
 }}
 
-var debandShader = {
-    'program': webglUtils.createProgramFromSources(gl,[vertexShaderSource, debandFragShader])
+var postprocessShader = {
+    'program': webglUtils.createProgramFromSources(gl,[vertexShaderSource, postprocessFragShader])
 }
-debandShader = {...debandShader,...{
+postprocessShader = {...postprocessShader,...{
     'attributes': {
-        'a_position': gl.getAttribLocation(debandShader.program, "a_position"),
-        'a_texCoord': gl.getAttribLocation(debandShader.program, "a_texCoord")
+        'a_position': gl.getAttribLocation(postprocessShader.program, "a_position"),
+        'a_texCoord': gl.getAttribLocation(postprocessShader.program, "a_texCoord")
     },
     'uniforms': {
-        'u_resolution': gl.getUniformLocation(debandShader.program, "u_resolution"),
-        'time': gl.getUniformLocation(debandShader.program, "time"),
-        'mode': gl.getUniformLocation(debandShader.program, "mode")
+        'u_resolution': gl.getUniformLocation(postprocessShader.program, "u_resolution"),
+        'time': gl.getUniformLocation(postprocessShader.program, "time"),
+        'mode': gl.getUniformLocation(postprocessShader.program, "mode")
         }
 }}
 
@@ -1765,10 +1764,10 @@ function initTexture(internalFormat, format, type) {
     gl.texImage2D(gl.TEXTURE_2D, 0, internalFormat, targetTexWidth, targetTexHeight, 0, format, type, null);
     
     // set the filtering so we don't need mips
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    //gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    //gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
 
     return targetTex;
 }
@@ -1904,15 +1903,15 @@ function init(time) {
 function display(time) {
 
     switch(mode) {
-        case 0: initShader(debandShader, [realOutput]); break;
-        case 1: initShader(debandShader, [pressure]); break;
-        case 2: initShader(debandShader, [divergence]); break;
-        case 3: initShader(debandShader, [newInitialVelocity]); break;
+        case 0: initShader(postprocessShader, [realOutput]); break;
+        case 1: initShader(postprocessShader, [pressure]); break;
+        case 2: initShader(postprocessShader, [divergence]); break;
+        case 3: initShader(postprocessShader, [newInitialVelocity]); break;
     }
-    gl.uniform2f(debandShader.uniforms.u_resolution, width, height);
-    gl.uniform1i(debandShader.uniforms.u_image, 0);
-    gl.uniform1i(debandShader.uniforms.mode, mode);
-    gl.uniform1f(debandShader.uniforms.time, time);
+    gl.uniform2f(postprocessShader.uniforms.u_resolution, width, height);
+    gl.uniform1i(postprocessShader.uniforms.u_image, 0);
+    gl.uniform1i(postprocessShader.uniforms.mode, mode);
+    gl.uniform1f(postprocessShader.uniforms.time, time);
 
     gl.viewport(0, 0, canvas.width, canvas.height);
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
@@ -1927,7 +1926,7 @@ function render(time) {
     sprite1.update();
     gl.viewport(0, 0, width, height);
 
-    //console.log(dt);
+    console.log(dt);
     
     // 1 / 60 is the regular frame rate... don't use dt for deltaT, it doesn't help slow computers, it's just makes the rendering wacky
     dt = time - oldTime;
