@@ -47,11 +47,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1671561174.css">
+  <link rel="stylesheet" href="/minima.1671566621.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1671561174.js"></script>
+  <script defer type="text/javascript" src="/minima.1671566621.js"></script>
 </head>
 <script>
   
@@ -1414,24 +1414,9 @@ void main() {
     outColor = texture(u_image, v_texCoord);
 }
 </script>
-<div align="center" id="slider-fill">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-        style="position:relative; top:-23px;">
-        <linearGradient id="Gradient2" x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0%" stop-color="#d60071" />
-            <stop offset="20%" stop-color="#c04e00" />
-            <stop offset="30%" stop-color="#917200" />
-            <stop id='example' offset="45%" stop-color="#468a00" />
-            <stop offset="50%" stop-color="#008a79" />
-            <stop offset="60%" stop-color="#0083a8" />
-            <stop offset="70%" stop-color="#4b5dff" />
-            <stop offset="100%" stop-color="#b200df" />
-        </linearGradient>
-        <path fill="url(#Gradient2)"
-            d="M12 0c-4.87 7.197-8 11.699-8 16.075 0 4.378 3.579 7.925 8 7.925s8-3.547 8-7.925c0-4.376-3.13-8.878-8-16.075zm.462 20.471c2.56-1.049 4.124-4.889 3.021-8.853 3.798 4.909.754 9.393-3.021 8.853z" /></svg>
-</div>
-<div align="center" id="slider-fill2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style = "position:relative; top:-23px;"><path fill='gray' d="M22.266 14.724c-.064.898-.242 1.766-.522 2.586l1.601.675c-.163.461-.353.909-.568 1.344l-1.602-.676c-.383.751-.855 1.448-1.402 2.078l1.229 1.229c-.323.364-.667.709-1.032 1.032l-2.262-2.262c1.874-1.59 3.125-4.039 3.125-6.735 0-4.878-3.954-8.832-8.832-8.832s-8.833 3.954-8.833 8.832c0 2.505 1.107 5.024 3.126 6.735l-2.293 2.27-1.031-1.031 1.259-1.238c-.562-.647-1.046-1.365-1.434-2.139l-1.606.665c-.212-.436-.399-.885-.559-1.348l1.605-.664c-.268-.802-.439-1.646-.5-2.521h-1.735v-1.459h1.734c.063-.897.242-1.765.522-2.585l-1.6-.675c.163-.461.352-.91.567-1.344l1.602.675c.383-.75.855-1.448 1.403-2.078l-1.229-1.229c.323-.365.668-.709 1.032-1.031l1.229 1.229c.647-.562 1.366-1.045 2.141-1.433l-.665-1.606c.435-.212.885-.399 1.347-.558l.665 1.604c.802-.267 1.647-.438 2.522-.5v-1.734h1.459v1.733c.899.063 1.767.242 2.587.522l.675-1.6c.462.162.911.353 1.345.567l-.676 1.602c.751.383 1.449.854 2.08 1.402l1.229-1.229c.365.322.709.666 1.032 1.03l-1.229 1.229c.562.647 1.045 1.366 1.434 2.14l1.606-.665c.212.436.399.885.558 1.348l-1.604.664c.269.802.439 1.646.501 2.521h1.733v1.459h-1.734zm-3.434-.729c0 3.767-3.064 6.832-6.832 6.832s-6.833-3.065-6.833-6.832 3.065-6.832 6.833-6.832 6.832 3.065 6.832 6.832zm-7.36-1.81l-2.158-2.158-1.415 1.413 2.158 2.158 1.415-1.413z"/></svg></div>
-<div align="center">
+<div align="center" id="slider-fill"></div>
+<div align="center" id="slider-fill2"></div>
+<div align="center" id='radiobtn'>
 <br>
 <input type="radio" id="smoke" name="mode" value="0" checked="checked">
 <label for="0">Smoke</label>
@@ -1453,6 +1438,8 @@ void main() {
 // Get A WebGL context
 var toggle = true;
 const btn = document.getElementById('btn');
+const radiobtn = document.getElementById('radiobtn');
+var mode = parseInt(document.querySelector('input[name="mode"]:checked').value);
 var canvas = document.querySelector("canvas");
 const gl = canvas.getContext("webgl2", {
     premultipliedAlpha: true,
@@ -1493,7 +1480,7 @@ window.addEventListener('pointerup', function (event) {
     mouseDown = false;
     //deltaX = event.clientX / canvas.width - mouseX;
     //deltaY = 1.0 - (event.clientY / canvas.height) - mouseY;
-    console.log(mouseX, mouseY, deltaX, deltaY);
+    //console.log(mouseX, mouseY, deltaX, deltaY);
 }, false);
 
 canvas.addEventListener('pointerdown', function (event) {
@@ -1525,13 +1512,12 @@ function initializeSprite(location, velocity, velocityPreference, direction, sta
     }
     sprite = {...sprite,...{
         'update': function() {
-            sprite.lastLocation = sprite.location;
-            var dx = sprite.velocity * Math.cos(sprite.direction);
-            var dy = sprite.velocity * Math.sin(sprite.direction);
-            sprite.location.x = (sprite.location.x + dx) % 1.0;
-            sprite.location.y = (sprite.location.y + dy) % 1.0;
-            sprite.velocity = 0.8 * sprite.velocity + 0.1 * sprite.velocityPreference + 0.1 * Math.random(),
-            sprite.direction = (Math.pow(Math.random() * 2.0 - 1.0, 100.0) * Math.PI + sprite.direction)
+            this.lastLocation = this.location,
+            this.location = initializeCoord(
+                (((this.location.x + 2. * this.velocity * Math.cos(this.direction) * ((height / width)/(1 + height / width)) / 300) % 1.0) + 1.0) % 1.0,
+                (((this.location.y + 2. * this.velocity * Math.sin(this.direction) * (1 /(1 + height / width)) / 300) % 1.0) + 1.0) % 1.0),
+            this.velocity = 0.5 * this.velocity + 0.1 * this.velocityPreference + 0.4 * Math.random(),
+            this.direction = (Math.pow(Math.random() * 2.0 - 1.0, 51.0) * Math.PI + this.direction) // very fly-like, in a bad way lol
             }
         }
     }
@@ -1562,6 +1548,7 @@ function update(sprite) {
     }}
 }*/
 
+/*
 function update(sprite) {
     return {...sprite,...{
         'lastLocation' : sprite.location,
@@ -1571,7 +1558,7 @@ function update(sprite) {
         'velocity' : 0.5 * sprite.velocity + 0.1 * sprite.velocityPreference + 0.4 * Math.random(),
         'direction' : (Math.pow(Math.random() * 2.0 - 1.0, 51.0) * Math.PI + sprite.direction) // very fly-like, in a bad way lol
     }}
-}
+}*/
 
 var sprite1 = initializeSprite();
 
@@ -1914,12 +1901,30 @@ function init(time) {
     if (toggle) {render();}
 }
 
+function display(time) {
+
+    switch(mode) {
+        case 0: initShader(debandShader, [realOutput]); break;
+        case 1: initShader(debandShader, [pressure]); break;
+        case 2: initShader(debandShader, [divergence]); break;
+        case 3: initShader(debandShader, [newInitialVelocity]); break;
+    }
+    gl.uniform2f(debandShader.uniforms.u_resolution, width, height);
+    gl.uniform1i(debandShader.uniforms.u_image, 0);
+    gl.uniform1i(debandShader.uniforms.mode, mode);
+    gl.uniform1f(debandShader.uniforms.time, time);
+
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
+}
+
 function render(time) {
 
     //console.log(localStorage.theme);
     //console.log(getComputedStyle(document.documentElement));
 
-    sprite1 = update(sprite1);
+    sprite1.update();
     gl.viewport(0, 0, width, height);
 
     //console.log(dt);
@@ -1984,24 +1989,9 @@ function render(time) {
 
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
-    console.log(document.querySelector('input[name="mode"]:checked').value);
-
     var mode = parseInt(document.querySelector('input[name="mode"]:checked').value);
 
-    switch(mode) {
-        case 0: initShader(debandShader, [realOutput]); break;
-        case 1: initShader(debandShader, [pressure]); break;
-        case 2: initShader(debandShader, [divergence]); break;
-        case 3: initShader(debandShader, [newInitialVelocity]); break;
-    }
-    gl.uniform2f(debandShader.uniforms.u_resolution, width, height);
-    gl.uniform1i(debandShader.uniforms.u_image, 0);
-    gl.uniform1i(debandShader.uniforms.mode, mode);
-    gl.uniform1f(debandShader.uniforms.time, time);
-
-    gl.viewport(0, 0, canvas.width, canvas.height);
-    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-    gl.drawArrays(gl.TRIANGLES, 0, 6);
+    display(time);
 
     temp = realOutput;
     realOutput = realOutput2;
@@ -2096,7 +2086,6 @@ var sliderFill2 = d3
         .size(250)
 )
 .on('onchange', val => {
-    console.log()
     if (toggle) render(image); // for some reason it gets weird if it doesn't have something fake in it
 });
 var gFill2 = d3
@@ -2118,6 +2107,10 @@ btn.addEventListener('click', function () {
             btn.textContent = '▶️';
         }
         render();
+    });
+radiobtn.addEventListener('click', function () {
+        mode = parseInt(document.querySelector('input[name="mode"]:checked').value);
+        requestAnimationFrame(display);
     });
 
 // only other thing worth caring about
