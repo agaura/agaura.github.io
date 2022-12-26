@@ -47,11 +47,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1671580701.css">
+  <link rel="stylesheet" href="/minima.1672071255.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1671580701.js"></script>
+  <script defer type="text/javascript" src="/minima.1672071255.js"></script>
 </head>
 <script>
   
@@ -1452,6 +1452,11 @@ var scaleFactor = 2.;
 var width = window.innerWidth / scaleFactor;
 var height = window.innerHeight / scaleFactor;
 
+
+
+
+
+
 // important for interacting with the canvas
 var mouseDown = false,
     mouseX = 0,
@@ -1482,14 +1487,22 @@ window.addEventListener('pointerup', function (event) {
     //console.log(mouseX, mouseY, deltaX, deltaY);
 }, false);
 
+// these 2 might've had to do with working on mobile, I think they prevent scrolling
 canvas.addEventListener('pointerdown', function (event) {
     event.preventDefault();
 }, false);
 
 canvas.addEventListener('pointermove', function (event) {
     if (!mouseDown) {return}
-        event.preventDefault();
-    }, false);
+    event.preventDefault();
+}, false);
+
+
+
+
+
+
+
 
 function initializeCoord(x, y) {
     return {'x': x ? x : Math.random(), 'y': y ? y : Math.random()}
@@ -1560,6 +1573,13 @@ function update(sprite) {
 }*/
 
 var sprite1 = initializeSprite();
+
+
+
+
+
+
+
 
 // create shaders
 const vertexShaderSource = '#version 300 es' + document.getElementById('vertex').text;;
@@ -1668,7 +1688,6 @@ postprocessShader = {...postprocessShader,...{
         }
 }}
 
-
 var outputShader = {
     'program': webglUtils.createProgramFromSources(gl,[vertexShaderSource, outputFragShader])
 }
@@ -1681,6 +1700,13 @@ outputShader = {...outputShader,...{
         'u_resolution': gl.getUniformLocation(outputShader.program, "u_resolution")
         }
 }}
+
+
+
+
+
+
+
 
 // resizes canvas and textures, as well as initializes them
 function resizeCanvas() {
@@ -1772,6 +1798,14 @@ function initTexture(internalFormat, format, type) {
     return targetTex;
 }
 
+
+
+
+
+
+
+
+
 // create buffers
 const positionBuffer = gl.createBuffer();
 const texCoordBuffer = gl.createBuffer();
@@ -1823,7 +1857,7 @@ function init(time) {
     resizeCanvas();
 
     initShader(advectionShader, [texture, texture], targetVelocity);
-    gl.uniform1f(advectionShader.uniforms.deltaT, sliderFill.value() / 60);
+    gl.uniform1f(advectionShader.uniforms.deltaT, slider.value() / 60);
     gl.uniform1f(advectionShader.uniforms.dt, dt);
     gl.uniform1f(advectionShader.uniforms.paint, false);
     gl.uniform2f(advectionShader.uniforms.radius, 1.0/width, 1.0/height);
@@ -1834,9 +1868,9 @@ function init(time) {
     // attach texture to framebuffer & attach the texture as the first color attachment
     initShader(divergenceShader, [targetVelocity], divergence);
     gl.uniform2f(divergenceShader.uniforms.u_resolution, width, height);
-    gl.uniform1f(divergenceShader.uniforms.deltaT, sliderFill.value() / 60);
+    gl.uniform1f(divergenceShader.uniforms.deltaT, slider.value() / 60);
     gl.uniform2f(divergenceShader.uniforms.epsilon, 1.0/width, 1.0/height);
-    gl.uniform1f(divergenceShader.uniforms.rho, sliderFill2.value());
+    gl.uniform1f(divergenceShader.uniforms.rho, slider2.value());
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
     gl.drawArrays(gl.TRIANGLES, 0, 6);
 
@@ -1867,7 +1901,7 @@ function init(time) {
     gl.uniform2f(pressureShader.uniforms.u_resolution, width, height);
     gl.uniform2f(pressureShader.uniforms.epsilon, 1.0/width, 1.0/height); 
     gl.uniform1f(pressureShader.uniforms.rho, 1.);
-    gl.uniform1f(pressureShader.uniforms.deltaT, sliderFill.value() / 60);
+    gl.uniform1f(pressureShader.uniforms.deltaT, slider.value() / 60);
     gl.uniform1i(pressureShader.uniforms.velocity, 0);
     gl.uniform1i(pressureShader.uniforms.pressure, 1);
     gl.uniform1f(pressureShader.uniforms.mouseDown, mouseDown);
@@ -1879,7 +1913,7 @@ function init(time) {
 
     initShader(advectionShader, [initialImage, newInitialVelocity], realOutput);
     gl.uniform2f(advectionShader.uniforms.u_resolution, width, height);
-    gl.uniform1f(advectionShader.uniforms.deltaT, sliderFill.value() / 60);
+    gl.uniform1f(advectionShader.uniforms.deltaT, slider.value() / 60);
     gl.uniform1f(advectionShader.uniforms.dt, dt);
     gl.uniform1i(advectionShader.uniforms.u_image, 0);
     gl.uniform1i(advectionShader.uniforms.velocity, 1);
@@ -1926,7 +1960,7 @@ function render(time) {
     sprite1.update();
     gl.viewport(0, 0, width, height);
 
-    console.log(dt);
+    //console.log(dt);
     
     // 1 / 60 is the regular frame rate... don't use dt for deltaT, it doesn't help slow computers, it's just makes the rendering wacky
     dt = time - oldTime;
@@ -1937,7 +1971,7 @@ function render(time) {
     gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuffer);
 
     initShader(advectionShader, [newInitialVelocity, newInitialVelocity], targetVelocity);
-    gl.uniform1f(advectionShader.uniforms.deltaT, sliderFill.value() / 60);
+    gl.uniform1f(advectionShader.uniforms.deltaT, slider.value() / 60);
     gl.uniform1f(advectionShader.uniforms.dt, dt);
     gl.uniform1f(advectionShader.uniforms.paint, false);
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
@@ -1945,8 +1979,8 @@ function render(time) {
     gl.drawArrays(gl.TRIANGLES, 0, 6);
 
     initShader(divergenceShader, [targetVelocity], divergence);
-    gl.uniform1f(divergenceShader.uniforms.deltaT, sliderFill.value() / 60);
-    gl.uniform1f(divergenceShader.uniforms.rho, sliderFill2.value());
+    gl.uniform1f(divergenceShader.uniforms.deltaT, slider.value() / 60);
+    gl.uniform1f(divergenceShader.uniforms.rho, slider2.value());
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
     gl.drawArrays(gl.TRIANGLES, 0, 6);
 
@@ -1964,7 +1998,7 @@ function render(time) {
     }
 
     initShader(pressureShader, [targetVelocity, pressurep], newInitialVelocity);
-    gl.uniform1f(pressureShader.uniforms.deltaT, sliderFill.value() / 60);
+    gl.uniform1f(pressureShader.uniforms.deltaT, slider.value() / 60);
     gl.uniform1f(pressureShader.uniforms.mouseDown, mouseDown);
     gl.uniform2f(pressureShader.uniforms.change, deltaX, deltaY);
     gl.uniform2f(pressureShader.uniforms.center, mouseX, mouseY);
@@ -1974,7 +2008,7 @@ function render(time) {
     gl.drawArrays(gl.TRIANGLES, 0, 6);
 
     initShader(advectionShader, [realOutput2, newInitialVelocity], realOutput);
-    gl.uniform1f(advectionShader.uniforms.deltaT, sliderFill.value() / 60);
+    gl.uniform1f(advectionShader.uniforms.deltaT, slider.value() / 60);
     gl.uniform1f(advectionShader.uniforms.paint, true);
     gl.uniform1f(advectionShader.uniforms.dark, localStorage.theme == "dark");
     gl.uniform1f(advectionShader.uniforms.mouseDown, mouseDown);
@@ -2021,81 +2055,56 @@ function setRectangle(gl, x, y, width, height) {
 
 
 // slider stuff mostly
-function componentToHex(c) {
-    var hex = c.toString(16);
-    return hex.length == 1 ? "0" + hex : hex;
-}
-
-function rgbToHex(r, g, b) {
-    return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
-}
-
-function hexToRgb(hex) {
-    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-        return result ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16)
-          } : null;
-    }
 
 var data = [0, 1.0];
-var sliderFill = d3
-.sliderBottom()
-.min(d3.min(data))
-.max(d3.max(data))
-.width(Math.min(300,screen.width*0.55))
-.tickFormat(d3.format('.0%'))
-.ticks(5)
-.default(1.0)
-.fill('#415794')
-.handle(
-    d3
-        .symbol()
+var slider = d3.sliderBottom()
+    .min(d3.min(data))
+    .max(d3.max(data))
+    .width(Math.min(300,screen.width*0.55))
+    .tickFormat(d3.format('.0%'))
+    .ticks(5)
+    .default(1.0)
+    .fill('#415794')
+    .handle(d3.symbol()
         .type(d3.symbolCircle)
         .size(250)
-)
-.on('onchange', val => {
-    render(image); // for some reason it gets weird if it doesn't have something fake in it
-});
-var gFill = d3
-.select('div#slider-fill')
-.append('svg')
-.attr('width', Math.min(350,screen.width*0.7))
-.attr('height', 65)
+    )
+var gFill = d3.select('div#slider-fill')
+    .append('svg')
+    .attr('width', Math.min(350,screen.width*0.7))
+    .attr('height', 65)
 var gFillg = gFill
-.append('g')
-.attr('transform', 'translate(30,30)')
-.attr('fill', '#aaaaaa')
-gFillg.call(sliderFill);
+    .append('g')
+    .attr('transform', 'translate(30,30)')
+    .attr('fill', '#aaaaaa')
+gFillg.call(slider);
 
-var sliderFill2 = d3
-.sliderBottom()
-.min(d3.min(data))
-.max(2.0)
-.width(Math.min(300,screen.width*0.55))
-.tickFormat(d3.format('.0%'))
-.ticks(5)
-.default(1.0)
-.fill('#415794')
-.handle(
-    d3
+var slider2 = d3.sliderBottom()
+    .min(d3.min(data))
+    .max(2.0)
+    .width(Math.min(300,screen.width*0.55))
+    .tickFormat(d3.format('.0%'))
+    .ticks(5)
+    .default(1.0)
+    .fill('#415794')
+    .handle(d3
         .symbol()
         .type(d3.symbolCircle)
         .size(250)
-)
-.on('onchange', val => {
-    if (toggle) render(image); // for some reason it gets weird if it doesn't have something fake in it
-});
-var gFill2 = d3
-.select('div#slider-fill2')
-.append('svg')
-.attr('width', Math.min(350,screen.width*0.7))
-.attr('height', 65)
+    )
+var gFill2 = d3.select('div#slider-fill2')
+    .append('svg')
+    .attr('width', Math.min(350,screen.width*0.7))
+    .attr('height', 65)
 var gFillg2 = gFill2.append('g')
-.attr('transform', 'translate(30,30)')
-.attr('fill', '#aaaaaa');
-gFillg2.call(sliderFill2);
+    .attr('transform', 'translate(30,30)')
+    .attr('fill', '#aaaaaa');
+gFillg2.call(slider2);
+
+
+
+
+
 
 btn.addEventListener('click', function () {
         toggle = !toggle;
@@ -2116,12 +2125,12 @@ radiobtn.addEventListener('click', function () {
 window.onload = function() {init()}
 
 function updateWindow(){
-    sliderFill.width(Math.min(300,screen.width*0.55));
+    slider.width(Math.min(300,screen.width*0.55));
     gFill.attr('width', Math.min(350,screen.width*0.7));
-    gFillg.call(sliderFill);
-    sliderFill2.width(Math.min(300,screen.width*0.55));
+    gFillg.call(slider);
+    slider2.width(Math.min(300,screen.width*0.55));
     gFill2.attr('width', Math.min(350,screen.width*0.7));
-    gFillg2.call(sliderFill2);
+    gFillg2.call(slider2);
     init();
 }
 

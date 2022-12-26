@@ -30,6 +30,16 @@
     </item>
     
     <item>
+      <title>A New Approach to English Spelling</title>
+      <link>https://agaura.github.io/transcriptor/</link>
+      <pubDate>Fri, 24 Jun 2022 10:23:10 +0200</pubDate>
+      
+      <guid>https://agaura.github.io/transcriptor/</guid>
+      <description>window.onload = TextToIPA.loadDict(&#39;https://agaura.github.io/text-to-ipa/lib/ipadict.txt&#39;);  Excerpt  Ål hjuumn beingz ar born fre and eicwl in dignody and riits. Ða ar øndoud wiþ reizn and cånsjonts and sjød act tordz wun ønuðr in a spirøt uv bruðrhod.
+Background  Back in high school, I wanted to teach some friends some Polish words and phrases. Since sometimes I was doing this over text (in English, in the US), I needed a way to write Polish sounds into English so they could read it.</description>
+    </item>
+    
+    <item>
       <title>Dimension Isolating Shader</title>
       <link>https://agaura.github.io/isolate/</link>
       <pubDate>Thu, 26 May 2022 13:56:21 +0200</pubDate>
