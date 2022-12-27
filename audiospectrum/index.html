@@ -45,11 +45,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1672071298.css">
+  <link rel="stylesheet" href="/minima.1672106083.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1672071298.js"></script>
+  <script defer type="text/javascript" src="/minima.1672106083.js"></script>
 </head>
 <script>
   
@@ -168,15 +168,11 @@ uniform float tx;
 uniform float ty;
 out vec2 v_texCoord;// all shaders have a main function
 void main() {// convert the position from pixels to 0.0 to 1.0
-vec2 zeroToOne = a_position / u_resolution;// convert from 0->1 to 0->2
+vec2 zeroToOne = a_position / vec2(1950.,1024.);// convert from 0->1 to 0->2
 vec2 zeroToTwo = zeroToOne * 2.0;// convert from 0->2 to -1->+1 (clipspace)
 vec2 clipSpace = zeroToTwo - 1.0;
 gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);// pass the texCoord to the fragment shader
-// The GPU will interpolate this value between points.
-//v_texCoord = a_texCoord * vec2(1.0,-1.0) + vec2(0.0,1.0);
-//v_texCoord = vec2(-tx / (k * 1950.),ty / (k * 1024.)) + 1./k * (a_texCoord * vec2(1.0,-1.0) + vec2(0.015,0.675)) + vec2(1.0 - 600./1950. - 0.015, 1.0 - 0.675);
-v_texCoord = vec2(-tx / (k * 1950.),ty / (k * 1024.)) + 1./k * (a_texCoord * vec2(1.0,-1.0) + vec2(0.0,0.691)) + vec2(1.0 - 600./1950., 1.0 - 0.684);
-// I have no idea why the vec2(0.0,0.691) is necessary, but if I don't have it then the vertical zoom translates away from the cursor
+v_texCoord = 1./k * (vec2(-tx / 1950., ty / 1024.) + a_texCoord * vec2(1.0,-1.0) + vec2(0.0, 1.0)) + vec2(1.0 - u_resolution.x/1950., (k - 1.) * (u_resolution.y/1024.) / k);
 }
 `;
 
@@ -786,8 +782,7 @@ const ylabel = leftAxis.append("text")
     .attr("dy", "0.71em")
     .attr("fill", "#808080B0")
     .text("Frequency (kHz)");
-const canvas_space = foreignObject.append("xhtml:canvas")
-    .call(d3.zoom()
+var zoom = d3.zoom()
         //.extent([[0, 0], [1950, 1024]])
         .extent([[0, 0], [graph.width, graph.height]])
         .scaleExtent([graph.width / (1024 * graph.width/graph.height), 8 * graph.width/(1024 * graph.width/graph.height)])
@@ -805,16 +800,22 @@ const canvas_space = foreignObject.append("xhtml:canvas")
        		k = d3.event.transform['k'];
        		tx = d3.event.transform['x'];
        		ty = d3.event.transform['y'];
-	   		console.log(d3.event.transform);
-			console.log(graph.width, graph.height);
+	   		//console.log(d3.event.transform);
 			zoomlabel.text("Zoom: " + d3.format(".2f")(k / (graph.width/(1024 * graph.width/graph.height))));
        		//console.log(screen.height);
        		//console.log(screen.width);
        		//console.log(window.innerWidth);
+
+			console.log("ZOOM");
+			console.log(graph.width, graph.height);
+			console.log(k, tx, ty);
+
        	if (!toggle) {
             display();
        }
-    }))
+    });
+const canvas_space = foreignObject.append("xhtml:canvas")
+    .call(zoom)
     .attr("id", "spectral_canvas")
     .attr("width", 1024 * graph.width/graph.height) // to match graph ratio
     .attr("height", 1024);
@@ -900,37 +901,79 @@ const texCoordBuffer = gl.createBuffer();
 
     function resizeCanvas() {
 		console.log("resize");
+		
         const maxWidth = Math.min(640, screen.width);
         svg.attr("width", maxWidth);
-        svg.attr("height", maxWidth * 360 / 640);
+        svg.attr("height", Math.round(maxWidth * 360 / 640));
         graph.width = svg.attr("width") - margin.left - margin.right,
         graph.height = svg.attr("height") - margin.top - margin.bottom,
-		console.log("HERE");
 		console.log(graph.width, graph.height);
+
         canvas.width = graph.width;
         canvas.height = graph.height;
+
         x = d3.scaleLinear().range([0, graph.width]);
         x.domain([-graph.width/60,0]) // 60 is the normal frame rate
         y = d3.scaleLinear().range([graph.height, 0]);
         y.domain([0,24 * graph.height / 1024]);
+
         foreignObject.attr('width', graph.width)
             .attr('height', graph.height);
         canvas_space.attr('width', graph.width)
             .attr('height', graph.height);
+
         bottomAxis.attr("transform", "translate(0," + graph.height + ")")
             .call(xaxis);
-		xgrid.tickSize(-graph.height);
-		ygrid.tickSize(-graph.width);
+		xgrid = d3.axisBottom(x).tickSize(-graph.height).tickFormat('');
 		vertGrid.attr("transform", "translate(0," + graph.height + ")")
             .call(xgrid);
-        xlabel.attr("x", graph.width - 3);
+		xlabel.attr("x", graph.width - 3);
+
+		ygrid = d3.axisLeft(y).tickSize(-graph.width).tickFormat('');
         leftAxis.call(yaxis);
 		horGrid.attr(ygrid);
         ylabel.attr("y", 6);
+
         vertical.attr("y2", graph.height);
-		zoomlabel.attr("x", graph.width - 29).attr("y", - graph.height + 11)
-		width = 1024 *  graph.width / graph.height;
+		zoomlabel.attr("x", graph.width - 29).attr("y", - graph.height + 11);
+		width = 1950;
 		height = 1024;
+
+		zoom = d3.zoom()
+        //.extent([[0, 0], [1950, 1024]])
+        .extent([[0, 0], [graph.width, graph.height]])
+        .scaleExtent([graph.width / (1024 * graph.width/graph.height), 8 * graph.width/(1024 * graph.width/graph.height)])
+        .translateExtent([[graph.width-(1024 * graph.width/graph.height), graph.height-1024], [graph.width, graph.height]])
+        //.extent([[0, 0], [600, 370]])
+        //.scaleExtent([600/1950, 2])
+        //.translateExtent([[-1060, -654], [600, 370]])
+        .on("zoom", function () {
+            vertGrid.call(xgrid.scale(d3.event.transform.rescaleX(x)));
+            horGrid.call(ygrid.scale(d3.event.transform.rescaleY(y)));
+            bottomAxis.call(xaxis.scale(d3.event.transform.rescaleX(x)));
+            leftAxis.call(yaxis.scale(d3.event.transform.rescaleY(y)));
+            //bottomAxis.call(bottomAxis.scale(transform.rescaleX(x)))
+       		//svg.attr("transform", d3.event.transform);
+       		k = d3.event.transform['k'];
+       		tx = d3.event.transform['x'];
+       		ty = d3.event.transform['y'];
+	   		//console.log(d3.event.transform);
+			zoomlabel.text("Zoom: " + d3.format(".2f")(k / (graph.width/(1024 * graph.width/graph.height))));
+       		//console.log(screen.height);
+       		//console.log(screen.width);
+       		//console.log(window.innerWidth);
+
+			console.log("ZOOM");
+			console.log(graph.width, graph.height);
+			console.log(k, tx, ty);
+
+       		if (!toggle) {
+            display();
+       		}
+    	});
+		
+		canvas_space.call(zoom);
+
     }
 
     function setRectangle(gl, x, y, width, height) {
@@ -1040,7 +1083,9 @@ const texCoordBuffer = gl.createBuffer();
 
         //gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuffer);
         //gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, targetTex2, 0);
-    	gl.uniform2f(gl.getUniformLocation(outProgram, "u_resolution"), width, height); 
+		console.log("Uniform", width, height);
+		console.log("Uniform", graph.width, graph.height);
+    	gl.uniform2f(gl.getUniformLocation(outProgram, "u_resolution"), graph.width, graph.height); 
         gl.uniform2f(gl.getUniformLocation(outProgram, "res"), width, height);
         gl.uniform1f(gl.getUniformLocation(outProgram, "k"), k);
         gl.uniform1f(gl.getUniformLocation(outProgram, "tx"), tx);
@@ -1090,6 +1135,7 @@ function display() {
 
     	gl.useProgram(outProgram);
 
+		console.log("Uniform", graph.width, graph.height);
         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer); // I think this isn't necessary
         gl.uniform1i(gl.getUniformLocation(outProgram, "u_image"), 0);
         gl.uniform1f(gl.getUniformLocation(outProgram, "k"), k);
