@@ -47,11 +47,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1672162327.css">
+  <link rel="stylesheet" href="/minima.1672201532.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1672162327.js"></script>
+  <script defer type="text/javascript" src="/minima.1672201532.js"></script>
 </head>
 <script>
   
@@ -1004,7 +1004,7 @@ void main() {
             //color = vec4(hsl2rgb(vec3((time + t * dt) / 128.0, 1.0, 0.5)), 1.0); // oil slick color
             //color = vec4(hsl2rgb(vec3((time + t * dt) / 4.0, 1.0, 0.5)), 1.0); // oil slick color
             //color = vec4(hsl2rgb(vec3(time / 1024.0, 0.25, 0.5)), 1.0); // gentle rainbow
-            color = vec4(okhsl_to_srgb(vec3(time / 1024.0, 0.5, 0.5)), 1.0); // gentle and smooth rainbow
+            color = vec4(okhsl_to_srgb(vec3(time / 1024.0, 1.0, 0.5)), 1.0); // gentle and smooth rainbow
             //color = vec4(hsl2rgb(vec3(time / 1024.0 + (time + t * dt) * mag / (2.* 8192.0), 0.25, 0.5)), 1.0); // reaaaally cool oil slick
             //color = vec4(okhsl_to_srgb(vec3(time / 1024.0 + (time + t * dt) * pow(mag, 0.5) / (.5* 8192.0), 0.75, 0.5)), 1.0); // reaaaally cool oil slick (I think something is wrong with the time, it is pretty when it starts but it seems like it gets stronger over time)
 
@@ -1036,12 +1036,8 @@ void main() {
         if (dark) {result = result + newColor * magp;}
         else {result = mix(result, newColor, magp);}
         result = mix(vec4(0.0), result, 0.99);
-        
-        //vec4 saturate = vec4(rgb2hsl(result.rgb),result.a);
-        //saturate = vec4(hsl2rgb(vec3(saturate.x, mix(saturate.y, 0.8, 0.5), saturate.z)), saturate.a);
 
         outColor = result;
-        //outColor = saturate;
 
         //if ((result.a == 1.0)) {outColor = vec4(0.0);}
         //if ((result.a < 1.0)) {outColor = mix(vec4(0.0), result, 0.99);}
@@ -1135,6 +1131,7 @@ float rand(vec2 co) {
 }
 
 // THIS FUNCTION NEEDS TO BE UPDATED TO BE CONSIDERATE OF THE WINDOW'S DIMENSIONS!!! XXXXX
+// actually I don't know if it does lol, think about it later
 vec2 closestPoint(vec2 delta, vec2 end, vec2 current) {
 
     if (delta == vec2(0.0)) {return end;}

@@ -45,11 +45,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1672162327.css">
+  <link rel="stylesheet" href="/minima.1672201532.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1672162327.js"></script>
+  <script defer type="text/javascript" src="/minima.1672201532.js"></script>
 </head>
 <script>
   
@@ -741,11 +741,9 @@ var ygrid = d3.axisLeft(y).tickSize(-graph.width).tickFormat('');
 //const foreignObject = g.append('foreignObject')
 //    .attr('width', width)
 //    .attr('height', height)
-const foreignObject = svg.append('foreignObject')
+const foreignObject = g.append('foreignObject')
     .attr('width', graph.width)
     .attr('height', graph.height)
-	.attr('x', margin.left)
-	.attr('y', margin.top)
     //.attr("transform", "translate(" + margin.left + "," + margin.top + ")"); // this doesn't seem to work in safari
 //const foreignBody = foreignObject.append('body');
 const vertGrid = g.append('g')
@@ -763,6 +761,7 @@ const xlabel = bottomAxis.append("text")
     .attr("text-anchor", "end")
     .attr("y", - 4)
     .attr("fill", "#808080B0")
+	//.attr("style", "position: relative; z-index: 999") // this doesn't work! I don't know why
     .text("Time (s)")
     .attr("fill", "#AA0000");
 const zoomlabel = bottomAxis.append("text")
@@ -772,6 +771,7 @@ const zoomlabel = bottomAxis.append("text")
     .attr("fill", "#808080B0")
     .text("Zoom: " + d3.format(".2f")(1 / (graph.width/(1024 * graph.width/graph.height))))
     .attr("fill", "#AA0000");
+	//.attr("style", "z-index: 999");
 const leftAxis = g.append("g")
     .attr("class", "axis")
     .call(yaxis);
@@ -780,7 +780,7 @@ const ylabel = leftAxis.append("text")
     .attr("y", 7)
     .attr("x", -3)
     .attr("dy", "0.71em")
-    .attr("fill", "#808080B0")
+    //.attr("style", "fill: #800000") // this is the way to change the text color
     .text("Frequency (kHz)");
 var zoom = d3.zoom()
         //.extent([[0, 0], [1950, 1024]])
@@ -819,15 +819,16 @@ const canvas_space = foreignObject.append("xhtml:canvas")
     .attr("id", "spectral_canvas")
     .attr("width", 1024 * graph.width/graph.height) // to match graph ratio
     .attr("height", 1024);
+	//.attr("style", "position:relative; z-index: -1");
 var vertical = g.append("line")
-    .attr("y1", 0)
+    .attr("y1", -5)
     .attr("y2", 305)
     .attr("x1", 0)
     .attr("x2", 0)
     .attr("stroke", "#7F7F7F50");
 var final_color = g.append('circle')
     .attr('cx', 0)
-    .attr('cy', -5)
+    .attr('cy', -7)
     .attr('r', 6)
     .attr('stroke', 'gray')
     .attr('fill', '#000000A0');
@@ -857,31 +858,20 @@ var final_color = g.append('circle')
             }
         });
 
+d3.select("foreignObject").raise();
+d3.selectAll("text").select(function() { return this.parentNode; }).raise(); // raises the parent nodes (a bunch of g objects) of all the text, so the grids do not block zooming function
+
 var canvas = canvas_space.node();
+var gl = canvas.getContext("webgl2");
 
-var gl = canvas.getContext("webgl2", {
-  			premultipliedAlpha: true,
-			alpha: true
-			});
-gl.getExtension(gl.EXT_color_buffer_float);
-gl.getExtension(gl.EXT_float_blend);
-gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
-gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-
-var inProgram = webglUtils.createProgramFromSources(gl,
-    [vertexShaderSource, iterFrag]);        // look up where the vertex data needs to go.
-var posAttributeLocation = gl.getAttribLocation(inProgram, "a_position");
-var texAttributeLocation = gl.getAttribLocation(inProgram, "a_texCoord");
+var inProgram = webglUtils.createProgramFromSources(gl, [vertexShaderSource, iterFrag]);
 var inLocs = {
     'time': gl.getUniformLocation(inProgram, "time"),
     'hue': gl.getUniformLocation(inProgram, "hue"),
     'res': gl.getUniformLocation(inProgram, "res")
 };
 
-var outProgram = webglUtils.createProgramFromSources(gl,
-    [scaleVert, colorFrag]);        // look up where the vertex data needs to go.
-var positionAttributeLocation = gl.getAttribLocation(outProgram, "a_position");
-var texCoordAttributeLocation = gl.getAttribLocation(outProgram, "a_texCoord");
+var outProgram = webglUtils.createProgramFromSources(gl, [scaleVert, colorFrag]);
 var outLocs = {
     'time': gl.getUniformLocation(outProgram, "time"),
     'k': gl.getUniformLocation(outProgram, "k"),
@@ -900,28 +890,21 @@ const frameBuffer = gl.createFramebuffer();
 const texCoordBuffer = gl.createBuffer();
 
     function resizeCanvas() {
-		//console.log("resize");
-		console.log(document.querySelector("body").offsetWidth);
 		
         const maxWidth = Math.min(640, document.querySelector("body").offsetWidth);
         svg.attr("width", maxWidth);
 		graph.width = svg.attr("width") - margin.left - margin.right;
 		graph.height = Math.round(graph.width * 315/600);
         svg.attr("height", graph.height + margin.top + margin.bottom);
-		//console.log(graph.width, graph.height);
 
         canvas.width = graph.width;
         canvas.height = graph.height;
 
-        x = d3.scaleLinear().range([0, graph.width]);
-        x.domain([-graph.width/60,0]) // 60 is the normal frame rate
-        y = d3.scaleLinear().range([graph.height, 0]);
-        y.domain([0,24 * graph.height / 1024]);
+        x = d3.scaleLinear().range([0, graph.width]).domain([ - graph.width / 60,0]); // 60 is the normal frame rate
+        y = d3.scaleLinear().range([graph.height, 0]).domain([0,24 * graph.height / 1024]); // the range of the audio is to 24 kHz
 
-        foreignObject.attr('width', graph.width)
-            .attr('height', graph.height);
-        canvas_space.attr('width', graph.width)
-            .attr('height', graph.height);
+        foreignObject.attr('width', graph.width).attr('height', graph.height);
+        canvas_space.attr('width', graph.width).attr('height', graph.height);
 
 		xaxis = d3.axisBottom(x);
         bottomAxis.attr("transform", "translate(0," + graph.height + ")").call(xaxis); // brings bottom axis to bottom: works
@@ -941,36 +924,20 @@ const texCoordBuffer = gl.createBuffer();
 		height = 1024;
 
 		zoom = d3.zoom()
-        //.extent([[0, 0], [1950, 1024]])
         .extent([[0, 0], [graph.width, graph.height]])
         .scaleExtent([graph.width / (1024 * graph.width/graph.height), 8 * graph.width/(1024 * graph.width/graph.height)])
         .translateExtent([[graph.width-(1024 * graph.width/graph.height), graph.height-1024], [graph.width, graph.height]])
-        //.extent([[0, 0], [600, 370]])
-        //.scaleExtent([600/1950, 2])
-        //.translateExtent([[-1060, -654], [600, 370]])
         .on("zoom", function () {
             vertGrid.call(xgrid.scale(d3.event.transform.rescaleX(x)));
             horGrid.call(ygrid.scale(d3.event.transform.rescaleY(y)));
             bottomAxis.call(xaxis.scale(d3.event.transform.rescaleX(x)));
             leftAxis.call(yaxis.scale(d3.event.transform.rescaleY(y)));
-            //bottomAxis.call(bottomAxis.scale(transform.rescaleX(x)))
-       		//svg.attr("transform", d3.event.transform);
        		k = d3.event.transform['k'];
        		tx = d3.event.transform['x'];
        		ty = d3.event.transform['y'];
-	   		//console.log(d3.event.transform);
 			zoomlabel.text("Zoom: " + d3.format(".2f")(k / (graph.width/(1024 * graph.width/graph.height))));
-       		//console.log(screen.height);
-       		//console.log(screen.width);
-       		//console.log(window.innerWidth);
 
-			//console.log("ZOOM");
-			//console.log(graph.width, graph.height);
-			//console.log(k, tx, ty);
-
-       		if (!toggle) {
-            display();
-       		}
+       		if (!toggle) {display();}
     	});
 		
 		canvas_space.call(zoom);
