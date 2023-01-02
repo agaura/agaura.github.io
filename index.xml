@@ -9,6 +9,15 @@
     <copyright>TH ↔ Þ</copyright>
     <lastBuildDate>Mon, 28 Nov 2022 12:06:38 +0100</lastBuildDate><atom:link href="https://agaura.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>Transcriptor</title>
+      <link>https://agaura.github.io/transcriptor2/</link>
+      <pubDate>Fri, 30 Dec 2022 15:31:41 -0500</pubDate>
+      
+      <guid>https://agaura.github.io/transcriptor2/</guid>
+      <description>window.onload = TextToIPA.loadDict(&#39;https://agaura.github.io/text-to-ipa/lib/ipadict.txt&#39;);    .md table { border-collapse: collapse; border-spacing: 0; border: 1px solid var(--ft); display: table; max-width: 100%; width: 100%; margin: 1em 0; overflow: auto; } .md table thead { border-top: 2px solid var(--ft); border-bottom: 1px solid var(--ft); } .md table tbody { border-bottom: 1px solid var(--ft); } .md table td { border: 1px solid var(--ft); transition: background-color 0.5s; } .md table td:hover { background-color: #80000080; cursor: pointer; } .</description>
+    </item>
+    
+    <item>
       <title>Audio Spectrum</title>
       <link>https://agaura.github.io/audiospectrum/</link>
       <pubDate>Mon, 28 Nov 2022 12:06:38 +0100</pubDate>

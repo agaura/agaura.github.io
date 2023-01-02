@@ -47,11 +47,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1672201532.css">
+  <link rel="stylesheet" href="/minima.1672690900.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1672201532.js"></script>
+  <script defer type="text/javascript" src="/minima.1672690900.js"></script>
 </head>
 <script>
   
@@ -1852,9 +1852,9 @@ function init(time) {
         advectionShader.attributes.a_texCoord, 2, gl.FLOAT, false, 0, 0);
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
     setRectangle(gl, 0, 0, width, height);
+    
     gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuffer);
 
-    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true); // this is needed for some reason, otherwise the y-axis will be flipped
     resizeCanvas();
 
     initShader(advectionShader, [texture, texture], targetVelocity);

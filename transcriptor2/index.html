@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta property="og:title" content="Transcriptor" />
+<meta property="og:description" content="window.onload = TextToIPA.loadDict(&#39;https://agaura.github.io/text-to-ipa/lib/ipadict.txt&#39;);    .md table { border-collapse: collapse; border-spacing: 0; border: 1px solid var(--ft); display: table; max-width: 100%; width: 100%; margin: 1em 0; overflow: auto; } .md table thead { border-top: 2px solid var(--ft); border-bottom: 1px solid var(--ft); } .md table tbody { border-bottom: 1px solid var(--ft); } .md table td { border: 1px solid var(--ft); transition: background-color 0.5s; } .md table td:hover { background-color: #80000080; cursor: pointer; } ." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://agaura.github.io/transcriptor2/" /><meta property="article:section" content="" />
+<meta property="article:published_time" content="2022-12-30T15:31:41-05:00" />
+<meta property="article:modified_time" content="2022-12-30T15:31:41-05:00" />
+
+
+  <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Transcriptor"/>
+<meta name="twitter:description" content="window.onload = TextToIPA.loadDict(&#39;https://agaura.github.io/text-to-ipa/lib/ipadict.txt&#39;);    .md table { border-collapse: collapse; border-spacing: 0; border: 1px solid var(--ft); display: table; max-width: 100%; width: 100%; margin: 1em 0; overflow: auto; } .md table thead { border-top: 2px solid var(--ft); border-bottom: 1px solid var(--ft); } .md table tbody { border-bottom: 1px solid var(--ft); } .md table td { border: 1px solid var(--ft); transition: background-color 0.5s; } .md table td:hover { background-color: #80000080; cursor: pointer; } ."/>
+
+  
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BBWS173BMQ"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-BBWS173BMQ', { 'anonymize_ip': false });
+}
+</script>
+
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#262d33">
+  <title>
+    
+    Alexander Gaura - Transcriptor
+    
+  </title>
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  
+  
+  
+  <link rel="stylesheet" href="/minima.1672690900.css">
+
+  
+  
+  <script defer type="text/javascript" src="/minima.1672690900.js"></script>
+</head>
+<script>
+  
+  let theme_2b_used = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+
+  try {
+    if (!('theme' in localStorage)) {
+      const default_theme = 'system';
+      
+      
+      if (default_theme === 'dark' || default_theme === 'light') {
+        theme_2b_used = default_theme;
+      }
+
+      
+      localStorage.theme = theme_2b_used;
+    }
+    
+    document.querySelector('html').classList.add(localStorage.theme);
+  } catch (e) {
+    console.error(e);
+  }
+</script>
+
+
+<body class=" sm:mx-5 sm:my-0">
+  <header class="flex justify-between items-center mb-6 sm:my-3">
+  <div class="flex items-center">
+    
+    <div id="theme-switcher" class="text-4xl cursor-pointer">⚫️</div>
+  </div>
+  <nav class="flex items-center
+    whitespace-nowrap overflow-x-auto overflow-y-hidden">
+    
+    <a class="ml-5" href="/">Home</a>
+    
+    <a class="ml-5" href="/categories/writing">Writing</a>
+    
+    <a class="ml-5" href="/categories/projects">Projects</a>
+    
+    <a class="ml-5" href="/about">About</a>
+    
+  </nav>
+</header>
+  
+  
+
+<h1 class="mt-6 mb-6" style="color: #456bc4;">Transcriptor</h1>
+<div class="mb-3 text-xs flex justify-between sm:flex-col">
+	<div>
+	
+		Posted at &mdash; Dec 30, 2022
+	
+		
+	</div>
+	
+</div>
+<main>
+	<p></p>
+	<article class="md">
+		<script src='https://agaura.github.io/text-to-ipa/lib/text-to-ipa.js'></script>
+<script src='https://agaura.github.io/text-to-ipa/lib/converter-form.js'></script>
+<script> window.onload = TextToIPA.loadDict('https://agaura.github.io/text-to-ipa/lib/ipadict.txt'); </script>
+<script src="https://d3js.org/d3.v6.min.js"></script>
+<!-- modified version from markdown.scss -->
+<style>
+.md table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  border: 1px solid var(--ft);
+  display: table;
+  max-width: 100%;
+  width: 100%;
+  margin: 1em 0;
+  overflow: auto;
+}
+
+.md table thead {
+  border-top: 2px solid var(--ft);
+  border-bottom: 1px solid var(--ft);
+}
+
+.md table tbody {
+  border-bottom: 1px solid var(--ft);
+}
+
+.md table td {
+  border: 1px solid var(--ft);
+  transition: background-color 0.5s;
+}
+
+.md table td:hover {
+  background-color: #80000080;
+  cursor: pointer;
+}
+
+.md table td:hover {
+  background-color: #80000080;
+  cursor: pointer;
+}
+
+.my_div {
+  transition: all 500ms ease-in-out;
+}
+.my_div:hover {
+  background-color: green;
+}
+h1 {
+  overflow: hidden;
+}
+</style>
+<h1 id="excerpt">Excerpt</h1>
+<p>  <em>Ål hjuumn beingz ar born fre and eicwl in dignody and riits. Ða ar øndoud wiþ reizn and cånsjonts and sjød act tordz wun ønuðr in a spirøt uv bruðrhod.</em></p>
+<h1 id="alphabet">Alphabet</h1>
+<table>
+<tbody><tr>
+<td id="A">A/a</td>
+<td id="Å">Å/å</td>
+<td id="B">B/b</td>
+<td id="C">C/c</td>
+<td id="D">D/d</td>
+<td id="Ð">Ð/ð</td>
+<td id="E">E/e</td>
+</tr>
+<tr>
+<td id="F">F/f</td>
+<td id="G">G/g</td>
+<td id="H">H/h</td>
+<td id="I">I/i</td>
+<td id="J">J/j</td>
+<td id="L">L/l</td>
+<td id="M">M/m</td>
+</tr>
+<tr>
+<td id="N">N/n</td>
+<td id="Ŋ">Ŋ/ŋ</td>
+<td id="O">O/o</td>
+<td id="Ø">Ø/ø</td>
+<td id="P">P/p</td>
+<td id="R">R/r</td>
+<td id="S">S/s</td>
+</tr>
+<tr>
+<td id="T">T/t</td>
+<td id="U">U/u</td>
+<td id="V">V/v</td>
+<td id="W">W/w</td>
+<td id="X">X/x</td>
+<td id="Y">Y/y</td>
+<td id="Z">Z/z</td>
+</tr>
+</tbody></table>
+<div id="AA">
+<p style="text-align: center; font-size: 25px;"> A/a </span>
+<p>Default Pronunciation: /æ/; like <em>a</em> as in <em>apple</em></p>
+<p>Other Pronunciations:</p>
+<ul>
+<li>Before <em>N</em> or <em>M</em>, <em>A</em> is pronounced /eə/; like <em>a</em> as in <em>can</em></li>
+<li>Before another vowel or at the end of words, as well as before <em>Ŋ</em>, <em>A</em> is pronounced /eɪ/; like <em>a</em> as in <em>date</em>
+<ul>
+<li>When paired with <em>I</em>, <em>AI</em> is also pronounced /eɪ/;</li>
+</ul>
+</li>
+<li>Before <em>R</em>, <em>A</em> is pronounced /ɑ/; like <em>a</em> as in <em>car</em></li>
+</ul>
+</tbody></table>
+</div>
+<div id="ÅÅ" style="display: none">
+<p style="text-align: center; font-size: 25px;"> Å/å </span>
+<p>Default Pronunciation: /ɑ/; like <em>a</em> as in <em>all</em></p>
+</div>
+</div>
+<div id="BB" style="display: none">
+<p style="text-align: center; font-size: 25px;"> B/b </span>
+<p>Default Pronunciation: /b/; like <em>b</em> as in <em>bag</em></p>
+</div>
+<div id="CC" style="display: none">
+<p style="text-align: center; font-size: 25px;"> C/c </span>
+<p>Default Pronunciation: /kʰ/; like <em>c</em> as in <em>cat</em></p>
+<p>Other pronunciations:</p>
+<ul>
+<li>When following <em>S</em>, starting unstressed syllables, before consonants, or at the end of a word, <em>C</em> is pronounced /k/; like <em>c</em> as in <em>scar</em></li>
+</ul>
+</div>
+<div id="DD" style="display: none">
+<p style="text-align: center; font-size: 25px;"> D/d </span>
+<p>Default Pronunciation: /d/; like <em>d</em> as in <em>dog</em></p>
+<p>Other pronunciations:</p>
+<ul>
+<li>When preceding <em>J</em> or <em>R</em>, <em>D</em> is pronounced /dʒ/; like <em>d</em> as in <em>drag</em> or <em>badge</em></li>
+<li>When surrounded by vowels and preceding an unstressed syllable, or when following a vowel at the end of a word, <em>D</em> is pronounced /ɾ/; like <em>d</em> as in <em>bad</em></li>
+</ul>
+</div>
+<div id="ÐÐ" style="display: none">
+<p style="text-align: center; font-size: 25px;"> Ð/ð </span>
+<p>Default Pronunciation: /ð/; like <em>th</em> as in <em>the</em></p>
+</div>
+<div id="EE" style="display: none">
+<p style="text-align: center; font-size: 25px;"> E/e </span>
+<p>Default Pronunciation: /ɛ/; like <em>e</em> as in <em>egg</em></p>
+<p>Other pronunciations:</p>
+<ul>
+<li>Before another vowel or at the end of words, <em>E</em> is pronounced /i/; like <em>e</em> as in <em>seed</em>
+<ul>
+<li>When paired with <em>I</em>, <em>EI</em> is also pronounced /i/;</li>
+</ul>
+</li>
+<li>Before <em>R</em>, <em>E</em> is pronounced /e/; like <em>e</em> as in <em>merry</em></li>
+</ul>
+</div>
+<div id="FF" style="display: none">
+<p style="text-align: center; font-size: 25px;"> F/f </span>
+<p>Default Pronunciation: /f/; like <em>f</em> as in <em>free</em></p>
+</div>
+<div id="GG" style="display: none">
+<p style="text-align: center; font-size: 25px;"> G/g </span>
+<p>Default Pronunciation: /g/; like <em>g</em> as in <em>girl</em></p>
+</div>
+<div id="HH" style="display: none">
+<p style="text-align: center; font-size: 25px;"> H/h </span>
+<p>Default Pronunciation: /h/; like <em>h</em> as in <em>hello</em></p>
+<p>Other pronunciations:</p>
+<ul>
+<li>May be silent at the end of words in order to prevent vowels from changing sound</li>
+</ul>
+</div>
+<div id="II" style="display: none">
+<p style="text-align: center; font-size: 25px;"> I/i </span>
+<p>Default Pronunciation: /ɪ/; like <em>i</em> as in <em>ill</em></p>
+<p>Other pronunciations:</p>
+<ul>
+<li>Before another vowel or at the end of words, <em>I</em> is pronounced /aɪ/; like <em>i</em> as in <em>hi</em>
+<ul>
+<li>When paired with <em>I</em>, <em>II</em> is also pronounced /aɪ/;</li>
+</ul>
+</li>
+<li>When paired with <em>A</em>, <em>AI</em> is pronounced /eɪ/; like <em>a</em> as in <em>date</em></li>
+<li>When paired with <em>E</em>, <em>EI</em> is pronounced /i/; like <em>e</em> as in <em>seed</em></li>
+<li>When paired with <em>O</em>, <em>OI</em> is pronounced /ɔɪ/; like <em>oi</em> as in <em>coin</em></li>
+</ul>
+</div>
+<div id="JJ" style="display: none">
+<p style="text-align: center; font-size: 25px;"> J/j </span>
+<p>Default Pronunciation: /j/; like <em>j</em> as in <em>fjord</em></p>
+<p>Other pronunciations:</p>
+<ul>
+<li>When paired with <em>D</em>, <em>DJ</em> is pronounced /dʒ/; like <em>j</em> as in <em>judge</em></li>
+<li>When paired with <em>S</em>, <em>SJ</em> is pronounced /ʃ/; like <em>sh</em> as in <em>ship</em></li>
+<li>When paired with <em>T</em>, <em>TJ</em> is pronounced /tʃ/; like <em>ch</em> as in <em>change</em></li>
+<li>When paired with <em>Z</em>, <em>ZJ</em> is pronounced /ʒ/; like <em>s</em> as in <em>pleasure</em></li>
+</ul>
+</div>
+<div id="LL" style="display: none">
+<p style="text-align: center; font-size: 25px;"> L/l </span>
+<p>Default Pronunciation: /l/; like <em>l</em> as in <em>lake</em></p>
+<p>Other pronunciations:</p>
+<ul>
+<li>When following a vowel and not preceding another vowel, <em>L</em> is pronounced /ɫ/; like <em>l</em> as in <em>full</em></li>
+</ul>
+</div>
+<div id="MM" style="display: none">
+<p style="text-align: center; font-size: 25px;"> M/m </span>
+<p>Default Pronunciation: /m/; like <em>m</em> as in <em>match</em></p>
+</div>
+<div id="NN" style="display: none">
+<p style="text-align: center; font-size: 25px;"> N/n </span>
+<p>Default Pronunciation: /n/; like <em>n</em> as in <em>no</em></p>
+<p>Other pronunciations:</p>
+<ul>
+<li>When preceding <em>B</em> or <em>P</em>, <em>N</em> is pronounced /m/; like <em>n</em> as in <em>rainbow</em></li>
+<li>When preceding <em>C</em> or <em>G</em>, <em>N</em> is pronounced /ŋ/; like <em>n</em> as in <em>sink</em></li>
+</ul>
+</div>
+<div id="ŊŊ" style="display: none">
+<p style="text-align: center; font-size: 25px;"> Ŋ/ŋ </span>
+<p>Default Pronunciation: /ŋ/; like <em>ng</em> as in <em>sing</em></p>
+</div>
+<div id="OO" style="display: none">
+<p style="text-align: center; font-size: 25px;"> O/o </span>
+<p>Default Pronunciation: /oʊ/; like <em>o</em> as in <em>note</em></p>
+<p>Other pronunciations:</p>
+<ul>
+<li>When preceding <em>R</em>, <em>O</em> is pronounced /ɔ/; like <em>o</em> as in <em>sore</em></li>
+<li>When paired with <em>I</em>, <em>OI</em> is pronounced /ɔɪ/; like <em>oi</em> as in <em>coin</em></li>
+<li>When paired with <em>U</em>, <em>OU</em> is pronounced /aʊ/; like <em>ou</em> as in <em>out</em></li>
+</ul>
+</div>
+<div id="ØØ" style="display: none">
+<p style="text-align: center; font-size: 25px;"> Ø/ø </span>
+<p>Default Pronunciation: /ʊ/; like <em>ou</em> as in <em>could</em></p>
+<p>Other pronunciations:</p>
+<ul>
+<li>In unstressed syllables, ø is pronounced /ə/; like <em>o</em> as in <em>shallot</em></li>
+</ul>
+</div>
+<div id="PP" style="display: none">
+<p style="text-align: center; font-size: 25px;"> P/p </span>
+<p>Default Pronunciation: /pʰ/; like <em>p</em> as in <em>pray</em></p>
+<p>Other pronunciations:</p>
+<ul>
+<li>When following <em>S</em>, starting unstressed syllables, before consonants, or at the end of a word, <em>P</em> is pronounced /p/; like <em>p</em> as in <em>spar</em></li>
+</ul>
+</div>
+<div id="RR" style="display: none">
+<p style="text-align: center; font-size: 25px;"> R/r </span>
+<p>Default Pronunciation: /ɹ/; like <em>r</em> as in <em>roger</em></p>
+</div>
+<div id="SS" style="display: none">
+<p style="text-align: center; font-size: 25px;"> S/s </span>
+<p>Default Pronunciation: /s/; like <em>s</em> as in <em>sir</em></p>
+<p>Other pronunciations:</p>
+<ul>
+<li>When preceding <em>J</em> or <em>R</em>, <em>S</em> is pronounced /ʃ/; like <em>sh</em> as in <em>ship</em></li>
+</ul>
+</div>
+<div id="TT" style="display: none">
+<p style="text-align: center; font-size: 25px;"> T/t </span>
+<p>Default Pronunciation: /tʰ/; like <em>t</em> as in <em>top</em></p>
+<p>Other pronunciations:</p>
+<ul>
+<li>After vowels and before unstressed syllables, <em>T</em> is pronounced /ɾ/; like <em>t</em> as in <em>humanity</em></li>
+<li>When isolated at the end of words and before syllabic <em>N</em>, <em>T</em> is pronounced /ʔ/; like <em>t</em> as in <em>kitten</em></li>
+<li>When following <em>S</em>, starting unstressed syllables, before <em>S</em> and <em>W</em>, or at the end of a word, <em>T</em> is pronounced /t/; like <em>t</em> as in <em>star</em></li>
+<li>When preceding <em>J</em> or <em>R</em>, <em>T</em> is pronounced /tʃ/; like <em>t</em> as in <em>true</em> or <em>batch</em></li>
+</ul>
+</div>
+<div id="UU" style="display: none">
+<p style="text-align: center; font-size: 25px;"> U/u </span>
+<p>Default Pronunciation: /ʌ/; like <em>u</em> as in <em>strut</em></p>
+<p>Other pronunciations:</p>
+<ul>
+<li>Before another vowel or at the end of words, <em>U</em> is pronounced /u/; like <em>u</em> as in <em>dude</em>
+<ul>
+<li>When preceding <em>U</em>, <em>UU</em> is also pronounced /u/;</li>
+</ul>
+</li>
+<li>When following <em>O</em>, <em>OU</em> is pronounced /aʊ/; like <em>ou</em> as in <em>out</em></li>
+</ul>
+</div>
+<div id="VV" style="display: none">
+<p style="text-align: center; font-size: 25px;"> V/v </span>
+<p>Default Pronunciation: /v/; like <em>v</em> as in <em>valve</em></p>
+</div>
+<div id="WW" style="display: none">
+<p style="text-align: center; font-size: 25px;"> W/w </span>
+<p>Default Pronunciation: /ks/; like <em>x</em> as in <em>axe</em></p>
+</div>
+<div id="XX" style="display: none">
+<p style="text-align: center; font-size: 25px;"> X/x </span>
+<p>Default Pronunciation: /ks/; like <em>x</em> as in <em>axe</em></p>
+</div>
+<div id="YY" style="display: none">
+<p style="text-align: center; font-size: 25px;"> Y/y </span>
+<p>Default Pronunciation: /j/; like <em>y</em> as in <em>yes</em></p>
+</div>
+<div id="ZZ" style="display: none">
+<p style="text-align: center; font-size: 25px;"> Z/z </span>
+<p>Default Pronunciation: /z/; like <em>z</em> as in <em>zip</em></p>
+</div>
+<h1 id="transcriptor">Transcriptor</h1>
+<p>Use the following text areas to convert english to it&rsquo;s IPA equivalent.</p>
+<p>This is NOT case sensitive and punctuation is ignored.</p>
+<p>Note: If you are using chrome and this is being ran locally, the dictionary will not load due to the way Chrome handles XHTTP Requests. It does handle them normally on proper websites. Check out a live example <a href="http://surrsur.us/projects/ipa/english-to-ipa.html">here</a></p>
+<center><textarea id="ipa-in" placeholder="Write text here" rows=4 oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"' style="width:90%; font:inherit; color: currentColor; background-color: #7f7f7f40"></textarea></center>
+&emsp;
+<center><button type="button" id="js-ipa-submit" onClick="ConverterForm.convert('ipa-in', 'ipa-out', 'ipa-err')">Convert!</button></center>
+&emsp;
+<center><textarea readonly id="ipa-out" placeholder="aʊtpʊt gəʊz hɪə" rows=4 onoutput='this.style.height = "";this.style.height = this.scrollHeight + "px"' style="width:90%; font:inherit; color: currentColor; background-color: #7f7f7f40"></textarea></center>
+<script>
+    var old_div = d3.select("#AA");
+    d3.selectAll("td")
+        .on('pointerdown', function () {
+            console.log(this.id);
+
+            var last_height = old_div.node().clientHeight;
+            old_div.style("display", "none")
+
+            var new_div = d3.select("#" + this.id + this.id);
+            
+            new_div.style("display", "block")
+            var height = new_div.node().clientHeight;
+
+            new_div
+                .style("display", "block")
+                .style("height", last_height + "px") // actually this should be the height of the previous div
+                .style("opacity", 0)
+
+            new_div
+                .transition()
+                .duration(50 * Math.sqrt(Math.abs(last_height - height)))
+                .style("height", height + "px")
+                .transition()
+                .duration(500)
+                .style("opacity", 1)
+            
+            old_div = new_div;
+
+            });
+</script><blockquote>
+</blockquote>
+
+	</article>
+</main>
+
+
+
+
+
+
+
+  <footer class="mt-8 flex sm:flex-col-reverse justify-between items-center">
+  <p class="mt-0 text-sm">
+    TH ↔ Þ 
+    
+  </p>
+  <p class="flex items-center mt-0">
+    
+      <a class="icon mx-2" href="https://github.com/agaura" title="github">
+      
+        <svg fill="#63636f" width="18" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>GitHub</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+      
+      </a>
+    
+      <a class="icon mx-2" href="https://www.instagram.com/arg793/" title="instagram">
+      
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><path fill = "#bc2a8d" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+      
+      </a>
+    
+      <a class="icon mx-2" href="https://www.linkedin.com/in/alexander-gaura-19980514a/" title="linkedin">
+      
+        <svg fill="#0073b1" width="18" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>LinkedIn</title><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+      
+      </a>
+    
+      <a class="icon mx-2" href="/index.xml" title="rss">
+      
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><path fill = "#ee802f" d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/></svg>
+      
+      </a>
+    
+  </p>
+</footer>
+
+  
+</body>
+</html>
