@@ -47,11 +47,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1672691448.css">
+  <link rel="stylesheet" href="/minima.1673024568.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1672691448.js"></script>
+  <script defer type="text/javascript" src="/minima.1673024568.js"></script>
 </head>
 <script>
   
@@ -994,19 +994,17 @@ void main() {
             float dy = (close.y - v_texCoord.y); // dy = 0.; // interesting effect
 
             // find out how affected a pixel should be due to its distance as well as the velocity (numbers chosen by experimentation)
-            vec2 effect = 50. * scale2(change) * exp(-(dx * dx + dy * dy) / .001);
+            vec2 effect = 50. * scale2(change) * exp(-(dx * dx + dy * dy) / (.001 * mix(1., 10., length(change))));
             //effect = 50. * (scale2(change) + vec2(0.0,-0.005)) * exp(-(dx * dx + dy * dy) / (radius * .5)); // for the aurora
             //effect = 50. * (scale2(change) + vec2(0.0,-0.002)) * exp(-(dx * dx + dy * dy) / (radius * .5)); // gives an interesting effect
             float mag = (effect.x * effect.x + effect.y * effect.y) / 2.0;
 
             // determine the color
             vec4 color = vec4(0.3,0.,1.,1.0); // make a random color
-            //color = vec4(hsl2rgb(vec3((time + t * dt) / 128.0, 1.0, 0.5)), 1.0); // oil slick color
-            //color = vec4(hsl2rgb(vec3((time + t * dt) / 4.0, 1.0, 0.5)), 1.0); // oil slick color
-            //color = vec4(hsl2rgb(vec3(time / 1024.0, 0.25, 0.5)), 1.0); // gentle rainbow
-            color = vec4(okhsl_to_srgb(vec3(time / 1024.0, 1.0, 0.5)), 1.0); // gentle and smooth rainbow
+            //color = vec4(okhsl_to_srgb(vec3(time / 1024.0, 1.0, 0.5)), 1.0); // gentle and smooth rainbow (original)
             //color = vec4(hsl2rgb(vec3(time / 1024.0 + (time + t * dt) * mag / (2.* 8192.0), 0.25, 0.5)), 1.0); // reaaaally cool oil slick
-            //color = vec4(okhsl_to_srgb(vec3(time / 1024.0 + (time + t * dt) * pow(mag, 0.5) / (.5* 8192.0), 0.75, 0.5)), 1.0); // reaaaally cool oil slick (I think something is wrong with the time, it is pretty when it starts but it seems like it gets stronger over time)
+            color = vec4(okhsl_to_srgb(vec3((time + t) / 1024.0 + 0.9 * pow(mag, 0.5), 0.9, 0.5)), 1.0); // reaaaally cool oil slick
+            //color = vec4(okhsl_to_srgb(vec3((time + t) / (1024.0 * 1. * pow(change.x * change.y, 0.05) + 16.) + 0.9 * pow(mag, 0.5), 0.9, 0.5)), 1.0); // trying to make it cycle through more colors when slow, so that when it's real slow it'll effectively be gray 
 
             // if dark mode is on, add the color to the background, which will cause brightening (like a glow)
             if (dark) {result = result + mix(vec4(0.0), color, mag);} // if you want to add summing-to-white effects
@@ -1132,6 +1130,7 @@ float rand(vec2 co) {
 
 // THIS FUNCTION NEEDS TO BE UPDATED TO BE CONSIDERATE OF THE WINDOW'S DIMENSIONS!!! XXXXX
 // actually I don't know if it does lol, think about it later
+
 vec2 closestPoint(vec2 delta, vec2 end, vec2 current) {
 
     if (delta == vec2(0.0)) {return end;}
@@ -1141,7 +1140,7 @@ vec2 closestPoint(vec2 delta, vec2 end, vec2 current) {
         vec2 initial = end - delta;
         float t = clamp(dot(current - initial, delta) / (delta.x * delta.x + delta.y * delta.y), 0.0, 1.0);
         //vec2 closest = initial + t * delta;
-        vec2 closest = initial + t * delta + (sin(t * 6. * M_PI) + 1.0 * rand(vec2(t*100.0,deltaT))) * 0.025 * normalize(vec2(-delta.y, delta.x));
+        vec2 closest = initial + t * delta + 1. * pow(length(change), 0.1) * (sin(t * 6. * M_PI) + 1.0 * rand(vec2(t*100.0,deltaT))) * 0.025 * normalize(vec2(-delta.y, delta.x));
 
         return closest;
     }
@@ -1285,7 +1284,7 @@ vec4 lineGradient2(float co, float thresh, float sat_band_limit, float lum_band_
     float neg_range = 0.10;
     float pos_range = 0.16;
 
-    float neg_shift = 0.06;
+    float neg_shift = 0.90;
     float pos_shift = 0.68;
 
     vec4 graycolor = vec4(0.0);
@@ -1338,7 +1337,7 @@ vec4 logGradient(float co, float thresh, float v, float sat_band_limit, float lu
     float neg_range = 0.10;
     float pos_range = 0.16;
 
-    float neg_shift = 0.06;
+    float neg_shift = 0.90;
     float pos_shift = 0.68;
 
     vec4 graycolor = vec4(0.0);

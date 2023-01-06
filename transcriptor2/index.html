@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta property="og:title" content="Transcriptor" />
-<meta property="og:description" content="window.onload = TextToIPA.loadDict(&#39;https://agaura.github.io/text-to-ipa/lib/ipadict.txt&#39;);    .md table { border-collapse: collapse; border-spacing: 0; border: 1px solid var(--ft); display: table; max-width: 100%; width: 100%; margin: 1em 0; overflow: auto; } .md table thead { border-top: 2px solid var(--ft); border-bottom: 1px solid var(--ft); } .md table tbody { border-bottom: 1px solid var(--ft); } .md table td { border: 1px solid var(--ft); transition: background-color 0.5s; } .md table td:hover { background-color: #80000080; cursor: pointer; } ." />
+<meta property="og:description" content="window.onload = TextToIPA.loadDict(&#39;https://agaura.github.io/text-to-ipa/lib/ipadict.txt&#39;);    .md table { border-collapse: collapse; border-spacing: 0; border: 1px solid var(--ft); display: table; max-width: 100%; width: 100%; margin: 1em 0; overflow: auto; } .md table thead { border-top: 2px solid var(--ft); border-bottom: 1px solid var(--ft); } .md table tbody { border-bottom: 1px solid var(--ft); } .md table td { padding: 10px 10px; border: 1px solid var(--ft); transition: background-color 0.5s; text-align: center; } ." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://agaura.github.io/transcriptor2/" /><meta property="article:section" content="" />
 <meta property="article:published_time" content="2022-12-30T15:31:41-05:00" />
@@ -13,7 +13,7 @@
 
   <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Transcriptor"/>
-<meta name="twitter:description" content="window.onload = TextToIPA.loadDict(&#39;https://agaura.github.io/text-to-ipa/lib/ipadict.txt&#39;);    .md table { border-collapse: collapse; border-spacing: 0; border: 1px solid var(--ft); display: table; max-width: 100%; width: 100%; margin: 1em 0; overflow: auto; } .md table thead { border-top: 2px solid var(--ft); border-bottom: 1px solid var(--ft); } .md table tbody { border-bottom: 1px solid var(--ft); } .md table td { border: 1px solid var(--ft); transition: background-color 0.5s; } .md table td:hover { background-color: #80000080; cursor: pointer; } ."/>
+<meta name="twitter:description" content="window.onload = TextToIPA.loadDict(&#39;https://agaura.github.io/text-to-ipa/lib/ipadict.txt&#39;);    .md table { border-collapse: collapse; border-spacing: 0; border: 1px solid var(--ft); display: table; max-width: 100%; width: 100%; margin: 1em 0; overflow: auto; } .md table thead { border-top: 2px solid var(--ft); border-bottom: 1px solid var(--ft); } .md table tbody { border-bottom: 1px solid var(--ft); } .md table td { padding: 10px 10px; border: 1px solid var(--ft); transition: background-color 0.5s; text-align: center; } ."/>
 
   
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-BBWS173BMQ"></script>
@@ -43,11 +43,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1672691216.css">
+  <link rel="stylesheet" href="/minima.1673024568.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1672691216.js"></script>
+  <script defer type="text/javascript" src="/minima.1673024568.js"></script>
 </head>
 <script>
   
@@ -135,8 +135,10 @@ if (!doNotTrack) {
 }
 
 .md table td {
+  padding: 10px 10px;
   border: 1px solid var(--ft);
   transition: background-color 0.5s;
+  text-align: center;
 }
 
 .md table td:hover {
@@ -144,23 +146,9 @@ if (!doNotTrack) {
   cursor: pointer;
 }
 
-.md table td:hover {
-  background-color: #80000080;
-  cursor: pointer;
-}
-
-.my_div {
-  transition: all 500ms ease-in-out;
-}
-.my_div:hover {
-  background-color: green;
-}
-h1 {
-  overflow: hidden;
-}
 </style>
 <h1 id="excerpt">Excerpt</h1>
-<p>  <em>Ål hjuumn beingz ar born fre and eicwl in dignody and riits. Ða ar øndoud wiþ reizn and cånsjonts and sjød act tordz wun ønuðr in a spirøt uv bruðrhod.</em></p>
+<p>  <em>Ål hjuumn beiŋz ar born fre and eicwl in dignødy and riits. Ða ar øndoud wiþ reizn and cånsjonts and sjød act tordz wun ønuðr in a spirøt uv bruðrhod.</em></p>
 <h1 id="alphabet">Alphabet</h1>
 <table>
 <tbody><tr>
@@ -192,15 +180,18 @@ h1 {
 </tr>
 <tr>
 <td id="T">T</td>
+<td id="T">Þ</td>
 <td id="U">U</td>
 <td id="V">V</td>
-<td id="W">W</td>
-<td id="X">X</td>
+<td id="W" style="padding: 10px 8px;">W</td>
 <td id="Y">Y</td>
 <td id="Z">Z</td>
 </tr>
 </tbody></table>
-<div id="AA">
+<div id="alphabet_preview">
+<p style="text-align: center;">Select a letter in order to view how to pronounce it.</span>
+</div>
+<div id="AA" style="display: none">
 <p style="text-align: center; font-size: 25px;"> A/a </span>
 <p>Default Pronunciation: /æ/; like <em>a</em> as in <em>apple</em></p>
 <p>Other Pronunciations:</p>
@@ -213,7 +204,6 @@ h1 {
 </li>
 <li>Before <em>R</em>, <em>A</em> is pronounced /ɑ/; like <em>a</em> as in <em>car</em></li>
 </ul>
-</tbody></table>
 </div>
 <div id="ÅÅ" style="display: none">
 <p style="text-align: center; font-size: 25px;"> Å/å </span>
@@ -302,11 +292,7 @@ h1 {
 </div>
 <div id="LL" style="display: none">
 <p style="text-align: center; font-size: 25px;"> L/l </span>
-<p>Default Pronunciation: /l/; like <em>l</em> as in <em>lake</em></p>
-<p>Other pronunciations:</p>
-<ul>
-<li>When following a vowel and not preceding another vowel, <em>L</em> is pronounced /ɫ/; like <em>l</em> as in <em>full</em></li>
-</ul>
+<p>Default Pronunciation: /ɫ/; like <em>l</em> as in <em>lake</em></p>
 </div>
 <div id="MM" style="display: none">
 <p style="text-align: center; font-size: 25px;"> M/m </span>
@@ -374,6 +360,10 @@ h1 {
 <li>When preceding <em>J</em> or <em>R</em>, <em>T</em> is pronounced /tʃ/; like <em>t</em> as in <em>true</em> or <em>batch</em></li>
 </ul>
 </div>
+<div id="ÞÞ" style="display: none">
+<p style="text-align: center; font-size: 25px;"> Þ/þ </span>
+<p>Default Pronunciation: /θ/; like <em>th</em> as in <em>thick</em></p>
+</div>
 <div id="UU" style="display: none">
 <p style="text-align: center; font-size: 25px;"> U/u </span>
 <p>Default Pronunciation: /ʌ/; like <em>u</em> as in <em>strut</em></p>
@@ -395,10 +385,6 @@ h1 {
 <p style="text-align: center; font-size: 25px;"> W/w </span>
 <p>Default Pronunciation: /ks/; like <em>x</em> as in <em>axe</em></p>
 </div>
-<div id="XX" style="display: none">
-<p style="text-align: center; font-size: 25px;"> X/x </span>
-<p>Default Pronunciation: /ks/; like <em>x</em> as in <em>axe</em></p>
-</div>
 <div id="YY" style="display: none">
 <p style="text-align: center; font-size: 25px;"> Y/y </span>
 <p>Default Pronunciation: /j/; like <em>y</em> as in <em>yes</em></p>
@@ -407,6 +393,8 @@ h1 {
 <p style="text-align: center; font-size: 25px;"> Z/z </span>
 <p>Default Pronunciation: /z/; like <em>z</em> as in <em>zip</em></p>
 </div>
+<h1 id="passage">Passage</h1>
+<p>  And ð next þiŋ ðat hapnd aftr ðat wuz ðat ð Hart uv Gold cntinjwd ån its wa purføctly normøly wiþ a raðr fetjŋly reidøziind øntiryr. It wuz sumwut lardjr, and dun out in deløcøt pstel sjaidz uv grein and blu. In ð sentr a spiirl stercais, leidŋ noer in pørticjlr, stød in a spra uv furnz and yelo flourz and next tu it a ston sundiyl pedøstl houzd ð main cmpjuutr turmnl. Cunŋly dploid liitŋ and mirrz cryaidd ðe øluuzjn uv standŋ in a cnsurvøtory ovørløcŋ a wiid stretj uv øcscuizøtly manøcjrd gardn. Øround ð pøriføry uv ð cnsurvøtory eryø stød marbl-tåpt taiblz ån intrcøtly bjuudfl råt-iirn legz. Az ju gaizd intw ð påløsjt surføs uv ð marbl ð vaig formz uv instrmønts bcaim vizøbl, and az ju tutjd ðem ðe instrmnts mtiryøliizd instntly undr jur handz. Løct at frum ð cørect anglz ð mirrs øpird tu rflect ål ð rcuiird dadø reidouts, ðo it wuz far frum clir wer ða wur rflectd frum. It wuz in fact sønsaisjnøly bjuudfl.</p>
 <h1 id="transcriptor">Transcriptor</h1>
 <p>Use the following text areas to convert english to it&rsquo;s IPA equivalent.</p>
 <p>This is NOT case sensitive and punctuation is ignored.</p>
@@ -416,19 +404,45 @@ h1 {
 <center><button type="button" id="js-ipa-submit" onClick="ConverterForm.convert('ipa-in', 'ipa-out', 'ipa-err')">Convert!</button></center>
 &emsp;
 <center><textarea readonly id="ipa-out" placeholder="aʊtpʊt gəʊz hɪə" rows=4 onoutput='this.style.height = "";this.style.height = this.scrollHeight + "px"' style="width:90%; font:inherit; color: currentColor; background-color: #7f7f7f40"></textarea></center>
+<h1 id="appendix---ipa">Appendix - IPA</h1>
+<p>  All letters given are also presented with their pronunciation. While examples of words are also provided, making it clear to someone who shares my dialect what is meant, the International Phonetic Alphabet (IPA) transcription is also provided to make the pronunciation clearer. I believe this is particularly useful to speakers of dialects which are not that similar to mine, and also useful to non-native speakers who may be curious how a native may interpret their own speach. I also think it might of interest to someone who even has the exact same dialect as me, as analyzing the phonology of English may show some unintuitive structures which might be surprising⁠—I certainly found them to be.</p>
+<p>  That being said&hellip; IPA is not that straightforward. Or perhaps I should say phonology is not straightforward, and IPA is forced to accomadate its strangeness. When I look up guides to English pronunciation, I almost never find these complexities addressed. I suppose it&rsquo;s meant to not confuse the reader, but I&rsquo;m pretty confident that these complexities aren&rsquo;t <em>that</em> confusing, and I think the reader would benefit from understanding some things about IPA that aren&rsquo;t immediately obvious.</p>
+<ol>
+<li><em>Phonemes</em> aren&rsquo;t <em>phones</em> which aren&rsquo;t letters</li>
+</ol>
+<p>  When starting to learn IPA, it&rsquo;s very tempting to think that you can just remap the letters of English to IPA. Some are &ldquo;different,&rdquo; like <em>A</em> is /æ/ or [æ], and some are &ldquo;the same,&rdquo; like <em>B</em> is /b/ or [b]. In reality, it is more complicated.</p>
+<p>  When we see a letter in square brackets, such as [b], that is referring to a <em>phone</em>. A <em>phone</em> is a distinct sound in speech, i.e. a possible realization of a letter. The letters chosen to represent phones in IPA normally exist in some alphabet making a similar sound, but these do not always correspond to English&rsquo;s alphabet. For instance, [j] actually refers to the sound that we normally write with <em>Y</em> in English. Other phones might not traditionally appear in any alphabet, like [ɹ], which refers to the American way of pronouncing the letter <em>R</em>. These innovated characters normally resemble a letter that may use that pronunciation in some language, and they look like that (as rotations or combinations of other letters) simply because IPA predates computers and it was easier to print letters using the resources that were available. They may be borrowed from other alphabets too, like [θ] which makes the <em>TH</em>-sound as in <em>thick</em> and is taken from the Greek alphabet.</p>
+<p>  <em>Phonemes</em> are sounds which we use to distinguish words from one another. Phonemes often have multiple realizations, i.e. can be pronounced with different phones, depending on context or the way the speaker is speaking. The different realizations of a phoneme are called <em>allophones</em>, which may or may not be audible to the speaker! For example, often in American English the letter <em>T</em> before <em>R</em> causes the <em>T</em> to produce the sound [tʃ], which is the sound normally made by <em>CH</em>. This means that <em>train</em> and a hypothetical word <em>chrain</em> would sound exactly the same. However, the listener will interpret the sound before the <em>R</em> as a <em>T</em> despite it sounding like a <em>CH</em>, as [tʃ] is an allophone of <em>T</em> before <em>R</em>.</p>
+<p>  The previous example is normally easy to point out to a native speaker. However, other allophones can be much harder for native speakers to hear. For example, in Hindi, [p] and [pʰ] are phones which correspond to different phonemes (normally Romanized as <em>P</em> and <em>PH</em>, respectively). In English, however, they are allophones of /p/. Therefore, the Hindi words <em>pal</em> and <em>phal</em> may sound equivalent to English speakers, even though English has both sounds. In English, the <em>P</em> is <em>pit</em> is pronounced [pʰ] while the <em>P</em> in <em>spit</em> is pronounced [p], so an English speaker who natively speaks Hindi may correctly identify those sounds being different even though to the English speaker they are the same. The reverse of this phenomenon often happens when Spanish speakers have trouble distinguishing <em>J</em> and <em>Y</em> in English (as in <em>jail</em> and <em>Yale</em>) or when Japanese speakers have trouble distinguishing <em>R</em> and <em>L</em> (as in <em>rap</em> and <em>lap</em>), as these sounds which are distinguished in English correspond to allophones of the same phoneme in their respective languages.</p>
+<p>  Finally, the letters in an alphabet can represent any number of things. Normally they represent phonemes, but they can represent multiple phonemes! The words <em>polish</em> and <em>Polish</em> are distinguished by the letter <em>O</em> having two different phonetic realization, so <em>O</em> can at least represent two different phonemes (in fact, it has more&hellip;). They can also combine to make other phonemes, like <em>TH</em> to represent the phoneme /θ/.</p>
+<ol start="2">
+<li>The IPA transcription isn&rsquo;t standard</li>
+</ol>
+<p>  Considering that IPA has a representation for every sound in every language, you&rsquo;d think that the IPA transcription would be some straight-forward 1:1 mapping of sounds in a language to IPA. This is not the case&hellip; or well it can be, but the problem is there are varying levels of specificity that one cares about. If you care about the phonemes, then it makes much more sense to simply everything as much as possible and get rid of nuances. It doesn&rsquo;t matter if both [p] and [pʰ] exist⁠—just write them as /p/. However, even for the phonetic transcription, we can choose how specific we would like to be. Certain phonemes have barely audible allophones which occur for obvious reasons, like <em>V</em> can be pronounced without teeth as [β] after <em>P</em> or <em>B</em>, as in <em>upvote</em>&hellip; but does that matter? It&rsquo;s basically the same. Similarly, we can specify a more precise location of every sounds produced, which makes sense when comparing dialects or languages. For instance, the <em>T</em> in English is pronounced further back than the <em>T</em> in Spanish, but speakers of both languages would interpret each other&rsquo;s <em>T</em>s as being <em>T</em>s, so is it worth specifying that the Spanish <em>T</em> is <em>dental</em> while the English <em>T</em> is alveolar?</p>
+<p>  These considerations all come in before even thinking about the variety of accents that the transcription is meant to cover. Given all this, it makes sense that different transcriptions exist, and in fact different transcriptions will exist from different dictionaries from the same countries. So, it is important to keep in mind that now that we have IPA, that doesn&rsquo;t mean everything is so crystal clear.</p>
+<ol start="3">
+<li>IPA is, at the end of the day, an approximation</li>
+</ol>
+<p>  When studying English phonology, the concept of a <em>diphthong</em> is often discussed because they are pretty common in English. <em>Diphthongs</em> are vowels which are pronounced as a combination of vowels. For example, we can see that every vowel in &ldquo;no highway cowboys&rdquo; is a diphthong, so it may be transcribed [noʊ ˈhaɪweɪ ˈkaʊbɔɪz]. Notice how <em>O</em> → [oʊ], <em>I</em> → [aɪ], etc. Diphthongs are also perhaps one of the most prominent features of an American English accent when speaking other languages, besides our unique <em>R</em>, because oftentimes a vowel in a foreign language which may be short and pure is best approximated in English by a diphthong. For example, Spanish speakers may interpret an American saying <em>hola</em> as saying <em>houla</em>, or saying <em>tamale</em> as <em>tamaley</em>.</p>
+<p>  If you ever look up &ldquo;how many diphthongs are there in English?&rdquo; you may be confused to find that you get&hellip; a bunch of conflicting answers. This is partly because vowels are analyzed differently in British English and American English (as they should because they <em>are</em> completely different), but even if you limit it to just American sources you&rsquo;ll find multiple answers. This is in part because American English itself covers many different accents, but also because vowel-quality can change from person to person.</p>
+<p>  For example, I often found that when I was searching for the transcription of diphthongs in English, that they often failed to include the sound made by <em>U</em> and <em>OO</em> as in <em>dude</em> or <em>stoop</em>. For me, this sound is clearly a diphthong, where it starts with the same sound as the <em>OU</em> in <em>could</em> ([ʊ]) and slides into a <em>W</em>-like sound. However, some people <em>do</em> pronounce it as [u], so my realization can just be considered as a possible phonetic realization of the phoneme /u/.</p>
+<p>  But then for the &ldquo;actual&rdquo; diphthongs&hellip; why are they represented that way? Previously, I wrote that the <em>O</em> in <em>no</em> is transcribed as [oʊ]. Also, [ʊ] is the vowel in <em>could</em>&hellip; but the <em>O</em> doesn&rsquo;t really sound like it ends on that letter, no? (In fact, for me, it doesn&rsquo;t even begin on [o] either, but rather [ʌ] which is the <em>U</em> in <em>strut</em>) The deal here is that <em>some</em> way of representing this diphthong needs to be chosen, and this gets <em>close enough</em>. Other transcriptions may use [ow], for instance. I&rsquo;m particularly partial to this kind of analysis because when I hear a vowel after <em>O</em> I feel like I hear a <em>W</em> inserting itself in the middle, so that <em>co-op</em> sounds the same as <em>co-wop</em>. However, because [oʊ] seems to be more popular these days I stick to [oʊ] for lack of confusion if anyone ends up looking up the IPA of words and sees that they differ from how I represented them here.</p>
 <script>
-    var old_div = d3.select("#AA");
+    var old_div = d3.select("#alphabet_preview");
+    var temp = - 10;
     d3.selectAll("td")
         .on('pointerdown', function () {
             console.log(this.id);
 
-            var last_height = old_div.node().clientHeight;
+            var last_height = old_div.node().clientHeight + temp;
+            console.log(last_height);
             old_div.style("display", "none")
 
             var new_div = d3.select("#" + this.id + this.id);
             
             new_div.style("display", "block")
             var height = new_div.node().clientHeight;
+            console.log(height);
 
             new_div
                 .style("display", "block")
@@ -445,9 +459,10 @@ h1 {
             
             old_div = new_div;
 
+            temp = 0; // for some reason this function is off by 10... only the first time I do it, and although it's not off by 10 when I change the div to be idntical to #AA, I can't figure out what the issue is, so until then this'll remain
+
             });
-</script><blockquote>
-</blockquote>
+</script>
 
 	</article>
 </main>
