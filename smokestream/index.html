@@ -47,11 +47,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1673024594.css">
+  <link rel="stylesheet" href="/minima.1674958292.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1673024594.js"></script>
+  <script defer type="text/javascript" src="/minima.1674958292.js"></script>
 </head>
 <script>
   
@@ -1003,7 +1003,8 @@ void main() {
             vec4 color = vec4(0.3,0.,1.,1.0); // make a random color
             //color = vec4(okhsl_to_srgb(vec3(time / 1024.0, 1.0, 0.5)), 1.0); // gentle and smooth rainbow (original)
             //color = vec4(hsl2rgb(vec3(time / 1024.0 + (time + t * dt) * mag / (2.* 8192.0), 0.25, 0.5)), 1.0); // reaaaally cool oil slick
-            color = vec4(okhsl_to_srgb(vec3((time + t) / 1024.0 + 0.9 * pow(mag, 0.5), 0.9, 0.5)), 1.0); // reaaaally cool oil slick
+            //color = vec4(okhsl_to_srgb(vec3((time + t) / 1024.0 + 0.9 * pow(mag, 0.5), 0.9, 0.5)), 1.0); // reaaaally cool oil slick
+            color = vec4(okhsl_to_srgb(vec3((time + t) / 20000.0 + 0.9 * pow(mag, 0.5), 0.9, 0.5)), 1.0); // this one is just slow
             //color = vec4(okhsl_to_srgb(vec3((time + t) / (1024.0 * 1. * pow(change.x * change.y, 0.05) + 16.) + 0.9 * pow(mag, 0.5), 0.9, 0.5)), 1.0); // trying to make it cycle through more colors when slow, so that when it's real slow it'll effectively be gray 
 
             // if dark mode is on, add the color to the background, which will cause brightening (like a glow)
@@ -1404,6 +1405,9 @@ void main() {
         rand(vec2(rand((v_texCoord + 0.1) * 100.) * 100., time)) / 255.,
         rand(vec2(rand((v_texCoord + 0.2) * 100.) * 100., time)) / 255.,
         rand(vec2(rand((v_texCoord + 0.3) * 100.) * 100., time)) / 255.);
+    //color = vec4(okhsl_to_srgb(color.a * vec3(rand(vec2(v_texCoord.x * 10.0 + v_texCoord.y * 67., mod(time, 1.0) * v_texCoord.x * v_texCoord.y)), 1.0, 0.5)), color.a);
+    //float hue = rand(vec2(v_texCoord.x * 4.0 + v_texCoord.y * 4., mod(time, 1.0) * 4. * v_texCoord.x * v_texCoord.y)) * 2.0 * 3.1415926535;
+    //color = color.a * vec4(oklab_to_linear_srgb(vec3(0.5, color.g * sin(hue), color.g * cos(hue))) + .6, 1.0);
     outColor = color + 1.0 * noise;
 }
 </script>
@@ -1446,6 +1450,10 @@ var canvas = document.querySelector("canvas");
 const gl = canvas.getContext("webgl2", {premultipliedAlpha: true});
 gl.getExtension('EXT_color_buffer_float'); // allows for float textures (instead of 256 colors like regular)
 //gl.getExtension('OES_texture_float_linear'); // does automatic bilinear interpolation (or at least I assume it's bilinear)
+if (`drawingBufferColorSpace` in gl) {
+    gl.drawingBufferColorSpace = 'display-p3';
+    console.log(gl.drawingBufferColorSpace);
+}
 var scaleFactor = 2.;
 
 // size
