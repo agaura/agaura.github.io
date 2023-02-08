@@ -43,11 +43,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1674958601.css">
+  <link rel="stylesheet" href="/minima.1675883734.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1674958601.js"></script>
+  <script defer type="text/javascript" src="/minima.1675883734.js"></script>
 </head>
 <script>
   
@@ -639,6 +639,10 @@ out vec4 outColor;void main()
     const btn = document.getElementById('btn');
     var canvas = document.querySelector("canvas");
     var gl = canvas.getContext("webgl2");        // setup GLSL program
+    if (`drawingBufferColorSpace` in gl) {
+        gl.drawingBufferColorSpace = 'display-p3';
+        console.log(gl.drawingBufferColorSpace);
+    }
     var image = new Image();
     image.src = canvas.toDataURL();
     var program = webglUtils.createProgramFromSources(gl,

@@ -4,9 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta property="og:title" content="Smokestream" />
-<meta property="og:description" content="Shader      ⏸
-
-// an attribute is an input (in) to a vertex shader. // It will receive data from a buffer in vec2 a_position; in vec2 a_texCoord; uniform vec2 u_resolution; out vec2 v_texCoord; void main() { vec2 zeroToOne = a_position / u_resolution; vec2 zeroToTwo = zeroToOne * 2.0; // convert from 0-1 to 0-2 vec2 clipSpace = zeroToTwo - 1.0; // convert from 0-2 to -1-&#43;1 (clipspace) gl_Position = vec4(clipSpace * vec2(1, 1), 0, 1); // pass the texCoord to the fragment shader v_texCoord = a_texCoord; }  // Copyright(c) 2021 Björn Ottosson // // Permission is hereby granted, free of charge, to any person obtaining a copy of // this softwareand associated documentation files(the &#34;" />
+<meta property="og:description" content="Introduction       In the background of this page you can see an invisible sprite leaving a trail of multi-colored &ldquo;smoke.&rdquo; Feel free to click and drag on the page itself, your cursor will also give off colored smoke, varying over time and by the speed of your drag. The colors are somewhat transparent, so also experiment with clicking the ⚪️/⚫️ button at the top of the page to switch day/night mode." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://agaura.github.io/smokestream/" /><meta property="article:section" content="" />
 <meta property="article:published_time" content="2022-11-22T23:06:06+01:00" />
@@ -15,9 +13,7 @@
 
   <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Smokestream"/>
-<meta name="twitter:description" content="Shader      ⏸
-
-// an attribute is an input (in) to a vertex shader. // It will receive data from a buffer in vec2 a_position; in vec2 a_texCoord; uniform vec2 u_resolution; out vec2 v_texCoord; void main() { vec2 zeroToOne = a_position / u_resolution; vec2 zeroToTwo = zeroToOne * 2.0; // convert from 0-1 to 0-2 vec2 clipSpace = zeroToTwo - 1.0; // convert from 0-2 to -1-&#43;1 (clipspace) gl_Position = vec4(clipSpace * vec2(1, 1), 0, 1); // pass the texCoord to the fragment shader v_texCoord = a_texCoord; }  // Copyright(c) 2021 Björn Ottosson // // Permission is hereby granted, free of charge, to any person obtaining a copy of // this softwareand associated documentation files(the &#34;"/>
+<meta name="twitter:description" content="Introduction       In the background of this page you can see an invisible sprite leaving a trail of multi-colored &ldquo;smoke.&rdquo; Feel free to click and drag on the page itself, your cursor will also give off colored smoke, varying over time and by the speed of your drag. The colors are somewhat transparent, so also experiment with clicking the ⚪️/⚫️ button at the top of the page to switch day/night mode."/>
 
   
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-BBWS173BMQ"></script>
@@ -47,11 +43,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1674958601.css">
+  <link rel="stylesheet" href="/minima.1675883734.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1674958601.js"></script>
+  <script defer type="text/javascript" src="/minima.1675883734.js"></script>
 </head>
 <script>
   
@@ -120,12 +116,17 @@ if (!doNotTrack) {
 <main>
 	<p></p>
 	<article class="md">
-		<h1 id="shader">Shader</h1>
+		<h1 id="introduction">Introduction</h1>
 <script src="https://d3js.org/d3.v6.min.js"></script>
 <script src="https://unpkg.com/d3-simple-slider"></script>    <!-- topojson -->
 <script src="https://unpkg.com/topojson@3"></script>    <!-- WebGL -->
 <script src="https://webgl2fundamentals.org/webgl/resources/webgl-utils.js"></script>
 <script src="https://unpkg.com/jquery@3.5.1"></script>
+<p>  In the background of this page you can see an invisible sprite leaving a trail of multi-colored &ldquo;smoke.&rdquo; Feel free to click and drag on the page itself, your cursor will also give off colored smoke, varying over time and by the speed of your drag. The colors are somewhat transparent, so also experiment with clicking the ⚪️/⚫️ button at the top of the page to switch day/night mode.</p>
+<p>  Below there is a play/pause button to turn on/off the smoke. However, you can also press any key on your keyboard to play/pause, and if you want to see changes one frame at a time you can press the period (&quot;.&quot;) key.</p>
+<p>  The following sliders can change how the smoke works. The top slider changes the speed of the smoke, and the second varies the way the smoke spreads where higher values seem to make it flow more like watercolor paint.</p>
+<p>  The buttons show what is going on under-the-hood controlling how the smoke moves, and are painted with multicolored gradients. In the case of both Pressure and Divergence, red-purple colors are negatively valued and blue-purple colors are positively valued. The gradients cycle between colors such that when a color repeats N times, it either has N times the strength as the first band (as in the case of Pressure, i.e. it&rsquo;s a linear scale), or it has 2^(N/2) times the strength as the first band (as in the case of Divergence, i.e. it&rsquo;s a logarithmic scale). Velocity is shaded such that every direction is prescribed its own hue, and the strength of the hue is the velocity in that direction.</p>
+<p>  Beneath the sliders there is space to see the shader without any text blocking it, so just scroll down if you want to play more with it without obstructions.</p>
 <p><b style="font-size:30px" id='btn' onmouseover="this.style.cursor='pointer';" width = 20px>⏸</b></p>
 <p><canvas id="canvas" style='position:fixed; left:0; top:0; z-index: -1;'></canvas></p>
 <script type = "text" id = "vertex">
@@ -1377,9 +1378,9 @@ vec4 colorMap(vec2 co){
     //return vec4(0.0);
     float angle = atan(co.y, co.x) / (2. * M_PI);
     float mag = length(co);
-    vec4 newcolor = vec4(okhsl_to_srgb(vec3(angle, mag, 0.5)), 1.0);
+    vec4 newcolor = vec4(okhsl_to_srgb(vec3(angle, min(mag, 1.0), mix(0.75, mag * 0.5, 0.5))), 1.0);
 
-    return mix(vec4(0.0), newcolor, mag);
+    return mix(vec4(0.0), newcolor, min(mag, 1.0));
 }
 
 
@@ -1394,7 +1395,8 @@ void main() {
     //color = lineGradient(color.r, 32., 4., 2.); // pressure
     // color = lineGradient2(color.r, 1. / pow(2.,6.), pow(2.,3.), pow(2.,4.)); // pressure
     if (mode == 1) {color = lineGradient2(color.r, 1. / pow(2.,6.), pow(2.,3.), pow(2.,5.));} // pressure
-    if (mode == 2) {color = logGradient(color.r, 1. / pow(2.,12.), pow(2.,0.5), pow(2.,3.), pow(2.,4.));} // divergence
+    //if (mode == 2) {color = logGradient(color.r, 1. / pow(2.,12.), pow(2.,0.5), pow(2.,3.), pow(2.,4.));} // divergence
+    if (mode == 2) {color = logGradient(color.r, 1. / pow(2.,10.), pow(2.,0.5), pow(2.,3.), pow(2.,4.));} // divergence
     //if (mode == 2) {color = logGradient(color.r, 1. / pow(2.,12.), pow(2.,1.), pow(2.,2.), pow(2.,3.));} // divergence
     if (mode == 3) {color = colorMap(color.rg);} // velocity
     //color = lineGradient(color.r, pow(2.,10.), pow(2.,8.), pow(2.,6.)); // divergence
@@ -2111,10 +2113,7 @@ gFillg2.call(slider2);
 
 
 
-
-
-
-btn.addEventListener('click', function () {
+function activateSwitch() {
         toggle = !toggle;
         if (toggle) {
             btn.textContent = '⏸';
@@ -2123,7 +2122,21 @@ btn.addEventListener('click', function () {
             btn.textContent = '▶️';
         }
         render();
-    });
+    }
+
+function keySwitch() {
+    if (event.keyCode == 190) {
+        if (toggle) {activateSwitch()}
+        else {requestAnimationFrame(render)}
+        }
+    else {activateSwitch()}
+}
+
+
+btn.addEventListener('click', activateSwitch);
+window.addEventListener('keydown', keySwitch);
+
+
 radiobtn.addEventListener('click', function () {
         mode = parseInt(document.querySelector('input[name="mode"]:checked').value);
         requestAnimationFrame(display);
@@ -2147,8 +2160,14 @@ d3.select(window).on('resize.updatesvg', function() {
     updateWindow();
     toggle = true;
     });
-
+    
 </script>
+<div id="space" style="display: block; height: 100vh;"></div>
+<h1 id="extra-information">Extra Information</h1>
+<p>   The smoke shader should work both on desktop and on mobile, although it&rsquo;s better on desktop. It is especially best rendered on chrome, and if your monitor is capable of rendering P3 colors (most macs can, for example) then the colors will render as P3 colors on chrome (giving a wider gamut, making even more colorful smoke!).</p>
+<p>   Colors themselves are picked from the Okhsl color space, allowing for perceptually smoother gradients. The colors are technically floats, and while monitors do not normally render float values for colors, this allows for colors to be rendered extra smooth by adding a little noise, preventing &ldquo;banding.&rdquo;</p>
+<p>   Click-and-drag actions are somewhat sinusoidal (with a bit of noise), for that reason when quick and long paths are made with your cursor the smoke will seemingly have a lot of texture.</p>
+<p>   The smoke will also adjust easily to the screen changing sizes (although the smoke does behave slightly differently depending on the ratio of the dimensions, where it will spread farther across the wider dimension), so feel free to experiment with that as well.</p>
 
 	</article>
 </main>
