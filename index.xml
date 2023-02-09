@@ -14,8 +14,10 @@
       <pubDate>Mon, 28 Nov 2022 12:06:38 +0100</pubDate>
       
       <guid>https://agaura.github.io/audiospectrum/</guid>
-      <description>Audio Graph ▶️ 
- .line { fill: none; stroke: steelblue; stroke-width: 2px; } .axis line{ stroke: #808080; } .axis path{ stroke: #808080; } .axis text{ fill: #808080; } .axis-grid line{ stroke: #80808020; } .axis-grid path{ stroke: #80808020; }       var vertexShaderSource = `#version 300 es // an attribute is an input (in) to a vertex shader. // It will receive data from a buffer in vec2 a_position; in vec2 a_texCoord;// Used to pass in the resolution of the canvas uniform vec2 u_resolution;// Used to pass the texture coordinates to the fragment shader out vec2 v_texCoord;// all shaders have a main function void main() {// convert the position from pixels to 0.</description>
+      <description>Audio Graph  Below you can find a graph representing the spectrum of the audio input. The graph is interactive, so feel free trying to move and zoom to see better. Additionally, two different gradients are used depending on whether you are viewing in dark mode or light mode, so click the ⚪️/⚫️ button to switch.
+▶️
+
+ .line { fill: none; stroke: steelblue; stroke-width: 2px; } .axis line{ stroke: #808080; } .</description>
     </item>
     
     <item>

@@ -4,8 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta property="og:title" content="Audio Spectrum" />
-<meta property="og:description" content="Audio Graph ▶️ 
- .line { fill: none; stroke: steelblue; stroke-width: 2px; } .axis line{ stroke: #808080; } .axis path{ stroke: #808080; } .axis text{ fill: #808080; } .axis-grid line{ stroke: #80808020; } .axis-grid path{ stroke: #80808020; }       var vertexShaderSource = `#version 300 es // an attribute is an input (in) to a vertex shader. // It will receive data from a buffer in vec2 a_position; in vec2 a_texCoord;// Used to pass in the resolution of the canvas uniform vec2 u_resolution;// Used to pass the texture coordinates to the fragment shader out vec2 v_texCoord;// all shaders have a main function void main() {// convert the position from pixels to 0." />
+<meta property="og:description" content="Audio Graph  Below you can find a graph representing the spectrum of the audio input. The graph is interactive, so feel free trying to move and zoom to see better. Additionally, two different gradients are used depending on whether you are viewing in dark mode or light mode, so click the ⚪️/⚫️ button to switch.
+▶️
+
+ .line { fill: none; stroke: steelblue; stroke-width: 2px; } .axis line{ stroke: #808080; } ." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://agaura.github.io/audiospectrum/" /><meta property="article:section" content="" />
 <meta property="article:published_time" content="2022-11-28T12:06:38+01:00" />
@@ -14,8 +16,10 @@
 
   <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Audio Spectrum"/>
-<meta name="twitter:description" content="Audio Graph ▶️ 
- .line { fill: none; stroke: steelblue; stroke-width: 2px; } .axis line{ stroke: #808080; } .axis path{ stroke: #808080; } .axis text{ fill: #808080; } .axis-grid line{ stroke: #80808020; } .axis-grid path{ stroke: #80808020; }       var vertexShaderSource = `#version 300 es // an attribute is an input (in) to a vertex shader. // It will receive data from a buffer in vec2 a_position; in vec2 a_texCoord;// Used to pass in the resolution of the canvas uniform vec2 u_resolution;// Used to pass the texture coordinates to the fragment shader out vec2 v_texCoord;// all shaders have a main function void main() {// convert the position from pixels to 0."/>
+<meta name="twitter:description" content="Audio Graph  Below you can find a graph representing the spectrum of the audio input. The graph is interactive, so feel free trying to move and zoom to see better. Additionally, two different gradients are used depending on whether you are viewing in dark mode or light mode, so click the ⚪️/⚫️ button to switch.
+▶️
+
+ .line { fill: none; stroke: steelblue; stroke-width: 2px; } .axis line{ stroke: #808080; } ."/>
 
   
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-BBWS173BMQ"></script>
@@ -45,11 +49,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1675883734.css">
+  <link rel="stylesheet" href="/minima.1675976336.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1675883734.js"></script>
+  <script defer type="text/javascript" src="/minima.1675976336.js"></script>
 </head>
 <script>
   
@@ -111,8 +115,9 @@ if (!doNotTrack) {
 	<p></p>
 	<article class="md">
 		<h1 id="audio-graph">Audio Graph</h1>
-<p><b style="font-size:30px" id='btn' onmouseover="this.style.cursor='pointer';" width = 20px>▶️</b>
-<svg id = "graph" width="640" height="360"></svg></p>
+<p>  Below you can find a graph representing the spectrum of the audio input. The graph is interactive, so feel free trying to move and zoom to see better. Additionally, two different gradients are used depending on whether you are viewing in dark mode or light mode, so click the ⚪️/⚫️ button to switch.</p>
+<p><b style="font-size:30px" id='btn' onmouseover="this.style.cursor='pointer';" width = 20px>▶️</b></p>
+<p><svg id = "graph" width="640" height="360"></svg></p>
 <style>
 .line {
   fill: none;
@@ -215,7 +220,9 @@ void main()
 
     vec2 pixel = 1.0 / res;
 
-    if (uv.x < 1.0 - pixel.x) {outColor = texture(prev_image, uv + vec2(pixel.x,0.0));}
+	float speed = 1.0; // should be an integer
+
+    if (uv.x < 1.0 - pixel.x * speed) {outColor = texture(prev_image, uv + vec2(speed * pixel.x,0.0));}
     else {outColor = vec4(texture(u_image, uv.yx).r, 0.0, 0.0, 1.0);}
 
     //outColor = vec4(1.0,0.0,0.0,1.0);
@@ -672,6 +679,7 @@ uniform sampler2D prev_image;
 uniform float time;
 uniform vec2 res;
 uniform vec3 hue;
+uniform bool dark;
 // the texCoords passed in from the vertex shader.
 in vec2 v_texCoord;// we need to declare an output for the fragment shader
 out vec4 outColor;
@@ -682,8 +690,14 @@ void main()
     vec3 hsl = hue;
 
     vec2 pixel = 1.0 / res;
+	float alpha = pow(texture(u_image, uv).r, 0.9);
 
-    outColor = vec4(pow(texture(u_image, uv).r, 0.9)*okhsl_to_srgb(vec3(texture(u_image, uv).r * 0.5 + 0.65, 1.0, 0.5)),pow(texture(u_image, uv).r, 0.9));
+	if (dark) {
+    	outColor = vec4(alpha * okhsl_to_srgb(vec3(texture(u_image, uv).r * 0.61 + 0.71, 1.0, texture(u_image, uv).r * 0.7 + 0.2)), alpha);
+	}
+	else {
+		outColor = vec4(alpha * okhsl_to_srgb(vec3(-texture(u_image, uv).r * 0.75 + 0.43, 1.0, -texture(u_image, uv).r * 0.9 + 1.0)), alpha);
+	}
 }`;
 
 var toggle = false;
@@ -744,6 +758,7 @@ var ygrid = d3.axisLeft(y).tickSize(-graph.width).tickFormat('');
 const foreignObject = g.append('foreignObject')
     .attr('width', graph.width)
     .attr('height', graph.height)
+	.attr('position', "fixed")
     //.attr("transform", "translate(" + margin.left + "," + margin.top + ")"); // this doesn't seem to work in safari
 //const foreignBody = foreignObject.append('body');
 const vertGrid = g.append('g')
@@ -783,37 +798,37 @@ const ylabel = leftAxis.append("text")
     //.attr("style", "fill: #800000") // this is the way to change the text color
     .text("Frequency (kHz)");
 var zoom = d3.zoom()
-        //.extent([[0, 0], [1950, 1024]])
-        .extent([[0, 0], [graph.width, graph.height]])
-        .scaleExtent([graph.width / (1024 * graph.width/graph.height), 8 * graph.width/(1024 * graph.width/graph.height)])
-        .translateExtent([[graph.width-(1024 * graph.width/graph.height), graph.height-1024], [graph.width, graph.height]])
-        //.extent([[0, 0], [600, 370]])
-        //.scaleExtent([600/1950, 2])
-        //.translateExtent([[-1060, -654], [600, 370]])
-        .on("zoom", function () {
-            vertGrid.call(xgrid.scale(d3.event.transform.rescaleX(x)));
-            horGrid.call(ygrid.scale(d3.event.transform.rescaleY(y)));
-            bottomAxis.call(xaxis.scale(d3.event.transform.rescaleX(x)));
-            leftAxis.call(yaxis.scale(d3.event.transform.rescaleY(y)));
-            //bottomAxis.call(bottomAxis.scale(transform.rescaleX(x)))
-       		//svg.attr("transform", d3.event.transform);
-       		k = d3.event.transform['k'];
-       		tx = d3.event.transform['x'];
-       		ty = d3.event.transform['y'];
-	   		//console.log(d3.event.transform);
-			zoomlabel.text("Zoom: " + d3.format(".2f")(k / (graph.width/(1024 * graph.width/graph.height))));
-       		//console.log(screen.height);
-       		//console.log(screen.width);
-       		//console.log(window.innerWidth);
+	//.extent([[0, 0], [1950, 1024]])
+	.extent([[0, 0], [graph.width, graph.height]])
+	.scaleExtent([graph.width / (1024 * graph.width/graph.height), 8 * graph.width/(1024 * graph.width/graph.height)])
+	.translateExtent([[graph.width-(1024 * graph.width/graph.height), graph.height-1024], [graph.width, graph.height]])
+	//.extent([[0, 0], [600, 370]])
+	//.scaleExtent([600/1950, 2])
+	//.translateExtent([[-1060, -654], [600, 370]])
+	.on("zoom", function () {
+		vertGrid.call(xgrid.scale(d3.event.transform.rescaleX(x)));
+		horGrid.call(ygrid.scale(d3.event.transform.rescaleY(y)));
+		bottomAxis.call(xaxis.scale(d3.event.transform.rescaleX(x)));
+		leftAxis.call(yaxis.scale(d3.event.transform.rescaleY(y)));
+		//bottomAxis.call(bottomAxis.scale(transform.rescaleX(x)))
+		//svg.attr("transform", d3.event.transform);
+		k = d3.event.transform['k'];
+		tx = d3.event.transform['x'];
+		ty = d3.event.transform['y'];
+		//console.log(d3.event.transform);
+		zoomlabel.text("Zoom: " + d3.format(".2f")(k / (graph.width/(1024 * graph.width/graph.height))));
+		//console.log(screen.height);
+		//console.log(screen.width);
+		//console.log(window.innerWidth);
 
-			//console.log("ZOOM");
-			//console.log(graph.width, graph.height);
-			//console.log(k, tx, ty);
+		//console.log("ZOOM");
+		//console.log(graph.width, graph.height);
+		//console.log(k, tx, ty);
 
-       	if (!toggle) {
-            display();
-       }
-    });
+		if (!toggle) {
+			display();
+		}
+});
 const canvas_space = foreignObject.append("xhtml:canvas")
     .call(zoom)
     .attr("id", "spectral_canvas")
@@ -834,21 +849,18 @@ var final_color = g.append('circle')
     .attr('fill', '#000000A0');
     d3.select("#graph")
         .on("mousemove", function(){  
-           //console.log("moved");
-           mousex = d3.mouse(this);
-           mousex = mousex[0] - margin.left;
-           if (mousex > 0 && mousex < graph.width)
-            {vertical.attr("x2", mousex);
-            vertical.attr("x1", mousex);
-            final_color.attr("cx", mousex);
-            rgb = specToColor(mousex*330/graph.width+390);
-            d3.select("#color").attr("style","color: #" + decimalToHex(parseInt(rgb.r*255)) + decimalToHex(parseInt(rgb.g*255)) + decimalToHex(parseInt(rgb.b*255)));
-            final_color.attr("fill","#" + decimalToHex(parseInt(rgb.r*255)) + decimalToHex(parseInt(rgb.g*255)) + decimalToHex(parseInt(rgb.b*255)));
-            vertical.attr("stroke","#" + decimalToHex(parseInt(rgb.r*255)) + decimalToHex(parseInt(rgb.g*255)) + decimalToHex(parseInt(rgb.b*255)));
-            //blue.attr("cy", mousex);
-            }})
+			mousex = d3.mouse(this);
+			mousex = mousex[0] - margin.left;
+			if (mousex > 0 && mousex < graph.width) {
+				vertical.attr("x2", mousex);
+				vertical.attr("x1", mousex);
+				final_color.attr("cx", mousex);
+				rgb = specToColor(mousex*330/graph.width+390);
+				d3.select("#color").attr("style","color: #" + decimalToHex(parseInt(rgb.r*255)) + decimalToHex(parseInt(rgb.g*255)) + decimalToHex(parseInt(rgb.b*255)));
+				final_color.attr("fill","#" + decimalToHex(parseInt(rgb.r*255)) + decimalToHex(parseInt(rgb.g*255)) + decimalToHex(parseInt(rgb.b*255)));
+				vertical.attr("stroke","#" + decimalToHex(parseInt(rgb.r*255)) + decimalToHex(parseInt(rgb.g*255)) + decimalToHex(parseInt(rgb.b*255)));
+				}})
         .on("mouseover", function(){  
-           //console.log("moved");
             mousex = d3.mouse(this);
             mousex = mousex[0];
             if (mousex > margin.left && mousex < graph.width + margin.left)
@@ -882,7 +894,8 @@ var outLocs = {
     'tx': gl.getUniformLocation(outProgram, "tx"),
     'ty': gl.getUniformLocation(outProgram, "ty"),
     'hue': gl.getUniformLocation(outProgram, "hue"),
-    'res': gl.getUniformLocation(outProgram, "res")
+    'res': gl.getUniformLocation(outProgram, "res"),
+	'dark': gl.getUniformLocation(outProgram, "dark")
 };
 
 var tex = gl.createTexture();
@@ -1067,6 +1080,7 @@ const texCoordBuffer = gl.createBuffer();
     	gl.uniform1i(gl.getUniformLocation(outProgram, "u_image"), 0);            // Update the time
 		gl.uniform3f(outLocs.hue, h, s, l);
     	gl.uniform1f(outLocs.time, 0.0 * 0.001);
+		gl.uniform1f(outLocs.dark, localStorage.theme == "dark");
     	// in setRectangle puts data in the position buffer
     	gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);            // Set a rectangle the same size as the image.
     	setRectangle(gl, 0, 0, width, height);            // Draw the rectangle.
@@ -1116,6 +1130,7 @@ function display() {
         gl.uniform1f(gl.getUniformLocation(outProgram, "k"), k);
         gl.uniform1f(gl.getUniformLocation(outProgram, "tx"), tx);
         gl.uniform1f(gl.getUniformLocation(outProgram, "ty"), ty);
+		gl.uniform1f(outLocs.dark, localStorage.theme == "dark");
         gl.drawArrays(gl.TRIANGLES, 0, 6);
 }
 
@@ -1187,6 +1202,8 @@ function callback(stream) {
 window.onload = function() {firstRender(0.075, 1.0, 0.5);}
 
 }
+
+window.addEventListener('click', display);
 
 function updateWindow(){
 	resizeCanvas();
