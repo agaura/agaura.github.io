@@ -6,8 +6,7 @@
   <meta property="og:title" content="Audio Spectrum" />
 <meta property="og:description" content="Audio Graph  Below you can find a graph representing the spectrum of the audio input. The graph is interactive, so feel free trying to move and zoom to see better. Additionally, two different gradients are used depending on whether you are viewing in dark mode or light mode, so click the ⚪️/⚫️ button to switch.
 ▶️
-
- .line { fill: none; stroke: steelblue; stroke-width: 2px; } .axis line{ stroke: #808080; } ." />
+      .line { fill: none; stroke: steelblue; stroke-width: 2px; } ." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://agaura.github.io/audiospectrum/" /><meta property="article:section" content="" />
 <meta property="article:published_time" content="2022-11-28T12:06:38+01:00" />
@@ -18,8 +17,7 @@
 <meta name="twitter:title" content="Audio Spectrum"/>
 <meta name="twitter:description" content="Audio Graph  Below you can find a graph representing the spectrum of the audio input. The graph is interactive, so feel free trying to move and zoom to see better. Additionally, two different gradients are used depending on whether you are viewing in dark mode or light mode, so click the ⚪️/⚫️ button to switch.
 ▶️
-
- .line { fill: none; stroke: steelblue; stroke-width: 2px; } .axis line{ stroke: #808080; } ."/>
+      .line { fill: none; stroke: steelblue; stroke-width: 2px; } ."/>
 
   
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-BBWS173BMQ"></script>
@@ -49,11 +47,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1675976336.css">
+  <link rel="stylesheet" href="/minima.1676322059.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1675976336.js"></script>
+  <script defer type="text/javascript" src="/minima.1676322059.js"></script>
 </head>
 <script>
   
@@ -117,7 +115,13 @@ if (!doNotTrack) {
 		<h1 id="audio-graph">Audio Graph</h1>
 <p>  Below you can find a graph representing the spectrum of the audio input. The graph is interactive, so feel free trying to move and zoom to see better. Additionally, two different gradients are used depending on whether you are viewing in dark mode or light mode, so click the ⚪️/⚫️ button to switch.</p>
 <p><b style="font-size:30px" id='btn' onmouseover="this.style.cursor='pointer';" width = 20px>▶️</b></p>
-<p><svg id = "graph" width="640" height="360"></svg></p>
+<div id="container" style="position: relative; display:none">
+	<div>
+		<svg id = "graph" style="position: absolute;" width="640" height="360"></svg>
+	</div>
+	<div id="canvas_area" style="position: absolute;">
+	</div>
+</div>
 <style>
 .line {
   fill: none;
@@ -208,7 +212,6 @@ uniform sampler2D u_image;
 uniform sampler2D prev_image;
 uniform float time;
 uniform vec2 res;
-uniform vec3 hue;
 // the texCoords passed in from the vertex shader.
 in vec2 v_texCoord;// we need to declare an output for the fragment shader
 out vec4 outColor;
@@ -216,7 +219,6 @@ out vec4 outColor;
 void main()
 {
     vec2 uv = v_texCoord;
-    vec3 hsl = hue;
 
     vec2 pixel = 1.0 / res;
 
@@ -225,7 +227,7 @@ void main()
     if (uv.x < 1.0 - pixel.x * speed) {outColor = texture(prev_image, uv + vec2(speed * pixel.x,0.0));}
     else {outColor = vec4(texture(u_image, uv.yx).r, 0.0, 0.0, 1.0);}
 
-    //outColor = vec4(1.0,0.0,0.0,1.0);
+    //outColor = vec4(uv.x,0.0,0.0,1.0);
 }`;
 
 var colorFrag = `#version 300 es
@@ -703,59 +705,25 @@ void main()
 var toggle = false;
 var k = 1, tx = 0, ty = 0;
 
-function nearest_color(d, index) {
-  left = Math.floor(index);
-  right = Math.ceil(index);
-  dL = index - left;
-  return d[left].kW*(1-dL) + d[right].kW*dL;}
-function decimalToHex(d, padding) {
-    var hex = Number(d).toString(16);
-    padding = typeof (padding) === "undefined" || padding === null ? padding = 2 : padding;
-    while (hex.length < padding) {
-        hex = "0" + hex;
-    }
-    return hex;
-}
-
-function specToColor(l) {
-    r=0.0; g=0.0; b=0.0;
-         if ((l>=390.0)&&(l<410.0)) { t=(l-390.0)/(410.0-390.0); r=    +(0.33*t)-(0.20*t*t); }
-    else if ((l>=410.0)&&(l<475.0)) { t=(l-410.0)/(475.0-410.0); r=0.14         -(0.13*t*t); }
-    else if ((l>=545.0)&&(l<595.0)) { t=(l-545.0)/(595.0-545.0); r=    +(1.98*t)-(     t*t); }
-    else if ((l>=595.0)&&(l<650.0)) { t=(l-595.0)/(650.0-595.0); r=0.98+(0.06*t)-(0.40*t*t); }
-    else if ((l>=650.0)&&(l<720.0)) { t=(l-650.0)/(720.0-650.0); r=0.65-(0.84*t)+(0.20*t*t); }
-         if ((l>=415.0)&&(l<475.0)) { t=(l-415.0)/(475.0-415.0); g=             +(0.80*t*t); }
-    else if ((l>=475.0)&&(l<590.0)) { t=(l-475.0)/(590.0-475.0); g=0.8 +(0.76*t)-(0.80*t*t); }
-    else if ((l>=585.0)&&(l<639.0)) { t=(l-585.0)/(639.0-585.0); g=0.84-(0.84*t)           ; }
-         if ((l>=390.0)&&(l<475.0)) { t=(l-390.0)/(475.0-390.0); b=    +(2.20*t)-(1.50*t*t); }
-    else if ((l>=475.0)&&(l<560.0)) { t=(l-475.0)/(560.0-475.0); b=0.7 -(     t)+(0.30*t*t); }
-    return {r, g, b};
-    }
-
-// photoreceptor dataset originally from https://www.physics.upenn.edu/biophys/PtN/Datasets/PtNdatasets.pdf
-// now from http://www.cvrl.org/
 var svg = d3.select("#graph"),
     margin = {top: 15, right: 15, bottom: 30, left: 25},
     graph = {width: svg.attr("width") - margin.left - margin.right, height: svg.attr("height") - margin.top - margin.bottom}
-    g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-var color = d3.scaleOrdinal()
-    .domain(["Blue", "Green", "Red"])
-    .range(["rgba(255, 0, 0, 0.30)", "rgba(0, 255, 0, 0.30)", "rgba(50, 50, 255, 0.30)"]);
+    g = svg.append("g").attr("style", "translate: " + (margin.left - 1) + "px " + margin.top + "px")
+	svg_canvas = d3.select("#canvas_area").attr("style","translate: " + margin.left + "px " + margin.top + "px").append("svg")
+		.attr('width', graph.width)
+    	.attr('height', graph.height + margin.bottom)
+	g2 = svg_canvas.append("g");
 var x = d3.scaleLinear()
         .range([0, graph.width])
         .domain([-10,0]),
     y = d3.scaleLinear()
         .range([graph.height, 0])
-        .domain([0,24 * graph.height/1024]),
-    z = color;
+        .domain([0,24 * graph.height/1024]);
 var xaxis = d3.axisBottom(x);
 var yaxis = d3.axisLeft(y);
 var xgrid = d3.axisBottom(x).tickSize(-graph.height).tickFormat('');
 var ygrid = d3.axisLeft(y).tickSize(-graph.width).tickFormat('');
-//const foreignObject = g.append('foreignObject')
-//    .attr('width', width)
-//    .attr('height', height)
-const foreignObject = g.append('foreignObject')
+var foreignObject = g2.append('foreignObject')
     .attr('width', graph.width)
     .attr('height', graph.height)
 	.attr('position', "fixed")
@@ -774,7 +742,8 @@ const bottomAxis = g.append("g")
     .call(xaxis);
 const xlabel = bottomAxis.append("text")
     .attr("text-anchor", "end")
-    .attr("y", - 4)
+	.attr("x", graph.width - 3)
+	.attr("y", - 4)
     .attr("fill", "#808080B0")
 	//.attr("style", "position: relative; z-index: 999") // this doesn't work! I don't know why
     .text("Time (s)")
@@ -800,7 +769,7 @@ const ylabel = leftAxis.append("text")
 var zoom = d3.zoom()
 	//.extent([[0, 0], [1950, 1024]])
 	.extent([[0, 0], [graph.width, graph.height]])
-	.scaleExtent([graph.width / (1024 * graph.width/graph.height), 8 * graph.width/(1024 * graph.width/graph.height)])
+	.scaleExtent([graph.width / (1024 * graph.width/graph.height), 32 * graph.width/(1024 * graph.width/graph.height)])
 	.translateExtent([[graph.width-(1024 * graph.width/graph.height), graph.height-1024], [graph.width, graph.height]])
 	//.extent([[0, 0], [600, 370]])
 	//.scaleExtent([600/1950, 2])
@@ -828,12 +797,14 @@ var zoom = d3.zoom()
 		if (!toggle) {
 			display();
 		}
-});
+	});
 const canvas_space = foreignObject.append("xhtml:canvas")
     .call(zoom)
     .attr("id", "spectral_canvas")
     .attr("width", 1024 * graph.width/graph.height) // to match graph ratio
-    .attr("height", 1024);
+    .attr("height", 1024)
+	.attr("style", "position:static")
+	.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 	//.attr("style", "position:relative; z-index: -1");
 var vertical = g.append("line")
     .attr("y1", -5)
@@ -847,28 +818,24 @@ var final_color = g.append('circle')
     .attr('r', 6)
     .attr('stroke', 'gray')
     .attr('fill', '#000000A0');
-    d3.select("#graph")
-        .on("mousemove", function(){  
-			mousex = d3.mouse(this);
-			mousex = mousex[0] - margin.left;
-			if (mousex > 0 && mousex < graph.width) {
-				vertical.attr("x2", mousex);
-				vertical.attr("x1", mousex);
-				final_color.attr("cx", mousex);
-				rgb = specToColor(mousex*330/graph.width+390);
-				d3.select("#color").attr("style","color: #" + decimalToHex(parseInt(rgb.r*255)) + decimalToHex(parseInt(rgb.g*255)) + decimalToHex(parseInt(rgb.b*255)));
-				final_color.attr("fill","#" + decimalToHex(parseInt(rgb.r*255)) + decimalToHex(parseInt(rgb.g*255)) + decimalToHex(parseInt(rgb.b*255)));
-				vertical.attr("stroke","#" + decimalToHex(parseInt(rgb.r*255)) + decimalToHex(parseInt(rgb.g*255)) + decimalToHex(parseInt(rgb.b*255)));
-				}})
-        .on("mouseover", function(){  
-            mousex = d3.mouse(this);
-            mousex = mousex[0];
-            if (mousex > margin.left && mousex < graph.width + margin.left)
-            {
-                vertical.attr("x2", mousex - margin.left);
-                vertical.attr("x1", mousex - margin.left)
-            }
-        });
+d3.select("#graph")
+	.on("mousemove", function(){  
+		mousex = d3.mouse(this);
+		mousex = mousex[0] - margin.left;
+		if (mousex > 0 && mousex < graph.width) {
+			vertical.attr("x2", mousex);
+			vertical.attr("x1", mousex);
+			final_color.attr("cx", mousex);
+			}})
+	.on("mouseover", function(){  
+		mousex = d3.mouse(this);
+		mousex = mousex[0];
+		if (mousex > margin.left && mousex < graph.width + margin.left)
+		{
+			vertical.attr("x2", mousex - margin.left);
+			vertical.attr("x1", mousex - margin.left)
+		}
+	});
 
 d3.select("foreignObject").raise();
 d3.selectAll("text").select(function() { return this.parentNode; }).raise(); // raises the parent nodes (a bunch of g objects) of all the text, so the grids do not block zooming function
@@ -906,209 +873,189 @@ var positionBuffer = gl.createBuffer();
 const frameBuffer = gl.createFramebuffer();
 const texCoordBuffer = gl.createBuffer();
 
-    function resizeCanvas() {
-		
-        const maxWidth = Math.min(640, document.querySelector("body").offsetWidth);
-        svg.attr("width", maxWidth);
-		graph.width = svg.attr("width") - margin.left - margin.right;
-		graph.height = Math.round(graph.width * 315/600);
-        svg.attr("height", graph.height + margin.top + margin.bottom);
+function resizeCanvas() {
+	
+	const maxWidth = Math.min(640, document.querySelector("body").offsetWidth);
+	svg.attr("width", maxWidth);
+	graph.width = svg.attr("width") - margin.left - margin.right;
+	graph.height = Math.round(graph.width * 315/600);
+	svg.attr("height", graph.height + margin.top + margin.bottom);
+	svg_canvas.attr("width", maxWidth);
+	svg_canvas.attr("height", graph.height + margin.bottom);
 
-        canvas.width = graph.width;
-        canvas.height = graph.height;
+	canvas.width = graph.width;
+	canvas.height = graph.height;
 
-        x = d3.scaleLinear().range([0, graph.width]).domain([ - graph.width / 60,0]); // 60 is the normal frame rate
-        y = d3.scaleLinear().range([graph.height, 0]).domain([0,24 * graph.height / 1024]); // the range of the audio is to 24 kHz
+	x = d3.scaleLinear().range([0, graph.width]).domain([ - graph.width / 60,0]); // 60 is the normal frame rate
+	y = d3.scaleLinear().range([graph.height, 0]).domain([0,24 * graph.height / 1024]); // the range of the audio is to 24 kHz
 
-        foreignObject.attr('width', graph.width).attr('height', graph.height);
-        canvas_space.attr('width', graph.width).attr('height', graph.height);
+	foreignObject.attr('width', graph.width).attr('height', graph.height);
+	canvas_space.attr('width', graph.width).attr('height', graph.height);
 
-		xaxis = d3.axisBottom(x);
-        bottomAxis.attr("transform", "translate(0," + graph.height + ")").call(xaxis); // brings bottom axis to bottom: works
-		xgrid = d3.axisBottom(x).tickSize(-graph.height).tickFormat('');
-		vertGrid.attr("transform", "translate(0," + graph.height + ")").call(xgrid); // respaces vertical grid: works
-		xlabel.attr("x", graph.width - 3);
+	xaxis = d3.axisBottom(x);
+	bottomAxis.attr("transform", "translate(0," + graph.height + ")").call(xaxis); // brings bottom axis to bottom: works
+	xgrid = d3.axisBottom(x).tickSize(-graph.height).tickFormat('');
+	vertGrid.attr("transform", "translate(0," + graph.height + ")").call(xgrid); // respaces vertical grid: works
+	xlabel.attr("x", graph.width - 3);
 
-		yaxis = d3.axisLeft(y);
-        leftAxis.call(yaxis);
-		ygrid = d3.axisLeft(y).tickSize(-graph.width).tickFormat('');
-		horGrid.call(ygrid); // respaces horizontal grid: works (now, hehe)
-        ylabel.attr("y", 6);
+	yaxis = d3.axisLeft(y);
+	leftAxis.call(yaxis);
+	ygrid = d3.axisLeft(y).tickSize(-graph.width).tickFormat('');
+	horGrid.call(ygrid); // respaces horizontal grid: works (now, hehe)
+	ylabel.attr("y", 6);
 
-        vertical.attr("y2", graph.height);
-		zoomlabel.attr("x", graph.width - 29).attr("y", - graph.height + 11);
-		width = 1950;
-		height = 1024;
+	vertical.attr("y2", graph.height);
+	zoomlabel.attr("x", graph.width - 29).attr("y", - graph.height + 11);
+	width = 1950;
+	height = 1024;
 
-		zoom = d3.zoom()
-        .extent([[0, 0], [graph.width, graph.height]])
-        .scaleExtent([graph.width / (1024 * graph.width/graph.height), 8 * graph.width/(1024 * graph.width/graph.height)])
-        .translateExtent([[graph.width-(1024 * graph.width/graph.height), graph.height-1024], [graph.width, graph.height]])
-        .on("zoom", function () {
-            vertGrid.call(xgrid.scale(d3.event.transform.rescaleX(x)));
-            horGrid.call(ygrid.scale(d3.event.transform.rescaleY(y)));
-            bottomAxis.call(xaxis.scale(d3.event.transform.rescaleX(x)));
-            leftAxis.call(yaxis.scale(d3.event.transform.rescaleY(y)));
-       		k = d3.event.transform['k'];
-       		tx = d3.event.transform['x'];
-       		ty = d3.event.transform['y'];
-			zoomlabel.text("Zoom: " + d3.format(".2f")(k / (graph.width/(1024 * graph.width/graph.height))));
+	zoom = d3.zoom()
+	.extent([[0, 0], [graph.width, graph.height]])
+	.scaleExtent([graph.width / (1024 * graph.width/graph.height), 32 * graph.width/(1024 * graph.width/graph.height)])
+	.translateExtent([[graph.width-(1024 * graph.width/graph.height), graph.height-1024], [graph.width, graph.height]])
+	.on("zoom", function () {
+		vertGrid.call(xgrid.scale(d3.event.transform.rescaleX(x)));
+		horGrid.call(ygrid.scale(d3.event.transform.rescaleY(y)));
+		bottomAxis.call(xaxis.scale(d3.event.transform.rescaleX(x)));
+		leftAxis.call(yaxis.scale(d3.event.transform.rescaleY(y)));
+		k = d3.event.transform['k'];
+		tx = d3.event.transform['x'];
+		ty = d3.event.transform['y'];
+		zoomlabel.text("Zoom: " + d3.format(".2f")(k / (graph.width/(1024 * graph.width/graph.height))));
 
-       		if (!toggle) {display();}
-    	});
-		
-		canvas_space.call(zoom);
+		if (!toggle) {display();}
+	});
+	
+	canvas_space.call(zoom);
+	display();
 
-		display();
+	d3.select("#container").attr("style","display:block")
 
-    }
+}
 
-    function setRectangle(gl, x, y, width, height) {
-        var x1 = x;
-        var x2 = x + width;
-        var y1 = y;
-        var y2 = y + height;
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-            x1, y1,
-            x2, y1,
-            x1, y2,
-            x1, y2,
-            x2, y1,
-            x2, y2,
-        ]), gl.STATIC_DRAW);
-    }
+function setRectangle(gl, x, y, width, height) {
+	var x1 = x;
+	var x2 = x + width;
+	var y1 = y;
+	var y2 = y + height;
+	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+		x1, y1,
+		x2, y1,
+		x1, y2,
+		x1, y2,
+		x2, y1,
+		x2, y2,
+	]), gl.STATIC_DRAW);
+}
 
-	function firstRender(h, s, l) {
+function firstRender(h, s, l) {
 
-        resizeCanvas();
-		gl.viewport(0, 0, width, height);
+	resizeCanvas();
+	gl.viewport(0, 0, width, height);
 
-        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+	gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
 
-        gl.activeTexture(gl.TEXTURE0+0);
-        gl.bindTexture(gl.TEXTURE_2D, tex);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.R8, 1024, 1, 0, gl.RED, gl.UNSIGNED_BYTE, data);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR); 
+	gl.activeTexture(gl.TEXTURE0+0);
+	gl.bindTexture(gl.TEXTURE_2D, tex);
+	gl.texImage2D(gl.TEXTURE_2D, 0, gl.R8, 1024, 1, 0, gl.RED, gl.UNSIGNED_BYTE, data);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR); 
 
-        gl.activeTexture(gl.TEXTURE0+1);
-        gl.bindTexture(gl.TEXTURE_2D, targetTex);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.R8, width, height, 0, gl.RED, gl.UNSIGNED_BYTE, null);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+	gl.activeTexture(gl.TEXTURE0+1);
+	gl.bindTexture(gl.TEXTURE_2D, targetTex);
+	gl.texImage2D(gl.TEXTURE_2D, 0, gl.R8, width, height, 0, gl.RED, gl.UNSIGNED_BYTE, null);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
 
-        gl.activeTexture(gl.TEXTURE0+2);
-        gl.bindTexture(gl.TEXTURE_2D, targetTex2);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.R8, width, height, 0, gl.RED, gl.UNSIGNED_BYTE, null);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+	gl.activeTexture(gl.TEXTURE0+2);
+	gl.bindTexture(gl.TEXTURE_2D, targetTex2);
+	gl.texImage2D(gl.TEXTURE_2D, 0, gl.R8, width, height, 0, gl.RED, gl.UNSIGNED_BYTE, null);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
 
-        gl.activeTexture(gl.TEXTURE0+0);
+	gl.activeTexture(gl.TEXTURE0+0);
+	gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
 
-        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+	gl.enableVertexAttribArray(gl.getAttribLocation(inProgram, "a_position"));
+	gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+	gl.vertexAttribPointer(gl.getAttribLocation(inProgram, "a_position"), 2, gl.FLOAT, false, 0, 0);
+	gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
+	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+		0.0, 0.0,
+		1.0, 0.0,
+		0.0, 1.0,
+		0.0, 1.0,
+		1.0, 0.0,
+		1.0, 1.0,
+	]), gl.STATIC_DRAW);
+	gl.enableVertexAttribArray(gl.getAttribLocation(inProgram, "a_texCoord"));
+	gl.vertexAttribPointer(gl.getAttribLocation(inProgram, "a_texCoord"), 2, gl.FLOAT, false, 0, 0);
 
+	gl.useProgram(inProgram);
 
+	gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuffer);
+	gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, targetTex2, 0);
+	gl.uniform2f(gl.getUniformLocation(inProgram, "u_resolution"), width, height); 
+	gl.uniform2f(gl.getUniformLocation(inProgram, "res"), width, height);
+	gl.uniform1i(gl.getUniformLocation(inProgram, "u_image"), 0);
+	gl.uniform1i(gl.getUniformLocation(inProgram, "prev_image"), 1);
+	gl.uniform1f(inLocs.time, 0.0 * 0.001);
+	gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+	setRectangle(gl, 0, 0, width, height);
 
-        gl.enableVertexAttribArray(gl.getAttribLocation(inProgram, "a_position"));
-    	gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-    	gl.vertexAttribPointer(gl.getAttribLocation(inProgram, "a_position"), 2, gl.FLOAT, false, 0, 0);
-    	gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
-    	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-    	    0.0, 0.0,
-    	    1.0, 0.0,
-    	    0.0, 1.0,
-    	    0.0, 1.0,
-    	    1.0, 0.0,
-    	    1.0, 1.0,
-    	]), gl.STATIC_DRAW);
-    	gl.enableVertexAttribArray(gl.getAttribLocation(inProgram, "a_texCoord"));
-    	gl.vertexAttribPointer(gl.getAttribLocation(inProgram, "a_texCoord"), 2, gl.FLOAT, false, 0, 0);
+	gl.uniform3f(inLocs.hue, h, s, l);
+	gl.drawArrays(gl.TRIANGLES, 0, 6);
 
+	gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
+	temp = targetTex2;
+	targetTex2 = targetTex;
+	targetTex = temp;
 
-        gl.useProgram(inProgram);
+	gl.enableVertexAttribArray(gl.getAttribLocation(outProgram, "a_position"));
+	gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+	gl.vertexAttribPointer(gl.getAttribLocation(outProgram, "a_position"), 2, gl.FLOAT, false, 0, 0);
+	gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
+	gl.enableVertexAttribArray(gl.getAttribLocation(outProgram, "a_texCoord"));
+	gl.vertexAttribPointer(gl.getAttribLocation(outProgram, "a_texCoord"), 2, gl.FLOAT, false, 0, 0);
 
-        gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuffer);
-        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, targetTex2, 0);
-    	gl.uniform2f(gl.getUniformLocation(inProgram, "u_resolution"), width, height); 
-        gl.uniform2f(gl.getUniformLocation(inProgram, "res"), width, height);
-    	gl.uniform1i(gl.getUniformLocation(inProgram, "u_image"), 0);            // Update the time
-        gl.uniform1i(gl.getUniformLocation(inProgram, "prev_image"), 1);
-    	gl.uniform1f(inLocs.time, 0.0 * 0.001);
-    	// in setRectangle puts data in the position buffer
-    	gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);            // Set a rectangle the same size as the image.
-    	setRectangle(gl, 0, 0, width, height);            // Draw the rectangle.
+	gl.activeTexture(gl.TEXTURE0+0);
+	gl.bindTexture(gl.TEXTURE_2D, targetTex);
 
-        gl.uniform3f(inLocs.hue, h, s, l);
-        gl.drawArrays(gl.TRIANGLES, 0, 6);
+	gl.useProgram(outProgram);
 
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+	gl.uniform2f(gl.getUniformLocation(outProgram, "u_resolution"), graph.width, graph.height); 
+	gl.uniform2f(gl.getUniformLocation(outProgram, "res"), width, height);
+	gl.uniform1f(gl.getUniformLocation(outProgram, "k"), k);
+	gl.uniform1f(gl.getUniformLocation(outProgram, "tx"), tx);
+	gl.uniform1f(gl.getUniformLocation(outProgram, "ty"), ty);
+	gl.uniform1i(gl.getUniformLocation(outProgram, "u_image"), 0);
+	gl.uniform3f(outLocs.hue, h, s, l);
+	gl.uniform1f(outLocs.time, 0.0 * 0.001);
+	gl.uniform1f(outLocs.dark, localStorage.theme == "dark");
+	gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+	setRectangle(gl, 0, 0, width, height);
 
-        temp = targetTex2;
-        targetTex2 = targetTex;
-        targetTex = temp; // these should be switching between tex and targetTex eventually
+	gl.drawArrays(gl.TRIANGLES, 0, 6);
 
-
-
-    	gl.enableVertexAttribArray(gl.getAttribLocation(outProgram, "a_position"));
-    	gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-    	gl.vertexAttribPointer(gl.getAttribLocation(outProgram, "a_position"), 2, gl.FLOAT, false, 0, 0);
-    	gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
-    	gl.enableVertexAttribArray(gl.getAttribLocation(outProgram, "a_texCoord"));
-    	gl.vertexAttribPointer(gl.getAttribLocation(outProgram, "a_texCoord"), 2, gl.FLOAT, false, 0, 0);
-
-        gl.activeTexture(gl.TEXTURE0+0);
-        gl.bindTexture(gl.TEXTURE_2D, targetTex);
-
-    	gl.useProgram(outProgram);
-
-        //gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuffer);
-        //gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, targetTex2, 0);
-		//console.log("Uniform", width, height);
-		//console.log("Uniform", graph.width, graph.height);
-    	gl.uniform2f(gl.getUniformLocation(outProgram, "u_resolution"), graph.width, graph.height); 
-        gl.uniform2f(gl.getUniformLocation(outProgram, "res"), width, height);
-        gl.uniform1f(gl.getUniformLocation(outProgram, "k"), k);
-        gl.uniform1f(gl.getUniformLocation(outProgram, "tx"), tx);
-        gl.uniform1f(gl.getUniformLocation(outProgram, "ty"), ty);
-    	gl.uniform1i(gl.getUniformLocation(outProgram, "u_image"), 0);            // Update the time
-		gl.uniform3f(outLocs.hue, h, s, l);
-    	gl.uniform1f(outLocs.time, 0.0 * 0.001);
-		gl.uniform1f(outLocs.dark, localStorage.theme == "dark");
-    	// in setRectangle puts data in the position buffer
-    	gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);            // Set a rectangle the same size as the image.
-    	setRectangle(gl, 0, 0, width, height);            // Draw the rectangle.
-
-        gl.drawArrays(gl.TRIANGLES, 0, 6);
-
-        //temp = targetTex2;
-        //targetTex2 = targetTex;
-        //targetTex = temp;
-
-        //canvas.style.display="none";
-	}
-
-//window.onload = function() {firstRender(0.075, 1.0, 0.5);}
+}
 
 navigator.getUserMedia = ( navigator.getUserMedia ||
                        navigator.webkitGetUserMedia ||
                        navigator.mozGetUserMedia ||
                        navigator.msGetUserMedia);
 
-//navigator.getUserMedia({ video : false, audio : true }, callback, console.log);
-//firstRender(0.075, 1.0, 0.5);
-
 navigator.mediaDevices.getUserMedia({ video : false, audio : true })
-  .then(callback)
-  .catch((err) => {
-    /* handle the error */
-  });
+	.then(callback)
+	.catch((err) => {
+		/* handle the error */
+	});
 
 function display() {
     gl.enableVertexAttribArray(gl.getAttribLocation(outProgram, "a_position"));
@@ -1135,7 +1082,6 @@ function display() {
 }
 
 var data;  
-var data2;
 
 function callback(stream) {
     var ctx = new AudioContext();
@@ -1143,17 +1089,12 @@ function callback(stream) {
     var analyser = ctx.createAnalyser();
     mic.connect(analyser);
     data = new Uint8Array(analyser.frequencyBinCount);
-    data2 = new Float32Array(analyser.frequencyBinCount);  
-    //console.log(data);
-    firstRender(0.075, 1.0, 0.5);
+    firstRender();
 
     function play() {
         analyser.getByteFrequencyData(data);   
         //console.log(analyser.minDecibels);
         //console.log(analyser.maxDecibels);
-        //analyser.getFloatFrequencyData(data2);
-        //console.log(data2);
-        //console.log(data);
 
         gl.enableVertexAttribArray(gl.getAttribLocation(inProgram, "a_position"));
     	gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
@@ -1190,16 +1131,13 @@ function callback(stream) {
         if (toggle) {requestAnimationFrame(play);}
     }   
 
-    play();
-
     btn.addEventListener('click', function handleClick() {
     toggle = !toggle;
     if (toggle) btn.textContent = '⏸';
     else btn.textContent = '▶️';
     play();
-});
 
-window.onload = function() {firstRender(0.075, 1.0, 0.5);}
+	});
 
 }
 
