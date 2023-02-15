@@ -14,9 +14,9 @@
       <pubDate>Mon, 28 Nov 2022 12:06:38 +0100</pubDate>
       
       <guid>https://agaura.github.io/audiospectrum/</guid>
-      <description>Audio Graph  Below you can find a graph representing the spectrum of the audio input. The graph is interactive, so feel free trying to move and zoom to see better. Additionally, two different gradients are used depending on whether you are viewing in dark mode or light mode, so click the ⚪️/⚫️ button to switch.
+      <description>Audio Graph  Below you can find a graph representing the spectrum of the audio input. The graph is interactive, so feel free trying to click and drag the graph or zoom to see better. Additionally, two different gradients are used depending on whether you are viewing in dark mode or light mode, so click the ⚪️/⚫️ button to switch.
 ▶️
-  .line { fill: none; stroke: steelblue; stroke-width: 2px; } .axis line{ stroke: #808080; } .</description>
+  .line { fill: none; stroke: steelblue; stroke-width: 2px; } .</description>
     </item>
     
     <item>
@@ -73,8 +73,8 @@ Shader      ▶️  input[type=&#34;file&#34;] { display: none; } .custom-file-u
       <pubDate>Sun, 17 Apr 2022 17:08:58 +0200</pubDate>
       
       <guid>https://agaura.github.io/about/</guid>
-      <description>Howdy! My name is Alex and I&amp;rsquo;m currently a master&amp;rsquo;s student in a program called IMLEX where I&amp;rsquo;m currently completing a thesis at the Norwegian University of Science and Technology in Gjøvik, Norway.
- This website mostly functions as a way for me to teach myself and strengthen my understanding of what I like to study, as well as provide a space in which some of my projects can live.</description>
+      <description>Howdy! My name is Alex and I&amp;rsquo;m a recent graduate of a Master&amp;rsquo;s program called IMLEX.
+ This website mostly functions as a way for me to teach myself and strengthen my understanding of what I like to study, as well as provide a space in which some of my projects can live. I&amp;rsquo;m mostly interested in how we represent our perception and how we approximate and model it, so these days, that translates to studying color and gradients in different applications.</description>
     </item>
     
   </channel>

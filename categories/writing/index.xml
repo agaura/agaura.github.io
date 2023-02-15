@@ -14,9 +14,9 @@
       <pubDate>Mon, 28 Nov 2022 12:06:38 +0100</pubDate>
       
       <guid>https://agaura.github.io/audiospectrum/</guid>
-      <description>Audio Graph  Below you can find a graph representing the spectrum of the audio input. The graph is interactive, so feel free trying to move and zoom to see better. Additionally, two different gradients are used depending on whether you are viewing in dark mode or light mode, so click the ⚪️/⚫️ button to switch.
+      <description>Audio Graph  Below you can find a graph representing the spectrum of the audio input. The graph is interactive, so feel free trying to click and drag the graph or zoom to see better. Additionally, two different gradients are used depending on whether you are viewing in dark mode or light mode, so click the ⚪️/⚫️ button to switch.
 ▶️
-  .line { fill: none; stroke: steelblue; stroke-width: 2px; } .axis line{ stroke: #808080; } .</description>
+  .line { fill: none; stroke: steelblue; stroke-width: 2px; } .</description>
     </item>
     
   </channel>
