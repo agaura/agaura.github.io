@@ -47,11 +47,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1676425828.css">
+  <link rel="stylesheet" href="/minima.1676426081.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1676425828.js"></script>
+  <script defer type="text/javascript" src="/minima.1676426081.js"></script>
 </head>
 <script>
   
@@ -955,22 +955,24 @@ function resizeCanvas() {
 	.scaleExtent([graph.width / (1024 * graph.width/graph.height), 32 * graph.width/(1024 * graph.width/graph.height)])
 	.translateExtent([[graph.width-(1024 * graph.width/graph.height), graph.height-1024], [graph.width, graph.height]])
 	.on("zoom", function () {
+
 		lowerTime = d3.event.transform.rescaleX(x).domain()[0]
 		upperTime = d3.event.transform.rescaleX(x).domain()[1]
 		lowerHZ = d3.event.transform.rescaleY(y).domain()[0]
 		upperHZ = d3.event.transform.rescaleY(y).domain()[1]
 
+		mouse = d3.mouse(this);
+		mousex = mouse[0]
+		mousey = mouse[1]
+
 		truex = mousex / graph.width * lowerTime + (1 - mousex / graph.width) * upperTime
 		truey = mousey / graph.height * lowerHZ + (1 - mousey / graph.height) * upperHZ
 
-		vertGrid.call(xgrid.scale(d3.event.transform.rescaleX(x)));
-		horGrid.call(ygrid.scale(d3.event.transform.rescaleY(y)));
-		bottomAxis.call(xaxis.scale(d3.event.transform.rescaleX(x)));
-		leftAxis.call(yaxis.scale(d3.event.transform.rescaleY(y)));
-		k = d3.event.transform['k'];
-		tx = d3.event.transform['x'];
-		ty = d3.event.transform['y'];
-		zoomlabel.text("Zoom: " + d3.format(".2f")(k / (graph.width/(1024 * graph.width/graph.height))));
+		vertical.attr("x1", mousex - 1);
+		vertical.attr("x2", mousex - 1);
+		horizontal.attr("y1", mousey + 1);
+		horizontal.attr("y2", mousey + 2); // prevents scrolling issues, and the offset is unnoticeable
+		final_color.attr("cx", mousex);
 
 		if (mousex < graph.width / 2) {
 			identify.attr("text-anchor", "beginning")
@@ -982,6 +984,15 @@ function resizeCanvas() {
 				.attr("x", mousex - 9)
 				.text(d3.format(".0f")(truey * 1000) + " Hz")
 		}
+
+		vertGrid.call(xgrid.scale(d3.event.transform.rescaleX(x)));
+		horGrid.call(ygrid.scale(d3.event.transform.rescaleY(y)));
+		bottomAxis.call(xaxis.scale(d3.event.transform.rescaleX(x)));
+		leftAxis.call(yaxis.scale(d3.event.transform.rescaleY(y)));
+		k = d3.event.transform['k'];
+		tx = d3.event.transform['x'];
+		ty = d3.event.transform['y'];
+		zoomlabel.text("Zoom: " + d3.format(".2f")(k / (graph.width/(1024 * graph.width/graph.height))));
 
 		if (!toggle) {display();}
 	});
