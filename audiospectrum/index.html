@@ -47,11 +47,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1676322059.css">
+  <link rel="stylesheet" href="/minima.1676425828.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1676322059.js"></script>
+  <script defer type="text/javascript" src="/minima.1676425828.js"></script>
 </head>
 <script>
   
@@ -227,7 +227,16 @@ void main()
     if (uv.x < 1.0 - pixel.x * speed) {outColor = texture(prev_image, uv + vec2(speed * pixel.x,0.0));}
     else {outColor = vec4(texture(u_image, uv.yx).r, 0.0, 0.0, 1.0);}
 
-    //outColor = vec4(uv.x,0.0,0.0,1.0);
+	/*
+	if ((uv.x < 0.01) && (uv.y < 0.01)) {outColor = vec4(1.0,0.0,0.0,1.0);}
+	if ((uv.x < 0.01) && (uv.y > 0.99)) {outColor = vec4(0.75,0.0,0.0,1.0);}
+	if ((uv.x > 0.99) && (uv.y < 0.01)) {outColor = vec4(0.5,0.0,0.0,1.0);}
+	if ((uv.x > 0.99) && (uv.y > 0.99)) {outColor = vec4(0.25,0.0,0.0,1.0);}
+
+	outColor = vec4((uv.x + uv.y) / 2.,0.0,0.0,1.0);
+
+    outColor = vec4(uv.x,0.0,0.0,1.0);
+	*/
 }`;
 
 var colorFrag = `#version 300 es
@@ -713,6 +722,13 @@ var svg = d3.select("#graph"),
 		.attr('width', graph.width)
     	.attr('height', graph.height + margin.bottom)
 	g2 = svg_canvas.append("g");
+
+var lowerHZ = 0,
+	upperHZ = 24 * graph.height/1024,
+	lowerTime = -10,
+	upperTime = 0;
+var mousex, mousey;
+
 var x = d3.scaleLinear()
         .range([0, graph.width])
         .domain([-10,0]),
@@ -740,31 +756,33 @@ const bottomAxis = g.append("g")
     .attr("class", "axis")
     .attr("transform", "translate(0," + graph.height + ")")
     .call(xaxis);
-const xlabel = bottomAxis.append("text")
+const xlabel = g2.append("text")
     .attr("text-anchor", "end")
 	.attr("x", graph.width - 3)
-	.attr("y", - 4)
-    .attr("fill", "#808080B0")
+	.attr("y", graph.height - 4)
+    .attr("fill", "#808080")
 	//.attr("style", "position: relative; z-index: 999") // this doesn't work! I don't know why
-    .text("Time (s)")
-    .attr("fill", "#AA0000");
-const zoomlabel = bottomAxis.append("text")
-    .attr("text-anchor", "beginning")
-    .attr("x", graph.width - 29)
-    .attr("y", - 304)
-    .attr("fill", "#808080B0")
+	.attr("style", "font-size:10px")
+    .text("Time (s)");
+const zoomlabel = g2.append("text")
+    .attr("text-anchor", "end")
+    .attr("x", graph.width - 3)
+	.attr("y", 11)
     .text("Zoom: " + d3.format(".2f")(1 / (graph.width/(1024 * graph.width/graph.height))))
-    .attr("fill", "#AA0000");
+    .attr("fill", "#808080")
+	.attr("style", "font-size:10px");
 	//.attr("style", "z-index: 999");
 const leftAxis = g.append("g")
     .attr("class", "axis")
     .call(yaxis);
-const ylabel = leftAxis.append("text")
+const ylabel = g2.append("text")
     .attr("transform", "rotate(-90)")
     .attr("y", 7)
     .attr("x", -3)
     .attr("dy", "0.71em")
     //.attr("style", "fill: #800000") // this is the way to change the text color
+	.attr("fill", "#808080")
+	.attr("style", "font-size:10px")
     .text("Frequency (kHz)");
 var zoom = d3.zoom()
 	//.extent([[0, 0], [1950, 1024]])
@@ -806,42 +824,63 @@ const canvas_space = foreignObject.append("xhtml:canvas")
 	.attr("style", "position:static")
 	.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 	//.attr("style", "position:relative; z-index: -1");
-var vertical = g.append("line")
-    .attr("y1", -5)
-    .attr("y2", 305)
+var vertical = g2.append("line")
+    .attr("y1", 0)
+    .attr("y2", graph.height)
     .attr("x1", 0)
     .attr("x2", 0)
-    .attr("stroke", "#7F7F7F50");
+    .attr("stroke", "#505050A0");
+var horizontal = g2.append("line")
+    .attr("y1", 0)
+    .attr("y2", 0)
+    .attr("x1", 0)
+    .attr("x2", graph.width)
+    .attr("stroke", "#505050A0");
 var final_color = g.append('circle')
+	//.attr('style', '@media (color-gamut: p3)') // this doesn't seem to work
     .attr('cx', 0)
     .attr('cy', -7)
     .attr('r', 6)
     .attr('stroke', 'gray')
-    .attr('fill', '#000000A0');
-d3.select("#graph")
-	.on("mousemove", function(){  
-		mousex = d3.mouse(this);
-		mousex = mousex[0] - margin.left;
-		if (mousex > 0 && mousex < graph.width) {
-			vertical.attr("x2", mousex);
-			vertical.attr("x1", mousex);
-			final_color.attr("cx", mousex);
-			}})
-	.on("mouseover", function(){  
-		mousex = d3.mouse(this);
-		mousex = mousex[0];
-		if (mousex > margin.left && mousex < graph.width + margin.left)
-		{
-			vertical.attr("x2", mousex - margin.left);
-			vertical.attr("x1", mousex - margin.left)
-		}
-	});
+    .attr('fill', '#00000000');
+var identify = g.append('text')
+    .attr("text-anchor", "beginning")
+    .attr("x", graph.width)
+	.attr("y", -4)
+    .text(0 + " Hz")
+    .attr("fill", "#808080")
+	.attr("style", "font-size:10px");
+svg_canvas.on("mousemove", function(){  
+	mouse = d3.mouse(this);
+	mousex = mouse[0]
+	mousey = mouse[1]
 
-d3.select("foreignObject").raise();
-d3.selectAll("text").select(function() { return this.parentNode; }).raise(); // raises the parent nodes (a bunch of g objects) of all the text, so the grids do not block zooming function
+	truex = mousex / graph.width * lowerTime + (1 - mousex / graph.width) * upperTime
+	truey = mousey / graph.height * lowerHZ + (1 - mousey / graph.height) * upperHZ
+
+	vertical.attr("x1", mousex - 1);
+	vertical.attr("x2", mousex - 1);
+	horizontal.attr("y1", mousey + 1);
+	horizontal.attr("y2", mousey + 2); // prevents scrolling issues, and the offset is unnoticeable
+	final_color.attr("cx", mousex);
+
+	if (mousex < graph.width / 2) {
+		identify.attr("text-anchor", "beginning")
+			.attr("x", mousex + 10)
+			.text(d3.format(".0f")(truey * 1000) + " Hz")
+	}
+	else {
+		identify.attr("text-anchor", "end")
+			.attr("x", mousex - 9)
+			.text(d3.format(".0f")(truey * 1000) + " Hz")
+	}
+});
+
+//d3.select("foreignObject").raise();
+//d3.selectAll("text").select(function() { return this.parentNode; }).raise(); // raises the parent nodes (a bunch of g objects) of all the text, so the grids do not block zooming function
 
 var canvas = canvas_space.node();
-var gl = canvas.getContext("webgl2");
+var gl = canvas.getContext("webgl2", {preserveDrawingBuffer: true});
 if (`drawingBufferColorSpace` in gl) {
     gl.drawingBufferColorSpace = 'display-p3';
     console.log(gl.drawingBufferColorSpace);
@@ -880,8 +919,8 @@ function resizeCanvas() {
 	graph.width = svg.attr("width") - margin.left - margin.right;
 	graph.height = Math.round(graph.width * 315/600);
 	svg.attr("height", graph.height + margin.top + margin.bottom);
-	svg_canvas.attr("width", maxWidth);
-	svg_canvas.attr("height", graph.height + margin.bottom);
+	svg_canvas.attr("width", maxWidth - margin.left - margin.right);
+	svg_canvas.attr("height", graph.height);
 
 	canvas.width = graph.width;
 	canvas.height = graph.height;
@@ -897,15 +936,17 @@ function resizeCanvas() {
 	xgrid = d3.axisBottom(x).tickSize(-graph.height).tickFormat('');
 	vertGrid.attr("transform", "translate(0," + graph.height + ")").call(xgrid); // respaces vertical grid: works
 	xlabel.attr("x", graph.width - 3);
+	xlabel.attr("y", graph.height - 4)
 
 	yaxis = d3.axisLeft(y);
 	leftAxis.call(yaxis);
 	ygrid = d3.axisLeft(y).tickSize(-graph.width).tickFormat('');
 	horGrid.call(ygrid); // respaces horizontal grid: works (now, hehe)
-	ylabel.attr("y", 6);
+	ylabel.attr("x", -82)
+		.attr("y", 5);
 
 	vertical.attr("y2", graph.height);
-	zoomlabel.attr("x", graph.width - 29).attr("y", - graph.height + 11);
+	zoomlabel.attr("x", graph.width - 3).attr("y", 11);
 	width = 1950;
 	height = 1024;
 
@@ -914,6 +955,14 @@ function resizeCanvas() {
 	.scaleExtent([graph.width / (1024 * graph.width/graph.height), 32 * graph.width/(1024 * graph.width/graph.height)])
 	.translateExtent([[graph.width-(1024 * graph.width/graph.height), graph.height-1024], [graph.width, graph.height]])
 	.on("zoom", function () {
+		lowerTime = d3.event.transform.rescaleX(x).domain()[0]
+		upperTime = d3.event.transform.rescaleX(x).domain()[1]
+		lowerHZ = d3.event.transform.rescaleY(y).domain()[0]
+		upperHZ = d3.event.transform.rescaleY(y).domain()[1]
+
+		truex = mousex / graph.width * lowerTime + (1 - mousex / graph.width) * upperTime
+		truey = mousey / graph.height * lowerHZ + (1 - mousey / graph.height) * upperHZ
+
 		vertGrid.call(xgrid.scale(d3.event.transform.rescaleX(x)));
 		horGrid.call(ygrid.scale(d3.event.transform.rescaleY(y)));
 		bottomAxis.call(xaxis.scale(d3.event.transform.rescaleX(x)));
@@ -922,6 +971,17 @@ function resizeCanvas() {
 		tx = d3.event.transform['x'];
 		ty = d3.event.transform['y'];
 		zoomlabel.text("Zoom: " + d3.format(".2f")(k / (graph.width/(1024 * graph.width/graph.height))));
+
+		if (mousex < graph.width / 2) {
+			identify.attr("text-anchor", "beginning")
+				.attr("x", mousex + 10)
+				.text(d3.format(".0f")(truey * 1000) + " Hz")
+		}
+		else {
+			identify.attr("text-anchor", "end")
+				.attr("x", mousex - 9)
+				.text(d3.format(".0f")(truey * 1000) + " Hz")
+		}
 
 		if (!toggle) {display();}
 	});
@@ -1082,6 +1142,7 @@ function display() {
 }
 
 var data;  
+var bwdata = new Uint8Array(4);
 
 function callback(stream) {
     var ctx = new AudioContext();
@@ -1114,6 +1175,8 @@ function callback(stream) {
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuffer);
         gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, targetTex2, 0);
+
+  		//gl.readPixels(0, 0, width, height-2, gl.RED, gl.UNSIGNED_BYTE, bwdata); // height-2 is necessary for some reason
 
         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer); // I think this isn't necessary
         gl.uniform1i(gl.getUniformLocation(inProgram, "u_image"), 0);

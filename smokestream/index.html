@@ -43,11 +43,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1676322059.css">
+  <link rel="stylesheet" href="/minima.1676425828.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1676322059.js"></script>
+  <script defer type="text/javascript" src="/minima.1676425828.js"></script>
 </head>
 <script>
   
@@ -1394,9 +1394,12 @@ void main() {
 
     //color = lineGradient(color.r, 32., 4., 2.); // pressure
     // color = lineGradient2(color.r, 1. / pow(2.,6.), pow(2.,3.), pow(2.,4.)); // pressure
-    if (mode == 1) {color = lineGradient2(color.r, 1. / pow(2.,6.), pow(2.,3.), pow(2.,5.));} // pressure
+    //if (mode == 1) {color = lineGradient2(color.r, 1. / pow(2.,6.), pow(2.,3.), pow(2.,5.));} // pressure
+    if (mode == 1) {color = lineGradient2(color.r, 1. / pow(2.,7.), pow(2.,4.), pow(2.,6.));} // pressure
     //if (mode == 2) {color = logGradient(color.r, 1. / pow(2.,12.), pow(2.,0.5), pow(2.,3.), pow(2.,4.));} // divergence
-    if (mode == 2) {color = logGradient(color.r, 1. / pow(2.,10.), pow(2.,0.5), pow(2.,3.), pow(2.,4.));} // divergence
+    //if (mode == 2) {color = logGradient(color.r, 1. / pow(2.,10.), pow(2.,0.5), pow(2.,3.), pow(2.,4.));} // divergence
+    if (mode == 2) {color = logGradient(color.r, 1. / pow(2.,10.), pow(2.,.5), pow(2.,3.), pow(2.,5.));} // divergence
+    //if (mode == 2) {color = lineGradient2(color.r, 1. / pow(2.,12.), pow(2.,4.), pow(2.,6.));} // pressure
     //if (mode == 2) {color = logGradient(color.r, 1. / pow(2.,12.), pow(2.,1.), pow(2.,2.), pow(2.,3.));} // divergence
     if (mode == 3) {color = colorMap(color.rg);} // velocity
     //color = lineGradient(color.r, pow(2.,10.), pow(2.,8.), pow(2.,6.)); // divergence
