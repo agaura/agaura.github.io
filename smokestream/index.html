@@ -43,11 +43,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1676576798.css">
+  <link rel="stylesheet" href="/minima.1677860164.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1676576798.js"></script>
+  <script defer type="text/javascript" src="/minima.1677860164.js"></script>
 </head>
 <script>
   
@@ -1438,6 +1438,7 @@ void main() {
 <input type="radio" id="velocity" name="mode" value="3">
 <label for="3">Velocity</label>
 </div>
+<div id="space" style="display: block; height: 100vh; user-select: none"></div>
 <script type="text/javascript">
 "use strict";
 
@@ -2043,6 +2044,10 @@ function render(time) {
     realOutput = realOutput2;
     realOutput2 = temp;
 
+    // this fixes the sticky issue on mobile, I might want to toggle this!
+    deltaX = 0;
+    deltaY = 0;
+
     if (toggle) requestAnimationFrame(render);
 }
 
@@ -2163,9 +2168,11 @@ d3.select(window).on('resize.updatesvg', function() {
     updateWindow();
     toggle = true;
     });
+
+const freeSpace = document.getElementById('space');
+freeSpace.addEventListener('touchstart', function(e){ e.preventDefault(); }, {passive:false});
     
 </script>
-<div id="space" style="display: block; height: 100vh;"></div>
 <h1 id="extra-information">Extra Information</h1>
 <p>   The smoke shader should work both on desktop and on mobile, although it&rsquo;s better on desktop. It is especially best rendered on chrome, and if your monitor is capable of rendering P3 colors (most macs can, for example) then the colors will render as P3 colors on chrome (giving a wider gamut, making even more colorful smoke!).</p>
 <p>   Colors themselves are picked from the Okhsl color space, allowing for perceptually smoother gradients. The colors are technically floats, and while monitors do not normally render float values for colors, this allows for colors to be rendered extra smooth by adding a little noise, preventing &ldquo;banding.&rdquo;</p>
