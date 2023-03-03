@@ -43,11 +43,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1677863897.css">
+  <link rel="stylesheet" href="/minima.1677878362.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1677863897.js"></script>
+  <script defer type="text/javascript" src="/minima.1677878362.js"></script>
 </head>
 <script>
   
@@ -974,6 +974,16 @@ vec3 closestPoint(vec2 delta, vec2 end, vec2 current) {
     
 }
 
+float spread(float val, float mag) {
+    if (val < 0.5) {
+        val = pow(val * 2.0, mag) / 2.0;
+    }
+    else {
+        val = 1.0 - pow((1.0 - val) * 2.0, mag) / 2.0;
+    }
+    return val;
+}
+
 void main() {
 
     vec2 u = texture(velocity, v_texCoord).xy;
@@ -985,6 +995,7 @@ void main() {
     float ratio = radius.y / radius.x;
 
     if (paint) {
+
         if (mouseDown) {
 
             // sees how close a pixel is to the closest point on the line traced by the last two points registered from the cursor
@@ -1005,7 +1016,7 @@ void main() {
             //color = vec4(okhsl_to_srgb(vec3(time / 1024.0, 1.0, 0.5)), 1.0); // gentle and smooth rainbow (original)
             //color = vec4(hsl2rgb(vec3(time / 1024.0 + (time + t * dt) * mag / (2.* 8192.0), 0.25, 0.5)), 1.0); // reaaaally cool oil slick
             //color = vec4(okhsl_to_srgb(vec3((time + t) / 1024.0 + 0.9 * pow(mag, 0.5), 0.9, 0.5)), 1.0); // reaaaally cool oil slick
-            color = vec4(okhsl_to_srgb(vec3((time + t) / 20000.0 + 0.9 * pow(mag, 0.5), 0.9, 0.5)), 1.0); // this one is just slow
+            color = vec4(okhsl_to_srgb(vec3((time + t) / 20000.0 + 0.9 * pow(mag, 0.5), 0.9, 0.5 + 0.10 * sin(dx*dy*10000.*3.))), 1.0); // this one is just slow
             //color = vec4(okhsl_to_srgb(vec3((time + t) / (1024.0 * 1. * pow(change.x * change.y, 0.05) + 16.) + 0.9 * pow(mag, 0.5), 0.9, 0.5)), 1.0); // trying to make it cycle through more colors when slow, so that when it's real slow it'll effectively be gray 
 
             // if dark mode is on, add the color to the background, which will cause brightening (like a glow)
@@ -1014,15 +1025,12 @@ void main() {
             // colors are mixed in light mode as it seems more natural (kinda like subtractive color mixing)
             else {result = mix(result, color, mag);}
 
-            // makes sure that all color data is removed once transparency is reached, and that 
-            if ((result.a == 0.0) || (result.a == 1.0)) {outColor = vec4(0.0);} // the 1.0 case is just to get rid of the default
-            else {outColor = result;}
-
             //result = vec4(0.1*sin(close * 200000.0), 0.0, 0.99); // really useful
             //result = vec4(0.1*cos((close - 1.0) * 100.0), 0.0, 0.99); // really useful
             //result = vec4((ratio - 1.) * 125., - (ratio - 1.) * 125., 0.0, 0.99);
             //result = vec4(hsl2rgb(vec3(1.0, (ratio - 1.), 0.5)), 1.0);
-            //if (dx*dx < 0.001) {if (dy*dy < 0.001) {result = vec4(0.5, 0.5, 0.0, 0.99);}}
+            //if (dx*dx < 0.001) {if (dy*dy < 0.001) {result = vec4(.5, 0., 0., 0.5);}}
+            //if (sqrt(dx*dx +dy*dy) < 0.03) {result = vec4(.5, 0., 0., 0.5);}
         }
 
         float dxp = (spriteCenter.x - v_texCoord.x) * ratio;
@@ -1035,7 +1043,10 @@ void main() {
         vec4 newColor = vec4(hsl2rgb(vec3(time / 17.0, 1.0, 0.5)), 1.0); // oil slick color, looks great with a small radius
         if (dark) {result = result + newColor * magp;}
         else {result = mix(result, newColor, magp);}
-        result = mix(vec4(0.0), result, 0.99);
+        //result = mix(vec4(0.0), result, 0.98 + 0.02 * clamp(length(u),0.,1.));
+        //result = mix(vec4(0.0), result, pow(result.a, 0.001) - 0.02);
+        result = mix(vec4(0.0), result, pow(result.a, 0.001) - 0.02 + 0.02 * clamp(length(u),0.,1.));
+        //result = mix(vec4(0.0), result, 0.99);
 
         outColor = result;
 
@@ -1460,7 +1471,7 @@ if (`drawingBufferColorSpace` in gl) {
     gl.drawingBufferColorSpace = 'display-p3';
     console.log(gl.drawingBufferColorSpace);
 }
-var scaleFactor = 2.;
+var scaleFactor = 1.;
 
 // size
 var width = window.innerWidth / scaleFactor;
@@ -2168,6 +2179,7 @@ d3.select(window).on('resize.updatesvg', function() {
     if(!(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))){updateWindow();}
     else{ // on iPhone at least, it will resize when the address bar hides. I want that to be the size of the canvas, and then I never want it to change
         if ((window.innerWidth > canvas.width) || (window.innerHeight > canvas.height)){updateWindow()}
+        else{updateWindow()} // this is only for debugging
     }
     toggle = true;
     });
