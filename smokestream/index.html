@@ -43,11 +43,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1677863125.css">
+  <link rel="stylesheet" href="/minima.1677863522.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1677863125.js"></script>
+  <script defer type="text/javascript" src="/minima.1677863522.js"></script>
 </head>
 <script>
   
@@ -2165,8 +2165,9 @@ function updateWindow(){
 
 d3.select(window).on('resize.updatesvg', function() {
     toggle = false; // make sure it's not trying to render while updating the rendering settings
-    if(!(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))){
-        updateWindow();
+    if(!(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))){updateWindow();}
+    else{ // on iPhone at least, it will resize when the address bar hides. I want that to be the size of the canvas, and then I never want it to change
+        if ((screen.width > canvas.width) || (screen.height > canvas.height)){updateWindow()}
     }
     toggle = true;
     });
