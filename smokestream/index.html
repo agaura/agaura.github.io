@@ -43,11 +43,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1677879011.css">
+  <link rel="stylesheet" href="/minima.1677879763.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1677879011.js"></script>
+  <script defer type="text/javascript" src="/minima.1677879763.js"></script>
 </head>
 <script>
   
@@ -1388,7 +1388,7 @@ vec4 logGradient(float co, float thresh, float v, float sat_band_limit, float lu
 vec4 colorMap(vec2 co){
     //return vec4(0.0);
     float angle = atan(co.y, co.x) / (2. * M_PI);
-    float mag = length(co);
+    float mag = clamp(length(co),0.,2.);
     vec4 newcolor = vec4(okhsl_to_srgb(vec3(angle, min(mag, 1.0), mix(0.75, mag * 0.5, 0.5))), 1.0);
 
     return mix(vec4(0.0), newcolor, min(mag, 1.0));
