@@ -43,11 +43,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1677878362.css">
+  <link rel="stylesheet" href="/minima.1677879011.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1677878362.js"></script>
+  <script defer type="text/javascript" src="/minima.1677879011.js"></script>
 </head>
 <script>
   
@@ -1016,7 +1016,7 @@ void main() {
             //color = vec4(okhsl_to_srgb(vec3(time / 1024.0, 1.0, 0.5)), 1.0); // gentle and smooth rainbow (original)
             //color = vec4(hsl2rgb(vec3(time / 1024.0 + (time + t * dt) * mag / (2.* 8192.0), 0.25, 0.5)), 1.0); // reaaaally cool oil slick
             //color = vec4(okhsl_to_srgb(vec3((time + t) / 1024.0 + 0.9 * pow(mag, 0.5), 0.9, 0.5)), 1.0); // reaaaally cool oil slick
-            color = vec4(okhsl_to_srgb(vec3((time + t) / 20000.0 + 0.9 * pow(mag, 0.5), 0.9, 0.5 + 0.10 * sin(dx*dy*10000.*3.))), 1.0); // this one is just slow
+            color = vec4(okhsl_to_srgb(vec3((time + t) / 20000.0 + 0.9 * pow(mag, 0.5), 0.9, 0.5 + 0.1 * sin(dx*dy*10000.*3.))), 1.0); // this one is just slow
             //color = vec4(okhsl_to_srgb(vec3((time + t) / (1024.0 * 1. * pow(change.x * change.y, 0.05) + 16.) + 0.9 * pow(mag, 0.5), 0.9, 0.5)), 1.0); // trying to make it cycle through more colors when slow, so that when it's real slow it'll effectively be gray 
 
             // if dark mode is on, add the color to the background, which will cause brightening (like a glow)
@@ -1045,8 +1045,8 @@ void main() {
         else {result = mix(result, newColor, magp);}
         //result = mix(vec4(0.0), result, 0.98 + 0.02 * clamp(length(u),0.,1.));
         //result = mix(vec4(0.0), result, pow(result.a, 0.001) - 0.02);
-        result = mix(vec4(0.0), result, pow(result.a, 0.001) - 0.02 + 0.02 * clamp(length(u),0.,1.));
-        //result = mix(vec4(0.0), result, 0.99);
+        //result = mix(vec4(0.0), result, pow(result.a, 0.001) - 0.02 + 0.02 * clamp(length(u),0.,1.));
+        result = mix(vec4(0.0), result, 0.99);
 
         outColor = result;
 
@@ -1471,7 +1471,7 @@ if (`drawingBufferColorSpace` in gl) {
     gl.drawingBufferColorSpace = 'display-p3';
     console.log(gl.drawingBufferColorSpace);
 }
-var scaleFactor = 1.;
+var scaleFactor = 2.;
 
 // size
 var width = window.innerWidth / scaleFactor;
@@ -2179,7 +2179,7 @@ d3.select(window).on('resize.updatesvg', function() {
     if(!(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))){updateWindow();}
     else{ // on iPhone at least, it will resize when the address bar hides. I want that to be the size of the canvas, and then I never want it to change
         if ((window.innerWidth > canvas.width) || (window.innerHeight > canvas.height)){updateWindow()}
-        else{updateWindow()} // this is only for debugging
+        //else{updateWindow()} // this is only for debugging
     }
     toggle = true;
     });
