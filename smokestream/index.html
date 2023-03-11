@@ -43,11 +43,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1677879763.css">
+  <link rel="stylesheet" href="/minima.1678573467.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1677879763.js"></script>
+  <script defer type="text/javascript" src="/minima.1678573467.js"></script>
 </head>
 <script>
   
@@ -1182,9 +1182,10 @@ void main() {
 
         vec2 close = closestPoint(change, center, v_texCoord);
         dx = (close.x - v_texCoord.x) * ratio;
-        dy = close.y - v_texCoord.y;
+        dy = (close.y - v_texCoord.y);
         //outColor = outColor + vec4(25. * (change + vec2(0.0,-0.0025)) * exp(-(dx * dx + dy * dy) / (radius * 0.1)), 0.0, 1.0); // this could help for aurora
         outColor = outColor + vec4(25. * change * exp(-(dx * dx + dy * dy) / 0.00025), 0.0, 1.0);
+        //outColor = outColor + vec4(25. * change * vec2(1./ratio, 1.) * exp(-(dx * dx + dy * dy) / 0.00025), 0.0, 1.0);
     }
 
     float dxp = (spriteCenter.x - v_texCoord.x) * ratio;
@@ -1332,6 +1333,77 @@ vec4 lineGradient2(float co, float thresh, float sat_band_limit, float lum_band_
     return mix(vec4(0.0), newcolor, pow(sat_grad,2.0));
 }
 
+vec4 lineGradient3(float co, float thresh, float sat_band_limit, float lum_band_limit){
+
+    float scale = abs(co) / thresh;
+
+    float travelled = fract(scale) * 3.;
+    float mix_strength = fract(travelled);
+
+    float sat_grad = pow(clamp(scale / sat_band_limit,0.,1.),0.85) * 0.85 + 0.15;
+    float lum_grad = mix(0.3,0.75,clamp(scale / lum_band_limit,0.0,1.0));
+    if (sign(co) > 0.) {
+        lum_grad = mix(0.5,0.65,clamp(scale / lum_band_limit,0.0,1.0));
+        if (scale < 1.) {
+            lum_grad = mix(0.3,0.5,scale);
+        }
+    }
+    if (scale < 1.) {
+        sat_grad = mix(0.,0.15 + pow(1. / sat_band_limit,0.85) * 0.85, pow(scale,.33));
+    }
+
+    float neg_range = 0.12;
+    float pos_range = 0.12;
+
+    float neg_shift = 0.65;
+    float pos_shift = 0.58;
+
+    float pos_way = pow(clamp(2. * scale / lum_band_limit,0.0,1.0),0.6);
+    float pos_thresh = 2.0;
+    pos_way = pos_way * pos_thresh;
+    float pos_hue_shift = - mix(0.,.45,(pos_way - 1.) / (pos_thresh - 1.));
+    if (pos_way < 1.) {pos_hue_shift = - mix(0.5,0.,pos_way);}
+
+    //float pos_hue_shift = - mix(0.,0.65,pow(clamp(2. * scale / lum_band_limit,0.0,1.0),0.6));
+
+    float neg_way = pow(clamp(2. * scale / lum_band_limit,0.0,1.0),1.5);
+    float neg_thresh = 8.0;
+    neg_way = neg_way * neg_thresh;
+    float neg_hue_shift = mix(0.,0.2,(neg_way - 1.) / (neg_thresh - 1.));
+    if (neg_way < 1.) {neg_hue_shift = mix(0.2,0.,neg_way);}
+
+    vec4 graycolor = vec4(0.0);
+    if (sign(co) < 0.0) {graycolor = vec4(okhsl_to_srgb(vec3(neg_range / 2.0 + neg_shift, 0.5, lum_grad)), 1.0);}
+    else {graycolor = vec4(okhsl_to_srgb(vec3(pos_range / 2.0 + pos_shift, 0.5, lum_grad)), 1.0);}
+
+    vec4 newcolor = vec4(0.0);
+    if (travelled < 1.0) {
+        float color_grad = 0.0;
+        if (sign(co) < 0.0) {color_grad = mix_strength * neg_range + neg_shift + neg_hue_shift;}
+        else {color_grad = - mix_strength * pos_range + pos_shift + pos_hue_shift;}
+
+        newcolor = vec4(okhsl_to_srgb(vec3(color_grad, sat_grad, lum_grad)), 1.0);
+    }
+    else if (travelled < 2.0) {
+        float color_grad = 0.0;
+        if (sign(co) < 0.0) {color_grad = - mix_strength * neg_range / 2.0 + neg_range + neg_shift + neg_hue_shift;}
+        else {color_grad = mix_strength * pos_range / 2.0 - pos_range + pos_shift + pos_hue_shift;}
+
+        vec4 vividcolor = vec4(okhsl_to_srgb(vec3(color_grad, sat_grad, lum_grad)), 1.0);
+        newcolor = mix(vividcolor, graycolor, mix_strength);
+    }
+    else {
+        float color_grad = 0.0;
+        if (sign(co) < 0.0) {color_grad = - mix_strength * neg_range / 2.0 + neg_range / 2.0 + neg_shift + neg_hue_shift;}
+        else {color_grad = mix_strength * pos_range / 2.0 - pos_range / 2.0 + pos_shift + pos_hue_shift;}
+
+        vec4 vividcolor = vec4(okhsl_to_srgb(vec3(color_grad, sat_grad, lum_grad)), 1.0);
+        newcolor = mix(graycolor, vividcolor, mix_strength);
+    }
+
+    return mix(vec4(0.0), newcolor, pow(sat_grad,2.0));
+}
+
 vec4 logGradient(float co, float thresh, float v, float sat_band_limit, float lum_band_limit){
 
     // complete one band cycle by the time the threshold is reached
@@ -1385,6 +1457,82 @@ vec4 logGradient(float co, float thresh, float v, float sat_band_limit, float lu
     return mix(vec4(0.0), newcolor, pow(sat_grad,2.0));
 }
 
+vec4 logGradient2(float co, float thresh, float v, float sat_band_limit, float lum_band_limit){
+
+    // complete one band cycle by the time the threshold is reached
+    float scale = abs(co) / thresh;
+    if (abs(co) > thresh) {
+        // ex. if v = 2.0, each band cycle represents having 2x the magnitude of the last
+        scale = log(abs(co) / thresh) / log(v) + 1.0;
+        }
+    float travelled = fract(scale) * 3.;
+    float mix_strength = fract(travelled);
+
+    // the band limits determine the number of band cycles until maximum is reached
+    float sat_grad = pow(clamp(scale / sat_band_limit,0.,1.),0.85) * 0.85 + 0.15;
+    float lum_grad = mix(0.3,0.75,clamp(scale / lum_band_limit,0.0,1.0));
+    if (sign(co) > 0.) {
+        lum_grad = mix(0.5,0.65,clamp(scale / lum_band_limit,0.0,1.0));
+        if (scale < 1.) {
+            lum_grad = mix(0.3,0.5,scale);
+        }
+    }
+    if (scale < 1.) {
+        sat_grad = mix(0.,0.15 + pow(1. / sat_band_limit,0.85) * 0.85, pow(scale,.33));
+    }
+
+    float neg_range = 0.12;
+    float pos_range = 0.12;
+
+    float neg_shift = 0.65;
+    float pos_shift = 0.58;
+
+    float pos_way = pow(clamp(2. * scale / lum_band_limit,0.0,1.0),0.6);
+    float pos_thresh = 2.0;
+    pos_way = pos_way * pos_thresh;
+    float pos_hue_shift = - mix(0.,.45,(pos_way - 1.) / (pos_thresh - 1.));
+    if (pos_way < 1.) {pos_hue_shift = - mix(0.5,0.,pos_way);}
+
+    //float pos_hue_shift = - mix(0.,0.65,pow(clamp(2. * scale / lum_band_limit,0.0,1.0),0.6));
+
+    float neg_way = pow(clamp(2. * scale / lum_band_limit,0.0,1.0),1.5);
+    float neg_thresh = 8.0;
+    neg_way = neg_way * neg_thresh;
+    float neg_hue_shift = mix(0.,0.2,(neg_way - 1.) / (neg_thresh - 1.));
+    if (neg_way < 1.) {neg_hue_shift = mix(0.2,0.,neg_way);}
+
+    vec4 graycolor = vec4(0.0);
+    if (sign(co) < 0.0) {graycolor = vec4(okhsl_to_srgb(vec3(neg_range / 2.0 + neg_shift, 0.5, lum_grad)), 1.0);}
+    else {graycolor = vec4(okhsl_to_srgb(vec3(pos_range / 2.0 + pos_shift, 0.5, lum_grad)), 1.0);}
+
+    vec4 newcolor = vec4(0.0);
+    if (travelled < 1.0) {
+        float color_grad = 0.0;
+        if (sign(co) < 0.0) {color_grad = mix_strength * neg_range + neg_shift + neg_hue_shift;}
+        else {color_grad = - mix_strength * pos_range + pos_shift + pos_hue_shift;}
+
+        newcolor = vec4(okhsl_to_srgb(vec3(color_grad, sat_grad, lum_grad)), 1.0);
+    }
+    else if (travelled < 2.0) {
+        float color_grad = 0.0;
+        if (sign(co) < 0.0) {color_grad = - mix_strength * neg_range / 2.0 + neg_range + neg_shift + neg_hue_shift;}
+        else {color_grad = mix_strength * pos_range / 2.0 - pos_range + pos_shift + pos_hue_shift;}
+
+        vec4 vividcolor = vec4(okhsl_to_srgb(vec3(color_grad, sat_grad, lum_grad)), 1.0);
+        newcolor = mix(vividcolor, graycolor, mix_strength);
+    }
+    else {
+        float color_grad = 0.0;
+        if (sign(co) < 0.0) {color_grad = - mix_strength * neg_range / 2.0 + neg_range / 2.0 + neg_shift + neg_hue_shift;}
+        else {color_grad = mix_strength * pos_range / 2.0 - pos_range / 2.0 + pos_shift + pos_hue_shift;}
+
+        vec4 vividcolor = vec4(okhsl_to_srgb(vec3(color_grad, sat_grad, lum_grad)), 1.0);
+        newcolor = mix(graycolor, vividcolor, mix_strength);
+    }
+
+    return mix(vec4(0.0), newcolor, pow(sat_grad,2.0));
+}
+
 vec4 colorMap(vec2 co){
     //return vec4(0.0);
     float angle = atan(co.y, co.x) / (2. * M_PI);
@@ -1406,11 +1554,14 @@ void main() {
     //color = lineGradient(color.r, 32., 4., 2.); // pressure
     // color = lineGradient2(color.r, 1. / pow(2.,6.), pow(2.,3.), pow(2.,4.)); // pressure
     //if (mode == 1) {color = lineGradient2(color.r, 1. / pow(2.,6.), pow(2.,3.), pow(2.,5.));} // pressure
-    if (mode == 1) {color = lineGradient2(color.r, 1. / pow(2.,7.), pow(2.,4.), pow(2.,6.));} // pressure
+    //if (mode == 1) {color = lineGradient2(color.r, 1. / pow(2.,7.), pow(2.,4.), pow(2.,6.));} // pressure
+    if (mode == 1) {color = lineGradient3(color.r, 1. / pow(2.,7.), pow(2.,4.), pow(2.,6.));} // pressure
     //if (mode == 2) {color = logGradient(color.r, 1. / pow(2.,12.), pow(2.,0.5), pow(2.,3.), pow(2.,4.));} // divergence
     //if (mode == 2) {color = logGradient(color.r, 1. / pow(2.,10.), pow(2.,0.5), pow(2.,3.), pow(2.,4.));} // divergence
-    if (mode == 2) {color = logGradient(color.r, 1. / pow(2.,10.), pow(2.,.5), pow(2.,3.), pow(2.,5.));} // divergence
+    //if (mode == 2) {color = logGradient(color.r, 1. / pow(2.,10.), pow(2.,.5), pow(2.,3.), pow(2.,5.));} // divergence
+    if (mode == 2) {color = logGradient2(color.r, 1. / pow(2.,11.), pow(2.,.5), pow(2.,3.), pow(2.,4.));} // divergence
     //if (mode == 2) {color = lineGradient2(color.r, 1. / pow(2.,12.), pow(2.,4.), pow(2.,6.));} // pressure
+    //if (mode == 2) {color = lineGradient3(color.r, 1. / pow(2.,12.), pow(2.,4.), pow(2.,6.));} // pressure
     //if (mode == 2) {color = logGradient(color.r, 1. / pow(2.,12.), pow(2.,1.), pow(2.,2.), pow(2.,3.));} // divergence
     if (mode == 3) {color = colorMap(color.rg);} // velocity
     //color = lineGradient(color.r, pow(2.,10.), pow(2.,8.), pow(2.,6.)); // divergence
