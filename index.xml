@@ -18,6 +18,16 @@
     </item>
     
     <item>
+      <title>Time Dither</title>
+      <link>https://agaura.github.io/timedither/</link>
+      <pubDate>Wed, 21 Dec 2022 08:31:50 -0500</pubDate>
+      
+      <guid>https://agaura.github.io/timedither/</guid>
+      <description>@font-face { font-family: &#39;Digital-7&#39;; src: url(&#39;/fonts/digital-7.monoitalic.ttf&#39;) format(&#39;truetype&#39;) } .clock { font-family: &#39;Digital-7&#39; }     Previously I have used the concept of dithering with colors, but we can apply it to any system. Let&amp;rsquo;s see how this would look in the context of time:
+12:3456   Perhaps the only benefit is that you can somewhat estimate the milliseconds without needing the space to write them, but you can already do that with regular intuition.</description>
+    </item>
+    
+    <item>
       <title>Audio Spectrum</title>
       <link>https://agaura.github.io/audiospectrum/</link>
       <pubDate>Mon, 28 Nov 2022 12:06:38 +0100</pubDate>
