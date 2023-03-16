@@ -43,11 +43,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1678914511.css">
+  <link rel="stylesheet" href="/minima.1678930484.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1678914511.js"></script>
+  <script defer type="text/javascript" src="/minima.1678930484.js"></script>
 </head>
 <script>
   
@@ -1153,7 +1153,7 @@ vec2 closestPoint(vec2 delta, vec2 end, vec2 current) {
         vec2 initial = end - delta;
         float t = clamp(dot(current - initial, delta) / (delta.x * delta.x + delta.y * delta.y), 0.0, 1.0);
         //vec2 closest = initial + t * delta;
-        vec2 closest = initial + t * delta + 1. * pow(length(change), 0.1) * (sin(t * 6. * M_PI) + 1.0 * rand(vec2(t*100.0,deltaT))) * 0.025 * normalize(vec2(-delta.y, delta.x));
+        vec2 closest = initial + t * delta + 1. * pow(length(change), 0.1) * (sin(t * 6. * M_PI) + 1.0 * (rand(vec2(t*100.0,deltaT))-0.5)) * 0.025 * normalize(vec2(-delta.y, delta.x)); // tbh I'm not sure if the rand adds anything of value
 
         return closest;
     }
