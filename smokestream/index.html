@@ -43,11 +43,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1679343030.css">
+  <link rel="stylesheet" href="/minima.1679344385.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1679343030.js"></script>
+  <script defer type="text/javascript" src="/minima.1679344385.js"></script>
 </head>
 <script>
   
@@ -1027,7 +1027,7 @@ void main() {
             //color = vec4(okhsl_to_srgb(vec3((time + t) / 1024.0 + 0.9 * pow(mag, 0.5), 0.9, 0.5)), 1.0); // reaaaally cool oil slick
             //color = vec4(okhsl_to_srgb(vec3((time + t) / 20000.0 + 0.5 * pow(mag, 0.5), 1.0, 0.5 + 0.1 * sin(dx*dy*10000.*3.))), 1.0); // this one is just slow
             //color = vec4(okhsl_to_srgb(vec3(atan(dy, dx) / (2. * M_PI) + 0.9 * pow(mag, 0.5), 0.9, 0.5 + 0.1 * sin(dx*dy*10000.*3.))), 1.0); // very pretty, might be useful for debugging
-            if (initialDirection != 0.0) {
+            if (initialDirection > 0.0) {
                 float exactHue = initialDirection + 0.5 * pow(mag, 0.5);
                 color = vec4(okhsl_to_srgb(vec3(exactHue, 1.0, 0.1 * (1.0 - float(dark)) + 0.5 + 0.15 * sin(dx*dy*10000.*3.))), 1.0); // control color by direction
 
@@ -1867,15 +1867,10 @@ document.onscroll = function() {
     if (localStorage.theme == "dark") {
         document.body.style.backgroundColor = "rgb(" + darkval + "," + darkval + "," + darkval + ")";
         }
-    else {
-        //document.body.style.backgroundColor = "rgb(255,255,255)";
-    }
 }
 
 document.onclick = function() {
     var darkval = parseInt(Math.max(0,Math.min(24, document.getElementById('space').getBoundingClientRect().y / 20)));
-    var darkstyle = document.getElementsByClassName("dark");
-    //console.log(darkstyle);
     if (localStorage.theme == "dark") {
         document.body.style.backgroundColor = "rgb(" + darkval + "," + darkval + "," + darkval + ")";
         }
@@ -1905,7 +1900,6 @@ window.addEventListener('pointerdown', function (event) {
     count = 0;
     totalDX = 0;
     totalDY = 0;
-    console.log(count);
 }, false);
 
 window.addEventListener('pointermove', function (event) {
