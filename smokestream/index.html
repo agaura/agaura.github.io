@@ -43,11 +43,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1678930484.css">
+  <link rel="stylesheet" href="/minima.1679343030.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1678930484.js"></script>
+  <script defer type="text/javascript" src="/minima.1679343030.js"></script>
 </head>
 <script>
   
@@ -926,6 +926,9 @@ uniform vec2 change;
 uniform vec2 center;
 uniform vec2 radius;
 uniform float time;
+uniform bool glitter;
+uniform bool toggle;
+uniform float initialDirection;
 
 uniform vec2 spriteChange;
 uniform vec2 spriteCenter;
@@ -986,11 +989,17 @@ float spread(float val, float mag) {
 
 void main() {
 
-    vec2 u = texture(velocity, v_texCoord).xy;
-    //vec2 pastCoord = fract(v_texCoord - (0.5 * deltaT * u));
-    vec2 pastCoord = fract(v_texCoord - (0.5 * deltaT * u * vec2(radius.x/radius.y, 1.0)));
-    vec4 result = texture(u_image, pastCoord);
-    outColor = texture(u_image, pastCoord);
+    vec4 result = texture(u_image, v_texCoord);
+
+    if (toggle || !mouseDown) {
+
+        vec2 u = texture(velocity, v_texCoord).xy;
+        //vec2 pastCoord = fract(v_texCoord - (0.5 * deltaT * u));
+        vec2 pastCoord = fract(v_texCoord - (0.5 * deltaT * u * vec2(radius.x/radius.y, 1.0)));
+        result = texture(u_image, pastCoord);
+    }
+
+    outColor = result;
 
     float ratio = radius.y / radius.x;
 
@@ -1016,7 +1025,20 @@ void main() {
             //color = vec4(okhsl_to_srgb(vec3(time / 1024.0, 1.0, 0.5)), 1.0); // gentle and smooth rainbow (original)
             //color = vec4(hsl2rgb(vec3(time / 1024.0 + (time + t * dt) * mag / (2.* 8192.0), 0.25, 0.5)), 1.0); // reaaaally cool oil slick
             //color = vec4(okhsl_to_srgb(vec3((time + t) / 1024.0 + 0.9 * pow(mag, 0.5), 0.9, 0.5)), 1.0); // reaaaally cool oil slick
-            color = vec4(okhsl_to_srgb(vec3((time + t) / 20000.0 + 0.9 * pow(mag, 0.5), 0.9, 0.5 + 0.1 * sin(dx*dy*10000.*3.))), 1.0); // this one is just slow
+            //color = vec4(okhsl_to_srgb(vec3((time + t) / 20000.0 + 0.5 * pow(mag, 0.5), 1.0, 0.5 + 0.1 * sin(dx*dy*10000.*3.))), 1.0); // this one is just slow
+            //color = vec4(okhsl_to_srgb(vec3(atan(dy, dx) / (2. * M_PI) + 0.9 * pow(mag, 0.5), 0.9, 0.5 + 0.1 * sin(dx*dy*10000.*3.))), 1.0); // very pretty, might be useful for debugging
+            if (initialDirection != 0.0) {
+                float exactHue = initialDirection + 0.5 * pow(mag, 0.5);
+                color = vec4(okhsl_to_srgb(vec3(exactHue, 1.0, 0.1 * (1.0 - float(dark)) + 0.5 + 0.15 * sin(dx*dy*10000.*3.))), 1.0); // control color by direction
+
+                // getting rid of green
+                /*if ((exactHue > 0.33) && (exactHue < 0.42)){
+                    color = vec4(okhsl_to_srgb(vec3(exactHue, 0.0, 0.1 * (1.0 - float(dark)) + 0.5 + 0.15 * sin(dx*dy*10000.*3.))), 1.0); // control color by direction
+                }*/
+            }
+            else {
+                color = vec4(okhsl_to_srgb(vec3(atan(change.y, change.x) / (2. * M_PI) + 0.5 * pow(mag, 0.5), 1.0, 0.1 * (1.0 - float(dark)) + 0.5 + 0.15 * sin(dx*dy*10000.*3.))), 1.0); // control color by direction
+            }
             //color = vec4(okhsl_to_srgb(vec3((time + t) / (1024.0 * 1. * pow(change.x * change.y, 0.05) + 16.) + 0.9 * pow(mag, 0.5), 0.9, 0.5)), 1.0); // trying to make it cycle through more colors when slow, so that when it's real slow it'll effectively be gray 
 
             // if dark mode is on, add the color to the background, which will cause brightening (like a glow)
@@ -1046,9 +1068,43 @@ void main() {
         //result = mix(vec4(0.0), result, 0.98 + 0.02 * clamp(length(u),0.,1.));
         //result = mix(vec4(0.0), result, pow(result.a, 0.001) - 0.02);
         //result = mix(vec4(0.0), result, pow(result.a, 0.001) - 0.02 + 0.02 * clamp(length(u),0.,1.));
-        result = mix(vec4(0.0), result, 0.99);
+        result = mix(vec4(0.0), result, 0.995);
 
-        outColor = result;
+        // something along these lines could be helpful for keeping colors saturated while they fade away
+        /*
+        if (v_texCoord.y > 0.5) {
+            vec3 xxx = srgb_to_okhsl(clamp(result.rgb,0.0,1.0));
+
+            if (result.a > xxx.g) {
+                result = vec4(okhsl_to_srgb(vec3(xxx.r,mix(xxx.g,0.95,0.1),xxx.b)), result.a);
+            }
+            else {
+                result = vec4(okhsl_to_srgb(vec3(xxx.r,mix(xxx.g,0.95,1.0),xxx.b)), result.a);
+            }
+        }*/
+
+        
+        if (glitter) {
+            vec4 xxx = vec4(srgb_to_okhsl(clamp(result.rgb,0.0,1.0)),clamp(result.a,0.0,1.0));
+
+            float zzz = rand(vec2(v_texCoord.x * 10. + v_texCoord.y, time /100000.));
+
+            if (zzz > 0.975) {
+                if (xxx.b < 0.99) { // prevents weird black dots
+                    xxx.b = mix(xxx.b, mix(pow(xxx.b,2.),.99,pow(xxx.a,.75)), 0.5);
+                }
+                // xxx.b = mix(xxx.b, max(0.0, 0.1 * ((1.0 - zzz) * 40. - .5) + mix(pow(xxx.b,2.),.99,pow(xxx.a,.75))), 0.5); // could be useful
+                // xxx.b = mix(xxx.b, mix(-.5,.99,pow(xxx.a,.75)), 0.5); // really weird but interesting effect
+                //xxx.g = mix(xxx.g,1.0,0.5*xxx.a);
+                xxx.g = mix(xxx.g*0.9,1.0,pow(xxx.a,.75));
+                xxx.r = xxx.r + 0.1 * (1.1 - pow(xxx.a,2.)) * ((1.0 - zzz) * 40. - 0.5);
+            }
+
+            result = vec4(okhsl_to_srgb(xxx.rgb), result.a);
+
+        }
+
+        outColor = clamp(result,0.0,1.0);
 
         //if ((result.a == 1.0)) {outColor = vec4(0.0);}
         //if ((result.a < 1.0)) {outColor = mix(vec4(0.0), result, 0.99);}
@@ -1736,6 +1792,8 @@ void main() {
     //color = vec4(okhsl_to_srgb(color.a * vec3(rand(vec2(v_texCoord.x * 10.0 + v_texCoord.y * 67., mod(time, 1.0) * v_texCoord.x * v_texCoord.y)), 1.0, 0.5)), color.a);
     //float hue = rand(vec2(v_texCoord.x * 4.0 + v_texCoord.y * 4., mod(time, 1.0) * 4. * v_texCoord.x * v_texCoord.y)) * 2.0 * 3.1415926535;
     //color = color.a * vec4(oklab_to_linear_srgb(vec3(0.5, color.g * sin(hue), color.g * cos(hue))) + .6, 1.0);
+
+    //color = vec4(pow(color.a, 0.5)*color.rgb, color.a); could be useful for light mode
     outColor = color - 1.0 * noise;
 }
 </script>
@@ -1748,6 +1806,15 @@ void main() {
     outColor = texture(u_image, v_texCoord);
 }
 </script>
+<div align="center" id='checkboxes'>
+<br>
+<input type="checkbox" id="sprite" name="sprite" value="0" checked="checked">
+<label for="0">Sprite</label>
+<input type="checkbox" id="glitter" name="glitter" value="1" checked="checked">
+<label for="1">Glitter</label>
+<input type="checkbox" id="lock" name="lock" value="2">
+<label for="2">Color Direction-Lock</label>
+</div>
 <div align="center" id="slider-fill"></div>
 <div align="center" id="slider-fill2"></div>
 <div align="center" id='radiobtn'>
@@ -1775,7 +1842,10 @@ void main() {
 var toggle = true;
 const btn = document.getElementById('btn');
 const radiobtn = document.getElementById('radiobtn');
+const checkboxes = document.getElementById('checkboxes');
 var mode = parseInt(document.querySelector('input[name="mode"]:checked').value);
+var spriteOnOff = document.getElementById("sprite").checked;
+var lockOnOff = + document.getElementById("lock").checked;
 var canvas = document.querySelector("canvas");
 const gl = canvas.getContext("webgl2", {premultipliedAlpha: true});
 gl.getExtension('EXT_color_buffer_float'); // allows for float textures (instead of 256 colors like regular)
@@ -1790,10 +1860,29 @@ var scaleFactor = 2.;
 var width = window.innerWidth / scaleFactor;
 var height = window.innerHeight / scaleFactor;
 
+document.onscroll = function() {
+    var darkval = parseInt(Math.max(0,Math.min(24, document.getElementById('space').getBoundingClientRect().y / 20)));
+    var darkstyle = document.getElementsByClassName("dark");
+    //console.log(darkstyle);
+    if (localStorage.theme == "dark") {
+        document.body.style.backgroundColor = "rgb(" + darkval + "," + darkval + "," + darkval + ")";
+        }
+    else {
+        //document.body.style.backgroundColor = "rgb(255,255,255)";
+    }
+}
 
-
-
-
+document.onclick = function() {
+    var darkval = parseInt(Math.max(0,Math.min(24, document.getElementById('space').getBoundingClientRect().y / 20)));
+    var darkstyle = document.getElementsByClassName("dark");
+    //console.log(darkstyle);
+    if (localStorage.theme == "dark") {
+        document.body.style.backgroundColor = "rgb(" + darkval + "," + darkval + "," + darkval + ")";
+        }
+    else {
+        document.body.style.backgroundColor = "rgb(255,255,255)";
+    }
+}
 
 // important for interacting with the canvas
 var mouseDown = false,
@@ -1801,21 +1890,46 @@ var mouseDown = false,
     mouseY = 0,
     deltaX = 0,
     deltaY = 0;
+var initialDirection = 0.0;
+var count = 1;
+var totalDX = 0;
+var totalDY = 0;
 
 window.addEventListener('pointerdown', function (event) {
+    initialDirection = 0.0;
     mouseX = event.clientX / canvas.width;
     mouseY = 1.0 - (event.clientY / canvas.height);
     deltaX = 0;
     deltaY = 0;
     mouseDown = true;
+    count = 0;
+    totalDX = 0;
+    totalDY = 0;
+    console.log(count);
 }, false);
 
 window.addEventListener('pointermove', function (event) {
     if (!mouseDown) {return}
-        deltaX = event.clientX / canvas.width - mouseX;
-        deltaY = 1.0 - (event.clientY / canvas.height) - mouseY;
-        mouseX = event.clientX / canvas.width;
-        mouseY = 1.0 - (event.clientY / canvas.height);
+    deltaX = event.clientX / canvas.width - mouseX;
+    deltaY = 1.0 - (event.clientY / canvas.height) - mouseY;
+    mouseX = event.clientX / canvas.width;
+    mouseY = 1.0 - (event.clientY / canvas.height);
+    /*if ((initialDirection == 0.0) && (document.getElementById("lock").checked)) {
+        initialDirection = Math.atan(deltaY/deltaX) / ( 2.0 * Math.PI);
+        console.log(initialDirection)
+        if (initialDirection == 0.0) {initialDirection = 0.01;}
+    }*/
+    if ((count < 10) &&  (document.getElementById("lock").checked)) {
+        totalDX += deltaX;
+        totalDY += deltaY;
+        initialDirection = -(Math.atan2(totalDX, totalDY) / (2 * Math.PI) + 0.75);
+        if (initialDirection < 0) {initialDirection += 1}
+        if (initialDirection == 0.) {initialDirection += 0.01}
+        count += 1;
+    }
+    if (!toggle) {
+        requestAnimationFrame(render);
+    }
     }, false);
 
 window.addEventListener('pointerup', function (event) {
@@ -1943,6 +2057,9 @@ advectionShader = {...advectionShader,...{
         'u_image': gl.getUniformLocation(advectionShader.program, "u_image"),
         'velocity': gl.getUniformLocation(advectionShader.program, "velocity"),
         'mouseDown': gl.getUniformLocation(advectionShader.program, "mouseDown"),
+        'glitter': gl.getUniformLocation(advectionShader.program, "glitter"),
+        'toggle': gl.getUniformLocation(advectionShader.program, "toggle"),
+        'initialDirection': gl.getUniformLocation(advectionShader.program, "initialDirection"),
         'paint': gl.getUniformLocation(advectionShader.program, "paint"),
         'dark': gl.getUniformLocation(advectionShader.program, "dark"),
         'change': gl.getUniformLocation(advectionShader.program, "change"),
@@ -2258,6 +2375,9 @@ function init(time) {
     gl.uniform1f(advectionShader.uniforms.paint, true);
     gl.uniform1f(advectionShader.uniforms.dark, localStorage.theme == "dark");
     gl.uniform1f(advectionShader.uniforms.mouseDown, mouseDown);
+    gl.uniform1f(advectionShader.uniforms.glitter, document.getElementById("glitter").checked);
+    gl.uniform1f(advectionShader.uniforms.toggle, toggle);
+    gl.uniform1f(advectionShader.uniforms.initialDirection, initialDirection);
     gl.uniform2f(advectionShader.uniforms.change, deltaX, deltaY);
     gl.uniform2f(advectionShader.uniforms.center, mouseX, mouseY);
     //canvas.width/1000000, canvas.height/1000000); // these might fix some things
@@ -2295,7 +2415,7 @@ function render(time) {
     //console.log(localStorage.theme);
     //console.log(getComputedStyle(document.documentElement));
 
-    sprite1.update();
+    if (spriteOnOff) {sprite1.update();}
     gl.viewport(0, 0, width, height);
 
     //console.log(dt);
@@ -2350,6 +2470,9 @@ function render(time) {
     gl.uniform1f(advectionShader.uniforms.paint, true);
     gl.uniform1f(advectionShader.uniforms.dark, localStorage.theme == "dark");
     gl.uniform1f(advectionShader.uniforms.mouseDown, mouseDown);
+    gl.uniform1f(advectionShader.uniforms.glitter, document.getElementById("glitter").checked);
+    gl.uniform1f(advectionShader.uniforms.toggle, toggle);
+    gl.uniform1f(advectionShader.uniforms.initialDirection, initialDirection);
     gl.uniform2f(advectionShader.uniforms.change, deltaX, deltaY);
     gl.uniform2f(advectionShader.uniforms.center, mouseX, mouseY);
     gl.uniform1f(advectionShader.uniforms.time, time);
@@ -2360,7 +2483,7 @@ function render(time) {
 
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
-    var mode = parseInt(document.querySelector('input[name="mode"]:checked').value);
+    //mode = parseInt(document.querySelector('input[name="mode"]:checked').value);
 
     display(time);
 
@@ -2400,8 +2523,8 @@ function setRectangle(gl, x, y, width, height) {
 
 var data = [0, 1.0];
 var slider = d3.sliderBottom()
-    .min(d3.min(data))
-    .max(d3.max(data))
+    .min(0.01)
+    .max(1.0)
     .width(Math.min(300,screen.width*0.55))
     .tickFormat(d3.format('.0%'))
     .ticks(5)
@@ -2422,7 +2545,7 @@ var gFillg = gFill
 gFillg.call(slider);
 
 var slider2 = d3.sliderBottom()
-    .min(d3.min(data))
+    .min(0.1)
     .max(2.0)
     .width(Math.min(300,screen.width*0.55))
     .tickFormat(d3.format('.0%'))
@@ -2470,9 +2593,17 @@ window.addEventListener('keydown', keySwitch);
 
 
 radiobtn.addEventListener('click', function () {
-        mode = parseInt(document.querySelector('input[name="mode"]:checked').value);
-        requestAnimationFrame(display);
-    });
+    mode = parseInt(document.querySelector('input[name="mode"]:checked').value);
+    requestAnimationFrame(display);
+});
+
+checkboxes.addEventListener('click', function () {
+    spriteOnOff = document.getElementById("sprite").checked;
+    if (!spriteOnOff) {sprite1.lastLocation = sprite1.location}
+    lockOnOff = + document.getElementById("lock").checked;
+    console.log(spriteOnOff, lockOnOff)
+    requestAnimationFrame(display);
+});
 
 // only other thing worth caring about
 window.onload = function() {init()}
