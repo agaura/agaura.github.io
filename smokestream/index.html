@@ -43,11 +43,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1679347348.css">
+  <link rel="stylesheet" href="/minima.1679347679.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1679347348.js"></script>
+  <script defer type="text/javascript" src="/minima.1679347679.js"></script>
 </head>
 <script>
   
@@ -1846,7 +1846,6 @@ const radiobtn = document.getElementById('radiobtn');
 const checkboxes = document.getElementById('checkboxes');
 var mode = parseInt(document.querySelector('input[name="mode"]:checked').value);
 var spriteOnOff = document.getElementById("sprite").checked;
-var lockOnOff = + document.getElementById("lock").checked;
 var canvas = document.querySelector("canvas");
 const gl = canvas.getContext("webgl2", {premultipliedAlpha: true});
 gl.getExtension('EXT_color_buffer_float'); // allows for float textures (instead of 256 colors like regular)
@@ -2595,8 +2594,6 @@ radiobtn.addEventListener('click', function () {
 checkboxes.addEventListener('click', function () {
     spriteOnOff = document.getElementById("sprite").checked;
     if (!spriteOnOff) {sprite1.lastLocation = sprite1.location}
-    lockOnOff = + document.getElementById("lock").checked;
-    console.log(spriteOnOff, lockOnOff)
     requestAnimationFrame(display);
 });
 
