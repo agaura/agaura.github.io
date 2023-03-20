@@ -43,11 +43,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1679345042.css">
+  <link rel="stylesheet" href="/minima.1679345340.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1679345042.js"></script>
+  <script defer type="text/javascript" src="/minima.1679345340.js"></script>
 </head>
 <script>
   
@@ -991,66 +991,19 @@ void main() {
 
     vec4 result = texture(u_image, v_texCoord);
 
+    if (toggle || !mouseDown) {
+
         vec2 u = texture(velocity, v_texCoord).xy;
         //vec2 pastCoord = fract(v_texCoord - (0.5 * deltaT * u));
         vec2 pastCoord = fract(v_texCoord - (0.5 * deltaT * u * vec2(radius.x/radius.y, 1.0)));
         result = texture(u_image, pastCoord);
+    }
 
     outColor = result;
 
     float ratio = radius.y / radius.x;
 
     if (paint) {
-
-        if (mouseDown) {
-
-            // sees how close a pixel is to the closest point on the line traced by the last two points registered from the cursor
-            vec3 closest = closestPoint(change, center, v_texCoord);
-            vec2 close = closest.xy;
-            float t = closest.z;
-            float dx = (close.x - v_texCoord.x) * ratio;
-            float dy = (close.y - v_texCoord.y); // dy = 0.; // interesting effect
-
-            // find out how affected a pixel should be due to its distance as well as the velocity (numbers chosen by experimentation)
-            vec2 effect = 50. * scale2(change) * exp(-(dx * dx + dy * dy) / (.001 * mix(1., 10., length(change))));
-            //effect = 50. * (scale2(change) + vec2(0.0,-0.005)) * exp(-(dx * dx + dy * dy) / (radius * .5)); // for the aurora
-            //effect = 50. * (scale2(change) + vec2(0.0,-0.002)) * exp(-(dx * dx + dy * dy) / (radius * .5)); // gives an interesting effect
-            float mag = (effect.x * effect.x + effect.y * effect.y) / 2.0;
-
-            // determine the color
-            vec4 color = vec4(0.3,0.,1.,1.0); // make a random color
-            //color = vec4(okhsl_to_srgb(vec3(time / 1024.0, 1.0, 0.5)), 1.0); // gentle and smooth rainbow (original)
-            //color = vec4(hsl2rgb(vec3(time / 1024.0 + (time + t * dt) * mag / (2.* 8192.0), 0.25, 0.5)), 1.0); // reaaaally cool oil slick
-            //color = vec4(okhsl_to_srgb(vec3((time + t) / 1024.0 + 0.9 * pow(mag, 0.5), 0.9, 0.5)), 1.0); // reaaaally cool oil slick
-            //color = vec4(okhsl_to_srgb(vec3((time + t) / 20000.0 + 0.5 * pow(mag, 0.5), 1.0, 0.5 + 0.1 * sin(dx*dy*10000.*3.))), 1.0); // this one is just slow
-            //color = vec4(okhsl_to_srgb(vec3(atan(dy, dx) / (2. * M_PI) + 0.9 * pow(mag, 0.5), 0.9, 0.5 + 0.1 * sin(dx*dy*10000.*3.))), 1.0); // very pretty, might be useful for debugging
-            if (initialDirection > 0.005) {
-                float exactHue = initialDirection + 0.5 * pow(mag, 0.5);
-                color = vec4(okhsl_to_srgb(vec3(exactHue, 1.0, 0.1 * (1.0 - float(dark)) + 0.5 + 0.15 * sin(dx*dy*10000.*3.))), 1.0); // control color by direction
-
-                // getting rid of green
-                /*if ((exactHue > 0.33) && (exactHue < 0.42)){
-                    color = vec4(okhsl_to_srgb(vec3(exactHue, 0.0, 0.1 * (1.0 - float(dark)) + 0.5 + 0.15 * sin(dx*dy*10000.*3.))), 1.0); // control color by direction
-                }*/
-            }
-            else {
-                color = vec4(okhsl_to_srgb(vec3(atan(change.y, change.x) / (2. * M_PI) + 0.5 * pow(mag, 0.5), 1.0, 0.1 * (1.0 - float(dark)) + 0.5 + 0.15 * sin(dx*dy*10000.*3.))), 1.0); // control color by direction
-            }
-            //color = vec4(okhsl_to_srgb(vec3((time + t) / (1024.0 * 1. * pow(change.x * change.y, 0.05) + 16.) + 0.9 * pow(mag, 0.5), 0.9, 0.5)), 1.0); // trying to make it cycle through more colors when slow, so that when it's real slow it'll effectively be gray 
-
-            // if dark mode is on, add the color to the background, which will cause brightening (like a glow)
-            if (dark) {result = result + mix(vec4(0.0), color, mag);} // if you want to add summing-to-white effects
-
-            // colors are mixed in light mode as it seems more natural (kinda like subtractive color mixing)
-            else {result = mix(result, color, mag);}
-
-            //result = vec4(0.1*sin(close * 200000.0), 0.0, 0.99); // really useful
-            //result = vec4(0.1*cos((close - 1.0) * 100.0), 0.0, 0.99); // really useful
-            //result = vec4((ratio - 1.) * 125., - (ratio - 1.) * 125., 0.0, 0.99);
-            //result = vec4(hsl2rgb(vec3(1.0, (ratio - 1.), 0.5)), 1.0);
-            //if (dx*dx < 0.001) {if (dy*dy < 0.001) {result = vec4(.5, 0., 0., 0.5);}}
-            //if (sqrt(dx*dx +dy*dy) < 0.03) {result = vec4(.5, 0., 0., 0.5);}
-        }
 
         float dxp = (spriteCenter.x - v_texCoord.x) * ratio;
         float dyp = spriteCenter.y - v_texCoord.y;
@@ -1079,27 +1032,6 @@ void main() {
                 result = vec4(okhsl_to_srgb(vec3(xxx.r,mix(xxx.g,0.95,1.0),xxx.b)), result.a);
             }
         }*/
-
-        
-        if (glitter) {
-            vec4 xxx = vec4(srgb_to_okhsl(clamp(result.rgb,0.0,1.0)),clamp(result.a,0.0,1.0));
-
-            float zzz = rand(vec2(v_texCoord.x * 10. + v_texCoord.y, time /100000.));
-
-            if (zzz > 0.975) {
-                if (xxx.b < 0.99) { // prevents weird black dots
-                    xxx.b = mix(xxx.b, mix(pow(xxx.b,2.),.99,pow(xxx.a,.75)), 0.5);
-                }
-                // xxx.b = mix(xxx.b, max(0.0, 0.1 * ((1.0 - zzz) * 40. - .5) + mix(pow(xxx.b,2.),.99,pow(xxx.a,.75))), 0.5); // could be useful
-                // xxx.b = mix(xxx.b, mix(-.5,.99,pow(xxx.a,.75)), 0.5); // really weird but interesting effect
-                //xxx.g = mix(xxx.g,1.0,0.5*xxx.a);
-                xxx.g = mix(xxx.g*0.9,1.0,pow(xxx.a,.75));
-                xxx.r = xxx.r + 0.1 * (1.1 - pow(xxx.a,2.)) * ((1.0 - zzz) * 40. - 0.5);
-            }
-
-            result = vec4(okhsl_to_srgb(xxx.rgb), result.a);
-
-        }
 
         outColor = clamp(result,0.0,1.0);
 
