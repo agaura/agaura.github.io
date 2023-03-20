@@ -43,11 +43,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1679345628.css">
+  <link rel="stylesheet" href="/minima.1679345779.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1679345628.js"></script>
+  <script defer type="text/javascript" src="/minima.1679345779.js"></script>
 </head>
 <script>
   
@@ -1084,8 +1084,27 @@ void main() {
         }*/
 
         
+        if (glitter) {
+            vec4 xxx = vec4(srgb_to_okhsl(clamp(result.rgb,0.0,1.0)),clamp(result.a,0.0,1.0));
 
-        outColor = clamp(result,0.0,1.0);
+            float zzz = rand(vec2(v_texCoord.x * 10. + v_texCoord.y, time /100000.));
+
+            if (zzz > 0.975) {
+                if (xxx.b < 0.99) { // prevents weird black dots
+                    xxx.b = mix(xxx.b, mix(pow(xxx.b,2.),.99,pow(xxx.a,.75)), 0.5);
+                }
+                // xxx.b = mix(xxx.b, max(0.0, 0.1 * ((1.0 - zzz) * 40. - .5) + mix(pow(xxx.b,2.),.99,pow(xxx.a,.75))), 0.5); // could be useful
+                // xxx.b = mix(xxx.b, mix(-.5,.99,pow(xxx.a,.75)), 0.5); // really weird but interesting effect
+                //xxx.g = mix(xxx.g,1.0,0.5*xxx.a);
+                xxx.g = mix(xxx.g*0.9,1.0,pow(xxx.a,.75));
+                xxx.r = xxx.r + 0.1 * (1.1 - pow(xxx.a,2.)) * ((1.0 - zzz) * 40. - 0.5);
+            }
+
+            result = vec4(okhsl_to_srgb(xxx.rgb), result.a);
+
+        }
+
+        outColor = result;
 
         //if ((result.a == 1.0)) {outColor = vec4(0.0);}
         //if ((result.a < 1.0)) {outColor = mix(vec4(0.0), result, 0.99);}
