@@ -43,11 +43,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1679346552.css">
+  <link rel="stylesheet" href="/minima.1679346730.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1679346552.js"></script>
+  <script defer type="text/javascript" src="/minima.1679346730.js"></script>
 </head>
 <script>
   
@@ -1027,7 +1027,7 @@ void main() {
             //color = vec4(okhsl_to_srgb(vec3((time + t) / 1024.0 + 0.9 * pow(mag, 0.5), 0.9, 0.5)), 1.0); // reaaaally cool oil slick
             //color = vec4(okhsl_to_srgb(vec3((time + t) / 20000.0 + 0.5 * pow(mag, 0.5), 1.0, 0.5 + 0.1 * sin(dx*dy*10000.*3.))), 1.0); // this one is just slow
             //color = vec4(okhsl_to_srgb(vec3(atan(dy, dx) / (2. * M_PI) + 0.9 * pow(mag, 0.5), 0.9, 0.5 + 0.1 * sin(dx*dy*10000.*3.))), 1.0); // very pretty, might be useful for debugging
-            color = vec4(okhsl_to_srgb(vec3(atan(change.y, change.x) / (2. * M_PI) + 0.5 * pow(mag, 0.5), 1.0, 0.1 * (1.0 - float(dark)) + 0.5 + 0.15 * sin(dx*dy*10000.*3.))), 1.0); // control color by direction
+            color = vec4(okhsl_to_srgb(vec3(initialDirection + 0.5 * pow(mag, 0.5), 1.0, 0.1 * (1.0 - float(dark)) + 0.5 + 0.15 * sin(dx*dy*10000.*3.))), 1.0); // control color by direction
             //color = vec4(okhsl_to_srgb(vec3((time + t) / (1024.0 * 1. * pow(change.x * change.y, 0.05) + 16.) + 0.9 * pow(mag, 0.5), 0.9, 0.5)), 1.0); // trying to make it cycle through more colors when slow, so that when it's real slow it'll effectively be gray 
 
             // if dark mode is on, add the color to the background, which will cause brightening (like a glow)
