@@ -43,11 +43,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1679359201.css">
+  <link rel="stylesheet" href="/minima.1679596181.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1679359201.js"></script>
+  <script defer type="text/javascript" src="/minima.1679596181.js"></script>
 </head>
 <script>
   
@@ -1917,7 +1917,7 @@ window.addEventListener('pointermove', function (event) {
         totalDX += deltaX;
         totalDY += deltaY;
         initialDirection = -(Math.atan2(totalDX, totalDY) / (2 * Math.PI) + 0.75);
-        if (initialDirection < 0) {initialDirection += 1}
+        while (initialDirection < 0) {initialDirection += 1}
         if (initialDirection == 0.) {initialDirection += 0.01}
         count += 1;
     }
