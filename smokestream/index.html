@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta property="og:title" content="Smokestream" />
-<meta property="og:description" content="Introduction       In the background of this page you can see an invisible sprite leaving a trail of multi-colored &ldquo;smoke.&rdquo; Feel free to click and drag on the page itself, your cursor will also give off colored smoke, varying over time and by the speed of your drag. The colors are somewhat transparent, so also experiment with clicking the ⚪️/⚫️ button at the top of the page to switch day/night mode." />
+<meta property="og:description" content="Introduction       In the background of this page you can see an invisible sprite leaving a trail of multi-colored &ldquo;smoke.&rdquo; Feel free to click and drag on the page itself, your cursor will also give off colored smoke. The experience works in both light and dark mode but is best viewed in dark mode, so click the ⚪️/⚫️ button to switch. Scroll down for an empty area to interact with the smoke and for information on the settings." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://agaura.github.io/smokestream/" /><meta property="article:section" content="" />
 <meta property="article:published_time" content="2023-03-15T15:58:16-04:00" />
@@ -13,7 +13,7 @@
 
   <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Smokestream"/>
-<meta name="twitter:description" content="Introduction       In the background of this page you can see an invisible sprite leaving a trail of multi-colored &ldquo;smoke.&rdquo; Feel free to click and drag on the page itself, your cursor will also give off colored smoke, varying over time and by the speed of your drag. The colors are somewhat transparent, so also experiment with clicking the ⚪️/⚫️ button at the top of the page to switch day/night mode."/>
+<meta name="twitter:description" content="Introduction       In the background of this page you can see an invisible sprite leaving a trail of multi-colored &ldquo;smoke.&rdquo; Feel free to click and drag on the page itself, your cursor will also give off colored smoke. The experience works in both light and dark mode but is best viewed in dark mode, so click the ⚪️/⚫️ button to switch. Scroll down for an empty area to interact with the smoke and for information on the settings."/>
 
   
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-BBWS173BMQ"></script>
@@ -43,11 +43,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1679596181.css">
+  <link rel="stylesheet" href="/minima.1680488176.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1679596181.js"></script>
+  <script defer type="text/javascript" src="/minima.1680488176.js"></script>
 </head>
 <script>
   
@@ -122,11 +122,7 @@ if (!doNotTrack) {
 <script src="https://unpkg.com/topojson@3"></script>    <!-- WebGL -->
 <script src="https://webgl2fundamentals.org/webgl/resources/webgl-utils.js"></script>
 <script src="https://unpkg.com/jquery@3.5.1"></script>
-<p>  In the background of this page you can see an invisible sprite leaving a trail of multi-colored &ldquo;smoke.&rdquo; Feel free to click and drag on the page itself, your cursor will also give off colored smoke, varying over time and by the speed of your drag. The colors are somewhat transparent, so also experiment with clicking the ⚪️/⚫️ button at the top of the page to switch day/night mode.</p>
-<p>  Below there is a play/pause button to turn on/off the smoke. However, you can also press any key on your keyboard to play/pause, and if you want to see changes one frame at a time you can press the period (&quot;.&quot;) key.</p>
-<p>  The sliders below can change how the smoke works. The top slider changes the speed of the smoke, and the second varies the way the smoke spreads where higher values seem to make it flow more like watercolor paint.</p>
-<p>  The buttons show what is going on under-the-hood controlling how the smoke moves, and are painted with multicolored gradients. In the case of both Pressure and Divergence, lighter green-red colors represent positive values and darker blue-magenta colors represent negative values. The gradients cycle between colors such that it either is linear where the $N$th band has $N$ times the strength as the first band (as in the case of Pressure), or it has $\sqrt{2^{N-1}}$ times the strength as the first band (as in the case of Divergence, i.e. it&rsquo;s a logarithmic scale). Velocity is shaded such that every direction is prescribed its own hue, and the strength of the hue is the velocity in that direction.</p>
-<p>  Beneath the sliders there is space to see the shader without any text blocking it, so just scroll down if you want to play more with it without obstructions.</p>
+<p>  In the background of this page you can see an invisible sprite leaving a trail of multi-colored &ldquo;smoke.&rdquo; Feel free to click and drag on the page itself, your cursor will also give off colored smoke. The experience works in both light and dark mode but is best viewed in dark mode, so click the ⚪️/⚫️ button to switch. Scroll down for an empty area to interact with the smoke and for information on the settings.</p>
 <p><b style="font-size:30px" id='btn' onmouseover="this.style.cursor='pointer';" width = 20px>⏸</b></p>
 <p><canvas id="canvas" style='position:fixed; left:0; top:0; z-index: -1;'></canvas></p>
 <script type = "text" id = "vertex">
@@ -1057,6 +1053,7 @@ void main() {
             //if (sqrt(dx*dx +dy*dy) < 0.03) {result = vec4(.5, 0., 0., 0.5);}
         }
 
+        if (toggle) {
         float dxp = (spriteCenter.x - v_texCoord.x) * ratio;
         float dyp = spriteCenter.y - v_texCoord.y;
         
@@ -1071,6 +1068,7 @@ void main() {
         //result = mix(vec4(0.0), result, pow(result.a, 0.001) - 0.02);
         //result = mix(vec4(0.0), result, pow(result.a, 0.001) - 0.02 + 0.02 * clamp(length(u),0.,1.));
         result = mix(vec4(0.0), result, 0.995);
+        }
 
         // something along these lines could be helpful for keeping colors saturated while they fade away
         /*
@@ -1180,6 +1178,7 @@ uniform sampler2D velocity;   // Advected velocity field, u_a
 uniform sampler2D pressure;   // Solved pressure field 
 
 uniform bool mouseDown;
+uniform bool toggle;
 uniform vec2 change;
 uniform vec2 center;
 uniform vec2 radius;
@@ -1219,18 +1218,20 @@ vec2 closestPoint(vec2 delta, vec2 end, vec2 current) {
       
 void main() { 
     vec2 u_a = texture(velocity, v_texCoord).xy; 
-        
-    float diff_p_x = (p(v_texCoord + vec2(epsilon.x, 0.0)) - 
-                          p(v_texCoord - vec2(epsilon.x, 0.0))); 
-    float u_x = u_a.x - deltaT/(2.0 * rho * epsilon.x) * diff_p_x; 
-        
-    float diff_p_y = (p(v_texCoord + vec2(0.0, epsilon.y)) - 
-                          p(v_texCoord - vec2(0.0, epsilon.y))); 
-    float u_y = u_a.y - deltaT/(2.0 * rho * epsilon.y) * diff_p_y; 
-        
-    outColor = vec4(u_x, u_y, 0.0, 0.0);
-    //outColor = texture(velocity, v_texCoord);
 
+    outColor = vec4(u_a, 0.0, 0.0);
+        
+    if (toggle || !mouseDown) {
+        float diff_p_x = (p(v_texCoord + vec2(epsilon.x, 0.0)) - 
+                          p(v_texCoord - vec2(epsilon.x, 0.0))); 
+        float u_x = u_a.x - deltaT/(2.0 * rho * epsilon.x) * diff_p_x; 
+        
+        float diff_p_y = (p(v_texCoord + vec2(0.0, epsilon.y)) - 
+                          p(v_texCoord - vec2(0.0, epsilon.y))); 
+        float u_y = u_a.y - deltaT/(2.0 * rho * epsilon.y) * diff_p_y;
+        outColor = vec4(u_x, u_y, 0.0, 0.0);
+    }
+        
     float ratio = epsilon.y / epsilon.x;
 
     if (mouseDown) {
@@ -1245,9 +1246,11 @@ void main() {
         //outColor = outColor + vec4(25. * change * vec2(1./ratio, 1.) * exp(-(dx * dx + dy * dy) / 0.00025), 0.0, 1.0);
     }
 
-    float dxp = (spriteCenter.x - v_texCoord.x) * ratio;
-    float dyp = spriteCenter.y - v_texCoord.y;
-    outColor = outColor + vec4(25. * spriteChange * exp(-(dxp * dxp + dyp * dyp) / (0.00025)), 0.0, 1.0);
+    if (toggle) {
+        float dxp = (spriteCenter.x - v_texCoord.x) * ratio;
+        float dyp = spriteCenter.y - v_texCoord.y;
+        outColor = outColor + vec4(25. * spriteChange * exp(-(dxp * dxp + dyp * dyp) / (0.00025)), 0.0, 1.0);
+    }
 }
 </script>
 <script type = "text" id = "postprocess">
@@ -1484,10 +1487,10 @@ vec4 lineGradient4(float co, float thresh, float sat_band_limit, float lum_band_
         sat_grad = mix(0.,0.35 + pow(1. / sat_band_limit,0.85) * 0.4, pow(scale,.5));
     }
 
-    float neg_range = 0.2;
-    float pos_range = 0.2;
+    float neg_range = 0.15;
+    float pos_range = 0.15;
 
-    float neg_shift = 0.5;
+    float neg_shift = 0.5; // 0.8 is nice
     float pos_shift = 0.43;
 
     float pos_way = pow(clamp(1. * scale / lum_band_limit,0.0,1.0),0.5);
@@ -1503,7 +1506,7 @@ vec4 lineGradient4(float co, float thresh, float sat_band_limit, float lum_band_
     float neg_way = pow(clamp(1.25 * scale / lum_band_limit,0.0,1.0),0.33);
     float neg_thresh = 2.;
     neg_way = neg_way * neg_thresh;
-    float neg_hue_shift = mix(0.,0.35,(neg_way - 1.) / (neg_thresh - 1.));
+    float neg_hue_shift = mix(0.,0.35,(neg_way - 1.) / (neg_thresh - 1.)); // 0.9 is nice with 0.8 neg_shift
     if (neg_way < 1.) {neg_hue_shift = mix(0.45,0.,pow(neg_way,4.));}
 
     vec4 graycolor = vec4(0.0);
@@ -1758,7 +1761,52 @@ vec4 colorMap(vec2 co){
     return mix(vec4(0.0), newcolor, min(mag, 1.0));
 }
 
-
+float circleMix(float mix1, float mix2, float a) {
+	float res = mix(mix1, mix2, a);
+	if (distance(mix1, mix2) > 0.5) {(mix1 == min(mix1, mix2)) ? res =  mix(mix1 + 1.0, mix2, a) : res =  mix(mix1, mix2 + 1.0, a);}
+	return res;
+}
+float ditherHue( float h, float r1, float r2, float r3, float antiRad, float ts) {
+	float rightBound = h - antiRad * r2;
+    if (rightBound < -0.5) rightBound = rightBound + 1.0;
+    float leftBound = h + antiRad * r2;
+    if (leftBound > 0.5) leftBound = leftBound - 1.0;
+	if ((h > h - antiRad) && (h < h + antiRad))
+        if (((h - (h - antiRad)) / (2.0f * antiRad)) < r1)
+            h = rightBound;
+        else h = leftBound;
+    else if ((h - 1.0 > h - antiRad) && (h - 1.0 < h + antiRad))
+        if (((h - 1.0 - (h - antiRad)) / (2.0 * antiRad)) < r1)
+            h = rightBound;
+        else h = leftBound;
+    else if ((1.0 + h > h - antiRad) && (1.0 + h < h + antiRad))
+        if (((1.0 + h - (h - antiRad)) / (2.0 * antiRad)) < r1)
+            h = rightBound;
+        else h = leftBound;
+	if (h < 0.0) h = h + 1.0;
+	if (ts < 0.05) h = circleMix(r3, h, 25.0*(ts - 0.01)); // h is based on r, so you really should put in a new r!!!
+	if (ts < 0.01) h = r3;
+	return h;
+}
+float truedither( float v, float r, float antiRad, float lim) {
+    float lowerBound = max(0.0, v - antiRad);
+    if (v - antiRad < lim) lowerBound = mix(max(0.0, v - antiRad), lim, antiRad);
+    float upperBound = min(lowerBound + 2.0 * antiRad, 1.0 - lim);
+    if (v + antiRad > 1.0 - lim) {
+        upperBound = mix(min(1.0, v + antiRad), 1.0 - lim, antiRad);
+        lowerBound = max(lowerBound, upperBound - 2.0 * antiRad);
+    }
+    return mix(lowerBound, upperBound, r);
+}
+vec3 ditherOut(vec3 rgbcolor, vec4 rands) {
+    vec3 okhslcolor = srgb_to_okhsl(rgbcolor);
+    //return okhsl_to_srgb(vec3(ditherHue(okhslcolor.x, rands[0], rands[1], rands[2], 1.0, .5),
+    //   truedither(okhslcolor.y, rands[1], 0.0, 0.0),
+    //   truedither(okhslcolor.z, rand(vec2(rands[0]*100.+rands[1]*10.,rands[3]*100.-rands[2]*5.)), 1.0, 0.75)));
+    return okhsl_to_srgb(vec3(okhslcolor.x,
+       truedither(okhslcolor.y, rands[1], 0.0, 0.0),
+       truedither(okhslcolor.z, rand(vec2(rands[0]*100.+rands[1]*10.,rands[3]*100.-rands[2]*5.)), 1.0, 0.5)));
+}
 
 void main() {
     vec4 color = texture(u_image, v_texCoord);
@@ -1786,16 +1834,18 @@ void main() {
     //color = logGradient(color.r, 1. / pow(2.,12.), pow(2.,1.), pow(2.,2.), pow(2.,3.)); // divergence
     //color = colorMap(color.rg); // velocity
 
-    vec4 noise = vec4(rand(vec2(rand(v_texCoord * 100.) * 100., time)) / 255.,
-        rand(vec2(rand((v_texCoord + 0.1) * 100.) * 100., time)) / 255.,
-        rand(vec2(rand((v_texCoord + 0.2) * 100.) * 100., time)) / 255.,
-        rand(vec2(rand((v_texCoord + 0.3) * 100.) * 100., time)) / 255.);
+    vec4 noise = vec4(rand(vec2(rand(v_texCoord * 100.) * 100., time / 1000.)) / 255.,
+        rand(vec2(rand((v_texCoord + 0.1) * 100.) * 2., time)) / 255.,
+        rand(vec2(rand((v_texCoord + 0.2) * 100.) * 7., time)) / 255.,
+        rand(vec2(rand((v_texCoord + 0.3) * 100.) * 55., time)) / 255.);
     //color = vec4(okhsl_to_srgb(color.a * vec3(rand(vec2(v_texCoord.x * 10.0 + v_texCoord.y * 67., mod(time, 1.0) * v_texCoord.x * v_texCoord.y)), 1.0, 0.5)), color.a);
     //float hue = rand(vec2(v_texCoord.x * 4.0 + v_texCoord.y * 4., mod(time, 1.0) * 4. * v_texCoord.x * v_texCoord.y)) * 2.0 * 3.1415926535;
     //color = color.a * vec4(oklab_to_linear_srgb(vec3(0.5, color.g * sin(hue), color.g * cos(hue))) + .6, 1.0);
 
     //color = vec4(pow(color.a, 0.5)*color.rgb, color.a); could be useful for light mode
     outColor = color - 1.0 * noise;
+    //outColor = (color.a * 0.5 + 0.5)*vec4(ditherOut(color.rgb, noise.rgba * 255.),1.0);
+    //outColor = vec4(ditherOut(color.rgb, noise.rgba * 255.),1.0);
 }
 </script>
 <script type = "text" id = "output">
@@ -1816,8 +1866,83 @@ void main() {
 <input type="checkbox" id="lock" name="lock" value="2">
 <label for="2">Color Direction-Lock</label>
 </div>
-<div align="center" id="slider-fill"></div>
-<div align="center" id="slider-fill2"></div>
+<div align="center" id="slider-fill">
+<svg width="36px" height="36px" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" style="position:relative; top:-12px; left:5px"><path fill="gray" d="M321.375 15.313L262.72 73.906l25.78 6.906-15.563 58.063c-5.44-.756-10.87-1.14-16.25-1.125-.887.003-1.77.04-2.656.063l21.97 45.75 42.25-28.407c-6.263-3.87-12.944-7.205-20.03-9.875l15.467-57.718 28.657 7.657-20.97-79.907zM133.25 40.063l-.094 82.906 23.125-13.345 30.064 52.063c-5.034 3.824-9.75 8.072-14.125 12.687l50.06 16.438 9.064-50.157c-7.797 1.777-15.372 4.336-22.594 7.625l-29.875-51.718 25.688-14.812-71.313-41.688zm255.28 90.593l13.345 23.094-52.063 30.063c-3.8-5.002-8.01-9.707-12.593-14.063l-16.126 48.156 49.28 8.938c-1.744-7.094-4.148-13.99-7.155-20.594l51.717-29.875 14.813 25.656 41.688-71.31-82.907-.064zm-290.78 38.5l-79.906 20.97 58.562 58.655L83.312 223l58.063 15.563c-.935 6.767-1.25 13.498-1 20.156l47.53-22.814-29.843-43.25c-4.022 6.432-7.466 13.31-10.218 20.625l-57.78-15.468 7.686-28.656zm275.875 81.28L328.5 272.813l28.313 42.125c3.15-5.2 5.937-10.673 8.28-16.437l57.938 15.53-6.905 25.783 80.063-21.532-58.72-58.092-7.687 28.656-57.592-15.438c1.27-7.706 1.707-15.387 1.437-22.97zm-230.28 30.283c1.5 6.44 3.516 12.72 6.06 18.78l-52.093 30.094L83.97 306.5l-41.376 71.813 82.594-.438-14.813-25.656 51.78-29.908c4.655 6.52 9.98 12.557 15.907 18.032l17.282-49.53-52-10.095zM294 316.75l-9.22 51.03c5.91-1.454 11.673-3.347 17.25-5.686l30.095 52.094L309 427.53l71.844 41.408-.438-82.625-25.687 14.843-29.876-51.75c6.437-4.588 12.43-9.847 17.844-15.687L294 316.75zM240.25 324l-44.125 30.03c5.32 3.262 10.955 6.127 16.875 8.533L197.47 420.5l-25.782-6.906 21.53 80.062 58.095-58.72-28.625-7.686 15.437-57.625c8.295 1.367 16.576 1.816 24.72 1.406L240.25 324z"/></svg>
+</div>
+<div align="center" id="slider-fill2">
+<svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+ width="36" height="36" viewBox="0 0 1207.000000 1280.000000"
+ preserveAspectRatio="xMidYMid meet"
+ style="position:relative; top:-16px; left:7px">
+<metadata>
+Created by potrace 1.15, written by Peter Selinger 2001-2017
+</metadata>
+<g transform="translate(0.000000,1280.000000) scale(0.100000,-0.100000)"
+fill="#000000" stroke="none">
+<path fill = 'gray' d="M8175 12786 c-280 -68 -666 -492 -845 -926 -111 -270 -214 -833 -300
+-1647 -22 -206 -43 -303 -84 -397 -103 -232 -335 -420 -535 -433 -91 -6 -143
+6 -207 50 -73 49 -107 118 -112 226 -5 108 13 165 109 349 114 217 169 409
+169 585 0 120 -21 213 -69 312 -64 131 -125 187 -309 282 -103 53 -149 56
+-237 14 -96 -45 -129 -93 -171 -248 -27 -97 -27 -102 -28 -438 -1 -291 -3
+-345 -17 -376 -34 -74 -117 -147 -209 -183 -71 -29 -201 -45 -283 -35 -89 10
+-127 23 -195 66 -151 96 -272 286 -497 783 -164 362 -198 423 -285 511 -218
+221 -487 208 -735 -37 -39 -38 -88 -96 -109 -128 -44 -66 -93 -210 -103 -297
+-12 -116 29 -260 137 -484 139 -286 211 -355 498 -475 247 -103 301 -139 343
+-233 21 -45 24 -67 24 -172 0 -116 -1 -122 -33 -183 -39 -75 -105 -145 -158
+-167 -20 -8 -80 -20 -133 -26 -53 -5 -116 -15 -140 -21 -70 -18 -222 -142
+-257 -210 -9 -17 -27 -70 -40 -117 -28 -101 -32 -259 -10 -381 66 -356 65
+-333 6 -397 -120 -128 -249 -175 -346 -125 -21 11 -84 59 -139 106 -220 190
+-430 307 -680 376 -215 60 -302 97 -390 164 -22 16 -170 159 -330 316 -280
+275 -411 396 -455 420 -30 16 -83 -4 -115 -42 -92 -109 -146 -384 -96 -493 40
+-89 114 -126 401 -200 284 -74 382 -112 505 -200 118 -83 196 -185 330 -430
+48 -88 107 -188 132 -222 75 -107 234 -236 454 -369 154 -93 209 -161 209
+-263 0 -26 -8 -42 -35 -67 -80 -75 -248 -105 -482 -86 -382 32 -493 86 -1103
+535 -526 387 -572 414 -754 437 -156 19 -304 -27 -373 -118 -36 -48 -80 -177
+-89 -262 -10 -99 40 -272 113 -390 50 -79 370 -394 468 -459 150 -100 387
+-198 575 -238 62 -13 128 -18 245 -18 170 1 203 6 398 61 306 86 660 67 990
+-53 263 -96 354 -236 266 -411 -39 -78 -82 -115 -211 -179 -141 -70 -264 -114
+-469 -168 -96 -25 -204 -57 -241 -71 -87 -33 -168 -92 -207 -151 -41 -61 -75
+-173 -75 -243 0 -141 141 -250 323 -250 103 0 139 14 222 88 109 97 424 358
+492 408 185 137 407 77 407 -110 0 -71 -26 -137 -165 -411 -232 -457 -352
+-642 -609 -940 -434 -502 -517 -619 -587 -825 -67 -201 -85 -381 -54 -532 22
+-104 53 -160 147 -266 172 -192 305 -267 549 -308 203 -34 332 7 494 155 134
+122 205 234 256 406 22 72 24 97 23 260 -1 156 -6 210 -37 400 -50 304 -60
+408 -55 549 4 128 14 161 60 202 86 79 196 70 314 -24 135 -108 213 -290 214
+-499 0 -160 -19 -232 -153 -569 -137 -346 -189 -543 -191 -734 -1 -132 8 -157
+92 -231 89 -80 211 -115 366 -107 98 5 170 39 217 102 36 49 85 199 100 304
+27 187 -23 688 -107 1079 -30 138 -30 194 -3 249 75 156 290 196 512 96 89
+-41 122 -73 232 -234 174 -254 187 -264 319 -256 161 10 304 125 356 285 32
+98 28 137 -25 258 -51 117 -70 196 -55 225 32 59 122 92 183 66 27 -11 52 -48
+161 -237 679 -1173 830 -1534 1160 -2771 106 -397 136 -480 215 -596 101 -149
+266 -282 402 -323 108 -33 176 -12 265 82 68 74 106 144 156 290 37 112 42
+136 46 245 9 258 -66 417 -415 879 -413 547 -588 783 -673 905 -443 643 -782
+1322 -806 1615 l-6 70 33 19 c43 25 179 34 258 16 80 -17 187 -72 264 -136
+128 -106 241 -269 434 -629 162 -300 288 -433 466 -487 116 -35 194 -10 319
+99 146 128 226 239 268 371 36 113 37 138 9 197 -44 94 -292 327 -418 393 -66
+35 -216 87 -394 137 -176 49 -216 71 -322 179 -140 142 -195 252 -202 406 -5
+82 -4 87 27 133 88 131 175 129 539 -10 502 -192 1027 -515 1531 -943 277
+-235 314 -266 410 -337 177 -130 295 -188 487 -239 127 -34 232 -37 288 -8 53
+27 77 65 116 181 58 174 29 274 -123 425 -79 79 -100 94 -210 147 -68 33 -247
+103 -398 155 -548 191 -651 233 -1035 420 -430 209 -630 345 -761 519 -66 87
+-127 217 -132 282 -4 52 -3 54 44 106 81 87 159 107 274 73 30 -9 120 -49 200
+-89 349 -174 651 -258 834 -231 87 13 139 81 190 247 54 176 38 213 -159 376
+-295 245 -358 353 -288 492 59 119 201 236 350 288 70 25 91 28 213 28 113 0
+147 -4 210 -23 159 -50 342 -167 666 -427 256 -207 280 -223 343 -241 155 -46
+352 61 438 236 43 89 93 263 93 325 0 105 -78 203 -255 321 -207 137 -451 207
+-1045 299 -278 43 -348 58 -455 96 -167 60 -297 200 -340 366 -21 80 -20 254
+1 299 32 68 180 172 354 250 231 102 401 147 565 148 214 1 359 -53 718 -266
+254 -151 435 -231 642 -283 322 -82 579 -47 712 98 70 76 119 236 110 362 -14
+209 -109 352 -457 688 -182 177 -291 261 -429 331 -361 184 -627 218 -987 126
+-138 -35 -223 -75 -325 -152 -95 -72 -169 -157 -292 -338 -150 -220 -253 -310
+-457 -396 -138 -58 -228 -77 -344 -72 -82 3 -111 9 -157 30 -161 74 -212 221
+-174 506 22 162 17 270 -13 333 -12 25 -48 71 -79 102 -120 120 -211 137 -478
+92 -179 -31 -254 -30 -333 5 -97 43 -178 155 -201 277 -23 116 55 422 204 804
+145 372 322 654 569 907 129 133 243 230 437 375 168 125 235 189 244 234 4
+15 13 43 21 61 19 44 18 84 -6 167 -35 124 -96 231 -180 315 -41 42 -98 88
+-126 102 -102 55 -221 70 -329 44z"/>
+</g>
+</svg>
+</div>
 <div align="center" id='radiobtn'>
 <br>
 <input type="radio" id="smoke" name="mode" value="0" checked="checked">
@@ -2114,6 +2239,7 @@ pressureShader = {...pressureShader,...{
         'deltaT': gl.getUniformLocation(pressureShader.program, "deltaT"),
         'velocity': gl.getUniformLocation(pressureShader.program, "velocity"),
         'mouseDown': gl.getUniformLocation(pressureShader.program, "mouseDown"),
+        'toggle': gl.getUniformLocation(pressureShader.program, "toggle"),
         'change': gl.getUniformLocation(pressureShader.program, "change"),
         'center': gl.getUniformLocation(pressureShader.program, "center"),
         'radius': gl.getUniformLocation(pressureShader.program, "radius"),
@@ -2354,6 +2480,7 @@ function init(time) {
     gl.uniform1i(pressureShader.uniforms.velocity, 0);
     gl.uniform1i(pressureShader.uniforms.pressure, 1);
     gl.uniform1f(pressureShader.uniforms.mouseDown, mouseDown);
+    gl.uniform1f(pressureShader.uniforms.toggle, toggle);
     gl.uniform2f(pressureShader.uniforms.change, deltaX, deltaY);
     gl.uniform2f(pressureShader.uniforms.center, mouseX, mouseY);
     gl.uniform2f(pressureShader.uniforms.radius, 1.0/width, 1.0/height);
@@ -2440,7 +2567,7 @@ function render(time) {
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
     gl.drawArrays(gl.TRIANGLES, 0, 6);
 
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < 10; i++) {
         temp = pressurep;
         pressurep = pressure;
         pressure = temp;
@@ -2452,6 +2579,7 @@ function render(time) {
     initShader(pressureShader, [targetVelocity, pressurep], newInitialVelocity);
     gl.uniform1f(pressureShader.uniforms.deltaT, slider.value() / 60);
     gl.uniform1f(pressureShader.uniforms.mouseDown, mouseDown);
+    gl.uniform1f(pressureShader.uniforms.toggle, toggle);
     gl.uniform2f(pressureShader.uniforms.change, deltaX, deltaY);
     gl.uniform2f(pressureShader.uniforms.center, mouseX, mouseY);
     gl.uniform2f(pressureShader.uniforms.spriteChange, sprite1.location.x - sprite1.lastLocation.x, sprite1.location.y - sprite1.lastLocation.y);
@@ -2517,8 +2645,8 @@ function setRectangle(gl, x, y, width, height) {
 
 var data = [0, 1.0];
 var slider = d3.sliderBottom()
-    .min(0.01)
-    .max(1.0)
+    .min(0.1)
+    .max(2.0)
     .width(Math.min(300,screen.width*0.55))
     .tickFormat(d3.format('.0%'))
     .ticks(5)
@@ -2566,6 +2694,8 @@ function activateSwitch() {
         toggle = !toggle;
         if (toggle) {
             btn.textContent = '⏸';
+            //updateWindow(); // I could've just had render(), but this will also make sure that there exists a way to make sure the screen is adequate
+            // actually updating the window freaks out the pressure... FIGURE OUT WHY!!!
         }
         else {
             btn.textContent = '▶️';
@@ -2625,11 +2755,16 @@ freeSpace.addEventListener('touchstart', function(e){ e.preventDefault(); }, {pa
 freeSpace.addEventListener('touchmove', function(e){ e.preventDefault(); }, {passive:false});
     
 </script>
-<h1 id="extra-information">Extra Information</h1>
-<p>   The smoke shader should work both on desktop and on mobile, although it&rsquo;s better on desktop. It is best rendered on chrome, as if your monitor is capable of rendering P3 colors (most macs can, for example) then the colors will render as P3 colors (giving a wider gamut, making even more colorful smoke and gradients!).</p>
-<p>   Colors themselves are picked from the Okhsl color space, allowing for perceptually smoother gradients. The colors are technically floats, and while monitors do not normally render float values for colors, this allows for colors to be rendered extra smooth by adding a little noise, preventing banding.</p>
-<p>   Click-and-drag actions are somewhat sinusoidal (with a bit of noise), for that reason when quick and long paths are made with your cursor the smoke will seemingly have a lot of texture.</p>
-<p>   The smoke will also adjust easily to the screen changing sizes (although the smoke does behave slightly differently depending on the ratio of the dimensions, where it will spread farther across the wider dimension), so feel free to experiment with that as well.</p>
+<h1 id="information">Information</h1>
+<p>  The colors emitted by the cursor are determined by both the direction and the speed of the drag. The &ldquo;Glitter&rdquo; setting adds more variance to the colors and the &ldquo;Color Direction-Lock&rdquo; causes the colors to be determined only by the <em>initial</em> direction of the drag.</p>
+<p>  There is a play/pause button to turn on/off the smoke. However, you can also press any key on your keyboard to play/pause, and if you want to see changes one frame at a time you can press the period (&quot;.&quot;) key. Smoke can be emitted by the cursor even when paused.</p>
+<p>  The sliders can change how the smoke works. The top slider changes how quickly the smoke spreads, and the bottom slider varies the density of the smoke, effectively changing the way the smoke spreads where higher values seem to make it flow more like watercolor paint.</p>
+<p>  The buttons show what is going on under-the-hood controlling how the smoke moves, and are painted with multicolored gradients. In the case of both Pressure and Divergence, lighter green-red colors represent positive values and darker blue-magenta colors represent negative values. The gradients cycle between colors creating bands such that it either is linear where the $N$th band has $N$ times the strength as the first band (as in the case of Pressure), or it has $\sqrt{2^{N-1}}$ times the strength as the first band (as in the case of Divergence, i.e. it&rsquo;s a logarithmic scale). Velocity is shaded such that every direction is prescribed its own hue, and the strength of the hue is the velocity in that direction.</p>
+<h1 id="extra-details">Extra Details</h1>
+<p>  The smoke shader should work both on desktop and on mobile, although it&rsquo;s better on desktop. It is best rendered on chrome, as if your monitor is capable of rendering P3 colors (most macs can, for example) then the colors will render as P3 colors (giving a wider gamut, making even more colorful smoke and gradients!).</p>
+<p>  Colors themselves are picked from the Okhsl color space, allowing for perceptually smoother gradients. The colors are technically floats, and while monitors do not normally render float values for colors, this allows for colors to be rendered extra smooth by adding a little noise, preventing banding.</p>
+<p>  Click-and-drag actions are somewhat sinusoidal (with a bit of noise), for that reason when quick and long paths are made with your cursor the smoke will seemingly have a lot of texture.</p>
+<p>  The smoke will also adjust easily to the screen changing sizes (although the smoke does behave slightly differently depending on the ratio of the dimensions, where it will spread farther across the wider dimension), so feel free to experiment with that as well.</p>
 
 	</article>
 </main>
