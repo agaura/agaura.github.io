@@ -43,11 +43,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1680488176.css">
+  <link rel="stylesheet" href="/minima.1680573521.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1680488176.js"></script>
+  <script defer type="text/javascript" src="/minima.1680573521.js"></script>
 </head>
 <script>
   
@@ -1209,7 +1209,7 @@ vec2 closestPoint(vec2 delta, vec2 end, vec2 current) {
         vec2 initial = end - delta;
         float t = clamp(dot(current - initial, delta) / (delta.x * delta.x + delta.y * delta.y), 0.0, 1.0);
         //vec2 closest = initial + t * delta;
-        vec2 closest = initial + t * delta + 1. * pow(length(change), 0.1) * (sin(t * 6. * M_PI) + 1.0 * (rand(vec2(t*100.0,deltaT))-0.5)) * 0.025 * normalize(vec2(-delta.y, delta.x)); // tbh I'm not sure if the rand adds anything of value
+        vec2 closest = initial + t * delta + 1. * pow(length(change), 0.5) * (sin(t * 6. * M_PI) + 1.0 * (rand(vec2(t*100.0,deltaT))-0.5)) * 0.025 * normalize(vec2(-delta.y, delta.x)); // tbh I'm not sure if the rand adds anything of value
 
         return closest;
     }
@@ -1242,7 +1242,7 @@ void main() {
         dx = (close.x - v_texCoord.x) * ratio;
         dy = (close.y - v_texCoord.y);
         //outColor = outColor + vec4(25. * (change + vec2(0.0,-0.0025)) * exp(-(dx * dx + dy * dy) / (radius * 0.1)), 0.0, 1.0); // this could help for aurora
-        outColor = outColor + vec4(25. * change * exp(-(dx * dx + dy * dy) / 0.00025), 0.0, 1.0);
+        outColor = outColor + vec4(25. * change * exp(-sqrt(dx * dx + dy * dy) / 0.01), 0.0, 1.0);
         //outColor = outColor + vec4(25. * change * vec2(1./ratio, 1.) * exp(-(dx * dx + dy * dy) / 0.00025), 0.0, 1.0);
     }
 
@@ -1698,17 +1698,17 @@ vec4 logGradient3(float co, float thresh, float v, float sat_band_limit, float l
         sat_grad = mix(0.,0.35 + pow(1. / sat_band_limit,0.85) * 0.4, pow(scale,.5));
     }
 
-    float neg_range = 0.2;
-    float pos_range = 0.2;
+    float neg_range = 0.15;
+    float pos_range = 0.15;
 
-    float neg_shift = 0.5;
-    float pos_shift = 0.43;
+    float neg_shift = 0.55;
+    float pos_shift = 0.25;
 
     float pos_way = pow(clamp(1. * scale / lum_band_limit,0.0,1.0),0.5);
     float pos_thresh = 2.;
     pos_way = pos_way * pos_thresh;
-    float pos_hue_shift = - mix(0.,.33,(pos_way - 1.) / (pos_thresh - 1.));
-    if (pos_way < 1.) {pos_hue_shift = mix(1.6,0.,pos_way);}
+    float pos_hue_shift = - mix(0.,.25,(pos_way - 1.) / (pos_thresh - 1.));
+    if (pos_way < 1.) {pos_hue_shift = mix(-0.5,0.,pos_way);}
     //if (pos_way < 1.) {pos_hue_shift = - mix(0.4,0.,pow((pos_way-.5)*2.,1.));}
     //if (pos_way < .5) {pos_hue_shift = - mix(0.,0.4,pow(pos_way/.5,4.));}
 
@@ -1717,7 +1717,7 @@ vec4 logGradient3(float co, float thresh, float v, float sat_band_limit, float l
     float neg_way = pow(clamp(1.25 * scale / lum_band_limit,0.0,1.0),0.33);
     float neg_thresh = 2.;
     neg_way = neg_way * neg_thresh;
-    float neg_hue_shift = mix(0.,0.35,(neg_way - 1.) / (neg_thresh - 1.));
+    float neg_hue_shift = mix(0.,0.25,(neg_way - 1.) / (neg_thresh - 1.));
     if (neg_way < 1.) {neg_hue_shift = mix(0.45,0.,pow(neg_way,4.));}
 
     vec4 graycolor = vec4(0.0);
@@ -1738,7 +1738,7 @@ vec4 logGradient3(float co, float thresh, float v, float sat_band_limit, float l
         else {color_grad = mix_strength * pos_range / 2.0 - pos_range + pos_shift + pos_hue_shift;}
 
         vec4 vividcolor = vec4(okhsl_to_srgb(vec3(color_grad, sat_grad, lum_grad)), 1.0);
-        newcolor = mix(vividcolor, graycolor, mix_strength * 0.5);
+        newcolor = mix(vividcolor, graycolor, mix_strength * 0.33);
     }
     else {
         float color_grad = 0.0;
@@ -1746,7 +1746,7 @@ vec4 logGradient3(float co, float thresh, float v, float sat_band_limit, float l
         else {color_grad = mix_strength * pos_range / 2.0 - pos_range / 2.0 + pos_shift + pos_hue_shift;}
 
         vec4 vividcolor = vec4(okhsl_to_srgb(vec3(color_grad, sat_grad, lum_grad)), 1.0);
-        newcolor = mix(graycolor, vividcolor, mix_strength * 0.5 + 0.5);
+        newcolor = mix(graycolor, vividcolor, mix_strength * 0.33 + 0.66);
     }
 
     return mix(vec4(0.0), newcolor, pow(sat_grad,2.0));
@@ -1821,11 +1821,12 @@ void main() {
     //if (mode == 1) {color = lineGradient2(color.r, 1. / pow(2.,7.), pow(2.,4.), pow(2.,6.));} // pressure
     //if (mode == 1) {color = lineGradient3(color.r, 1. / pow(2.,7.), pow(2.,4.), pow(2.,6.));} // pressure
     if (mode == 1) {color = lineGradient4(color.r, 1. / pow(2.,7.), pow(2.,4.), pow(2.,6.));} // pressure
+    //if (mode == 1) {color = lineGradient4(color.r, 1. / pow(2.,10.), pow(2.,8.), pow(2.,10.));} // pressure
     //if (mode == 2) {color = logGradient(color.r, 1. / pow(2.,12.), pow(2.,0.5), pow(2.,3.), pow(2.,4.));} // divergence
     //if (mode == 2) {color = logGradient(color.r, 1. / pow(2.,10.), pow(2.,0.5), pow(2.,3.), pow(2.,4.));} // divergence
     //if (mode == 2) {color = logGradient(color.r, 1. / pow(2.,10.), pow(2.,.5), pow(2.,3.), pow(2.,5.));} // divergence
     //if (mode == 2) {color = logGradient2(color.r, 1. / pow(2.,11.), pow(2.,.5), pow(2.,3.), pow(2.,4.));} // divergence
-    if (mode == 2) {color = logGradient3(color.r, 1. / pow(2.,11.), pow(2.,.5), pow(2.,3.), pow(2.,4.));} // divergence
+    if (mode == 2) {color = logGradient3(color.r, 1. / pow(2.,12.), pow(2.,.25), pow(2.,3.), pow(2.,5.));} // divergence
     //if (mode == 2) {color = lineGradient2(color.r, 1. / pow(2.,12.), pow(2.,4.), pow(2.,6.));} // pressure
     //if (mode == 2) {color = lineGradient3(color.r, 1. / pow(2.,12.), pow(2.,4.), pow(2.,6.));} // pressure
     //if (mode == 2) {color = logGradient(color.r, 1. / pow(2.,12.), pow(2.,1.), pow(2.,2.), pow(2.,3.));} // divergence
@@ -1857,7 +1858,7 @@ void main() {
     outColor = texture(u_image, v_texCoord);
 }
 </script>
-<div align="center" id='checkboxes'>
+<div align="center" id='checkboxes' style="height:42px">
 <br>
 <input type="checkbox" id="sprite" name="sprite" value="0" checked="checked">
 <label for="0">Sprite</label>
@@ -1867,13 +1868,13 @@ void main() {
 <label for="2">Color Direction-Lock</label>
 </div>
 <div align="center" id="slider-fill">
-<svg width="36px" height="36px" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" style="position:relative; top:-12px; left:5px"><path fill="gray" d="M321.375 15.313L262.72 73.906l25.78 6.906-15.563 58.063c-5.44-.756-10.87-1.14-16.25-1.125-.887.003-1.77.04-2.656.063l21.97 45.75 42.25-28.407c-6.263-3.87-12.944-7.205-20.03-9.875l15.467-57.718 28.657 7.657-20.97-79.907zM133.25 40.063l-.094 82.906 23.125-13.345 30.064 52.063c-5.034 3.824-9.75 8.072-14.125 12.687l50.06 16.438 9.064-50.157c-7.797 1.777-15.372 4.336-22.594 7.625l-29.875-51.718 25.688-14.812-71.313-41.688zm255.28 90.593l13.345 23.094-52.063 30.063c-3.8-5.002-8.01-9.707-12.593-14.063l-16.126 48.156 49.28 8.938c-1.744-7.094-4.148-13.99-7.155-20.594l51.717-29.875 14.813 25.656 41.688-71.31-82.907-.064zm-290.78 38.5l-79.906 20.97 58.562 58.655L83.312 223l58.063 15.563c-.935 6.767-1.25 13.498-1 20.156l47.53-22.814-29.843-43.25c-4.022 6.432-7.466 13.31-10.218 20.625l-57.78-15.468 7.686-28.656zm275.875 81.28L328.5 272.813l28.313 42.125c3.15-5.2 5.937-10.673 8.28-16.437l57.938 15.53-6.905 25.783 80.063-21.532-58.72-58.092-7.687 28.656-57.592-15.438c1.27-7.706 1.707-15.387 1.437-22.97zm-230.28 30.283c1.5 6.44 3.516 12.72 6.06 18.78l-52.093 30.094L83.97 306.5l-41.376 71.813 82.594-.438-14.813-25.656 51.78-29.908c4.655 6.52 9.98 12.557 15.907 18.032l17.282-49.53-52-10.095zM294 316.75l-9.22 51.03c5.91-1.454 11.673-3.347 17.25-5.686l30.095 52.094L309 427.53l71.844 41.408-.438-82.625-25.687 14.843-29.876-51.75c6.437-4.588 12.43-9.847 17.844-15.687L294 316.75zM240.25 324l-44.125 30.03c5.32 3.262 10.955 6.127 16.875 8.533L197.47 420.5l-25.782-6.906 21.53 80.062 58.095-58.72-28.625-7.686 15.437-57.625c8.295 1.367 16.576 1.816 24.72 1.406L240.25 324z"/></svg>
+<svg width="36px" height="36px" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" style="position:relative; top:-16px; left:5px"><path fill="gray" d="M321.375 15.313L262.72 73.906l25.78 6.906-15.563 58.063c-5.44-.756-10.87-1.14-16.25-1.125-.887.003-1.77.04-2.656.063l21.97 45.75 42.25-28.407c-6.263-3.87-12.944-7.205-20.03-9.875l15.467-57.718 28.657 7.657-20.97-79.907zM133.25 40.063l-.094 82.906 23.125-13.345 30.064 52.063c-5.034 3.824-9.75 8.072-14.125 12.687l50.06 16.438 9.064-50.157c-7.797 1.777-15.372 4.336-22.594 7.625l-29.875-51.718 25.688-14.812-71.313-41.688zm255.28 90.593l13.345 23.094-52.063 30.063c-3.8-5.002-8.01-9.707-12.593-14.063l-16.126 48.156 49.28 8.938c-1.744-7.094-4.148-13.99-7.155-20.594l51.717-29.875 14.813 25.656 41.688-71.31-82.907-.064zm-290.78 38.5l-79.906 20.97 58.562 58.655L83.312 223l58.063 15.563c-.935 6.767-1.25 13.498-1 20.156l47.53-22.814-29.843-43.25c-4.022 6.432-7.466 13.31-10.218 20.625l-57.78-15.468 7.686-28.656zm275.875 81.28L328.5 272.813l28.313 42.125c3.15-5.2 5.937-10.673 8.28-16.437l57.938 15.53-6.905 25.783 80.063-21.532-58.72-58.092-7.687 28.656-57.592-15.438c1.27-7.706 1.707-15.387 1.437-22.97zm-230.28 30.283c1.5 6.44 3.516 12.72 6.06 18.78l-52.093 30.094L83.97 306.5l-41.376 71.813 82.594-.438-14.813-25.656 51.78-29.908c4.655 6.52 9.98 12.557 15.907 18.032l17.282-49.53-52-10.095zM294 316.75l-9.22 51.03c5.91-1.454 11.673-3.347 17.25-5.686l30.095 52.094L309 427.53l71.844 41.408-.438-82.625-25.687 14.843-29.876-51.75c6.437-4.588 12.43-9.847 17.844-15.687L294 316.75zM240.25 324l-44.125 30.03c5.32 3.262 10.955 6.127 16.875 8.533L197.47 420.5l-25.782-6.906 21.53 80.062 58.095-58.72-28.625-7.686 15.437-57.625c8.295 1.367 16.576 1.816 24.72 1.406L240.25 324z"/></svg>
 </div>
 <div align="center" id="slider-fill2">
 <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
  width="36" height="36" viewBox="0 0 1207.000000 1280.000000"
  preserveAspectRatio="xMidYMid meet"
- style="position:relative; top:-16px; left:7px">
+ style="position:relative; top:-14px; left:7px">
 <metadata>
 Created by potrace 1.15, written by Peter Selinger 2001-2017
 </metadata>
@@ -1946,7 +1947,7 @@ fill="#000000" stroke="none">
 <div align="center" id='radiobtn'>
 <br>
 <input type="radio" id="smoke" name="mode" value="0" checked="checked">
-<label for="0">Smoke</label>
+<label for="0">Main</label>
 <input type="radio" id="pressure" name="mode" value="1">
 <label for="1">Pressure</label>
 <input type="radio" id="divergence" name="mode" value="2">
@@ -2759,7 +2760,7 @@ freeSpace.addEventListener('touchmove', function(e){ e.preventDefault(); }, {pas
 <p>  The colors emitted by the cursor are determined by both the direction and the speed of the drag. The &ldquo;Glitter&rdquo; setting adds more variance to the colors and the &ldquo;Color Direction-Lock&rdquo; causes the colors to be determined only by the <em>initial</em> direction of the drag.</p>
 <p>  There is a play/pause button to turn on/off the smoke. However, you can also press any key on your keyboard to play/pause, and if you want to see changes one frame at a time you can press the period (&quot;.&quot;) key. Smoke can be emitted by the cursor even when paused.</p>
 <p>  The sliders can change how the smoke works. The top slider changes how quickly the smoke spreads, and the bottom slider varies the density of the smoke, effectively changing the way the smoke spreads where higher values seem to make it flow more like watercolor paint.</p>
-<p>  The buttons show what is going on under-the-hood controlling how the smoke moves, and are painted with multicolored gradients. In the case of both Pressure and Divergence, lighter green-red colors represent positive values and darker blue-magenta colors represent negative values. The gradients cycle between colors creating bands such that it either is linear where the $N$th band has $N$ times the strength as the first band (as in the case of Pressure), or it has $\sqrt{2^{N-1}}$ times the strength as the first band (as in the case of Divergence, i.e. it&rsquo;s a logarithmic scale). Velocity is shaded such that every direction is prescribed its own hue, and the strength of the hue is the velocity in that direction.</p>
+<p>  The buttons show what is going on under-the-hood controlling how the smoke moves, and are painted with multicolored gradients. In the case of both Pressure and Divergence, lighter green/yellow-red colors represent positive values and darker blue-magenta colors represent negative values. The gradients cycle between colors creating bands such that it either is linear where the $N$th band has $N$ times the strength as the first band (as in the case of Pressure), or it has $\sqrt[4]{2^{N-1}}$ times the strength as the first band (as in the case of Divergence, i.e. it&rsquo;s a logarithmic scale). Velocity is shaded such that every direction is prescribed its own hue, and the strength of the hue is the velocity in that direction.</p>
 <h1 id="extra-details">Extra Details</h1>
 <p>  The smoke shader should work both on desktop and on mobile, although it&rsquo;s better on desktop. It is best rendered on chrome, as if your monitor is capable of rendering P3 colors (most macs can, for example) then the colors will render as P3 colors (giving a wider gamut, making even more colorful smoke and gradients!).</p>
 <p>  Colors themselves are picked from the Okhsl color space, allowing for perceptually smoother gradients. The colors are technically floats, and while monitors do not normally render float values for colors, this allows for colors to be rendered extra smooth by adding a little noise, preventing banding.</p>
