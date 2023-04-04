@@ -43,11 +43,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1680573521.css">
+  <link rel="stylesheet" href="/minima.1680575824.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1680573521.js"></script>
+  <script defer type="text/javascript" src="/minima.1680575824.js"></script>
 </head>
 <script>
   
@@ -123,6 +123,7 @@ if (!doNotTrack) {
 <script src="https://webgl2fundamentals.org/webgl/resources/webgl-utils.js"></script>
 <script src="https://unpkg.com/jquery@3.5.1"></script>
 <p>  In the background of this page you can see an invisible sprite leaving a trail of multi-colored &ldquo;smoke.&rdquo; Feel free to click and drag on the page itself, your cursor will also give off colored smoke. The experience works in both light and dark mode but is best viewed in dark mode, so click the ⚪️/⚫️ button to switch. Scroll down for an empty area to interact with the smoke and for information on the settings.</p>
+<p>  Note: All settings can also be toggled by pressing on the keyboard key that matches the first letter of the setting.</p>
 <p><b style="font-size:30px" id='btn' onmouseover="this.style.cursor='pointer';" width = 20px>⏸</b></p>
 <p><canvas id="canvas" style='position:fixed; left:0; top:0; z-index: -1;'></canvas></p>
 <script type = "text" id = "vertex">
@@ -1865,7 +1866,7 @@ void main() {
 <input type="checkbox" id="glitter" name="glitter" value="1" checked="checked">
 <label for="1">Glitter</label>
 <input type="checkbox" id="lock" name="lock" value="2">
-<label for="2">Color Direction-Lock</label>
+<label for="2">Lock Color Direction</label>
 </div>
 <div align="center" id="slider-fill">
 <svg width="36px" height="36px" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" style="position:relative; top:-16px; left:5px"><path fill="gray" d="M321.375 15.313L262.72 73.906l25.78 6.906-15.563 58.063c-5.44-.756-10.87-1.14-16.25-1.125-.887.003-1.77.04-2.656.063l21.97 45.75 42.25-28.407c-6.263-3.87-12.944-7.205-20.03-9.875l15.467-57.718 28.657 7.657-20.97-79.907zM133.25 40.063l-.094 82.906 23.125-13.345 30.064 52.063c-5.034 3.824-9.75 8.072-14.125 12.687l50.06 16.438 9.064-50.157c-7.797 1.777-15.372 4.336-22.594 7.625l-29.875-51.718 25.688-14.812-71.313-41.688zm255.28 90.593l13.345 23.094-52.063 30.063c-3.8-5.002-8.01-9.707-12.593-14.063l-16.126 48.156 49.28 8.938c-1.744-7.094-4.148-13.99-7.155-20.594l51.717-29.875 14.813 25.656 41.688-71.31-82.907-.064zm-290.78 38.5l-79.906 20.97 58.562 58.655L83.312 223l58.063 15.563c-.935 6.767-1.25 13.498-1 20.156l47.53-22.814-29.843-43.25c-4.022 6.432-7.466 13.31-10.218 20.625l-57.78-15.468 7.686-28.656zm275.875 81.28L328.5 272.813l28.313 42.125c3.15-5.2 5.937-10.673 8.28-16.437l57.938 15.53-6.905 25.783 80.063-21.532-58.72-58.092-7.687 28.656-57.592-15.438c1.27-7.706 1.707-15.387 1.437-22.97zm-230.28 30.283c1.5 6.44 3.516 12.72 6.06 18.78l-52.093 30.094L83.97 306.5l-41.376 71.813 82.594-.438-14.813-25.656 51.78-29.908c4.655 6.52 9.98 12.557 15.907 18.032l17.282-49.53-52-10.095zM294 316.75l-9.22 51.03c5.91-1.454 11.673-3.347 17.25-5.686l30.095 52.094L309 427.53l71.844 41.408-.438-82.625-25.687 14.843-29.876-51.75c6.437-4.588 12.43-9.847 17.844-15.687L294 316.75zM240.25 324l-44.125 30.03c5.32 3.262 10.955 6.127 16.875 8.533L197.47 420.5l-25.782-6.906 21.53 80.062 58.095-58.72-28.625-7.686 15.437-57.625c8.295 1.367 16.576 1.816 24.72 1.406L240.25 324z"/></svg>
@@ -1946,13 +1947,13 @@ fill="#000000" stroke="none">
 </div>
 <div align="center" id='radiobtn'>
 <br>
-<input type="radio" id="smoke" name="mode" value="0" checked="checked">
+<input type="radio" id="radio_main" name="mode" value="0" checked="checked">
 <label for="0">Main</label>
-<input type="radio" id="pressure" name="mode" value="1">
+<input type="radio" id="radio_pressure" name="mode" value="1">
 <label for="1">Pressure</label>
-<input type="radio" id="divergence" name="mode" value="2">
+<input type="radio" id="radio_divergence" name="mode" value="2">
 <label for="2">Divergence</label>
-<input type="radio" id="velocity" name="mode" value="3">
+<input type="radio" id="radio_velocity" name="mode" value="3">
 <label for="3">Velocity</label>
 </div>
 <div id="space" style="display: block; height: 100vh; user-select: none"></div>
@@ -2705,11 +2706,45 @@ function activateSwitch() {
     }
 
 function keySwitch() {
-    if (event.keyCode == 190) {
-        if (toggle) {activateSwitch()}
-        else {requestAnimationFrame(render)}
-        }
-    else {activateSwitch()}
+    switch(event.keyCode) {
+        case 190:
+            if (toggle) {activateSwitch()}
+            else {requestAnimationFrame(render)}
+            break
+        case 77: 
+            document.getElementById("radio_main").checked = true
+            mode = 0
+            requestAnimationFrame(display)
+            break
+        case 80: 
+            document.getElementById("radio_pressure").checked = true
+            mode = 1
+            requestAnimationFrame(display);
+            break
+        case 68: 
+            document.getElementById("radio_divergence").checked = true
+            mode = 2
+            requestAnimationFrame(display);
+            break
+        case 86: 
+            document.getElementById("radio_velocity").checked = true
+            mode = 3
+            requestAnimationFrame(display);
+            break
+        case 83: 
+            document.getElementById("sprite").checked = !document.getElementById("sprite").checked
+            spriteOnOff = document.getElementById("sprite").checked
+            if (!spriteOnOff) {sprite1.lastLocation = sprite1.location}
+            break
+        case 71: 
+            document.getElementById("glitter").checked = !document.getElementById("glitter").checked
+            break
+        case 76: 
+            document.getElementById("lock").checked = !document.getElementById("lock").checked
+            break
+        default:activateSwitch()
+
+    }
 }
 
 
@@ -2722,10 +2757,9 @@ radiobtn.addEventListener('click', function () {
     requestAnimationFrame(display);
 });
 
-checkboxes.addEventListener('click', function () {
+document.getElementById("sprite").addEventListener('click', function () {
     spriteOnOff = document.getElementById("sprite").checked;
     if (!spriteOnOff) {sprite1.lastLocation = sprite1.location}
-    requestAnimationFrame(display);
 });
 
 // only other thing worth caring about
@@ -2757,8 +2791,8 @@ freeSpace.addEventListener('touchmove', function(e){ e.preventDefault(); }, {pas
     
 </script>
 <h1 id="information">Information</h1>
-<p>  The colors emitted by the cursor are determined by both the direction and the speed of the drag. The &ldquo;Glitter&rdquo; setting adds more variance to the colors and the &ldquo;Color Direction-Lock&rdquo; causes the colors to be determined only by the <em>initial</em> direction of the drag.</p>
-<p>  There is a play/pause button to turn on/off the smoke. However, you can also press any key on your keyboard to play/pause, and if you want to see changes one frame at a time you can press the period (&quot;.&quot;) key. Smoke can be emitted by the cursor even when paused.</p>
+<p>  The colors emitted by the cursor are determined by both the direction and the speed of the drag. The &ldquo;Glitter&rdquo; setting adds more variance to the colors and &ldquo;Lock Color Direction&rdquo; causes the colors to be determined only by the <em>initial</em> direction of the drag.</p>
+<p>  There is a play/pause button to turn on/off the smoke. However, you can also press any key on your keyboard that doesn&rsquo;t match the first letter of the above settings to play/pause, and if you want to see changes one frame at a time you can press the period (&quot;.&quot;) key. Smoke can be emitted by the cursor even when paused.</p>
 <p>  The sliders can change how the smoke works. The top slider changes how quickly the smoke spreads, and the bottom slider varies the density of the smoke, effectively changing the way the smoke spreads where higher values seem to make it flow more like watercolor paint.</p>
 <p>  The buttons show what is going on under-the-hood controlling how the smoke moves, and are painted with multicolored gradients. In the case of both Pressure and Divergence, lighter green/yellow-red colors represent positive values and darker blue-magenta colors represent negative values. The gradients cycle between colors creating bands such that it either is linear where the $N$th band has $N$ times the strength as the first band (as in the case of Pressure), or it has $\sqrt[4]{2^{N-1}}$ times the strength as the first band (as in the case of Divergence, i.e. it&rsquo;s a logarithmic scale). Velocity is shaded such that every direction is prescribed its own hue, and the strength of the hue is the velocity in that direction.</p>
 <h1 id="extra-details">Extra Details</h1>
