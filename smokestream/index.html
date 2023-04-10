@@ -43,11 +43,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1680632845.css">
+  <link rel="stylesheet" href="/minima.1681145770.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1680632845.js"></script>
+  <script defer type="text/javascript" src="/minima.1681145770.js"></script>
 </head>
 <script>
   
@@ -2573,7 +2573,7 @@ function render(time) {
         temp = pressurep;
         pressurep = pressure;
         pressure = temp;
-        initShader(jacobiShader, [divergence, pressure], pressurep);
+        initShader(jacobiShader, [divergence, pressure], pressurep, true);
         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
     }
