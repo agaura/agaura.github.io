@@ -43,11 +43,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1682207068.css">
+  <link rel="stylesheet" href="/minima.1682213974.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1682207068.js"></script>
+  <script defer type="text/javascript" src="/minima.1682213974.js"></script>
 </head>
 <script>
   
@@ -1675,16 +1675,17 @@ vec4 sobel(float co, float thresh, float sat_band_limit, float lum_band_limit){
         sat_grad = pow(sat_scale,1.) * 0.4 + 0.35;
     }
 
-    float lum_grad = mix(0.2,0.75,clamp(scale / lum_band_limit,0.0,1.0));
+    float lum_grad = mix(0.1,0.6,clamp(scale / lum_band_limit,0.0,1.0));
     if (sign(co) > 0.) {
-        lum_grad = mix(0.5,0.65,clamp(scale / lum_band_limit,0.0,1.0));
+        lum_grad = mix(0.3,0.6,clamp(scale / lum_band_limit,0.0,1.0));
         if (scale < 2.) {
-            lum_grad = mix(0.2,0.5,scale / 2.);
+            lum_grad = mix(0.1,0.3,scale / 2.);
         }
     }
     //lum_grad += (2. - (2. / 0.55) * (lum_grad - 0.2)) * edge_grad;
     //lum_grad = lum_grad + 0.1 * clamp(10.*pow(edge_grad,0.25),0.0,1.);
-    lum_grad = mix(lum_grad, 0.9, pow(edge_grad,0.25));
+    lum_grad = clamp(mix(lum_grad, 1.5 - (0.5 / 0.65) * (lum_grad - 0.1), pow(edge_grad,0.25)),0.0,0.85);
+    //lum_grad = mix(lum_grad, 0.9, pow(edge_grad,0.25));
 
     if (scale < 1.) {
         sat_grad = mix(0.,0.35 + pow(1. / sat_band_limit,0.85) * 0.4, pow(scale,.5));
@@ -1692,7 +1693,8 @@ vec4 sobel(float co, float thresh, float sat_band_limit, float lum_band_limit){
     //sat_grad = clamp(sat_grad + clamp(1000.*edge_grad,0.0,pow(sat_grad,0.25)*0.5),0.0,1.0);
     //sat_grad = clamp(sat_grad + clamp(10.*pow(edge_grad,0.25),0.0,0.5),0.0,1.0);
     //sat_grad = clamp(sat_grad + clamp(10000.*edge_grad,0.0,0.5),0.0,1.0);
-    sat_grad = clamp(sat_grad + pow(sat_grad, 0.5) * clamp(10.*pow(edge_grad,0.25),0.0,0.5),0.0,1.0);
+    //sat_grad = clamp(sat_grad + pow(sat_grad, 0.5) * clamp(10.*pow(edge_grad,0.25),0.0,0.5),0.0,1.0);
+    sat_grad = clamp(sat_grad + clamp(10.*pow(edge_grad,0.25),0.0,0.5),0.0,1.0);
 
     float neg_range = 0.15;
     float pos_range = 0.15;
@@ -2142,6 +2144,7 @@ void main() {
 
     //color = lineGradient(color.r, 32., 4., 2.); // pressure
     // color = lineGradient2(color.r, 1. / pow(2.,6.), pow(2.,3.), pow(2.,4.)); // pressure
+    //if (mode == 1) {color = lineGradient(color.r, 32., 4., 2.);} // pressure
     //if (mode == 1) {color = lineGradient2(color.r, 1. / pow(2.,6.), pow(2.,3.), pow(2.,5.));} // pressure
     //if (mode == 1) {color = lineGradient2(color.r, 1. / pow(2.,7.), pow(2.,4.), pow(2.,6.));} // pressure
     //if (mode == 1) {color = lineGradient3(color.r, 1. / pow(2.,7.), pow(2.,4.), pow(2.,6.));} // pressure
