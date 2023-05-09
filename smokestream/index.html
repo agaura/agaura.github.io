@@ -43,11 +43,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1683591568.css">
+  <link rel="stylesheet" href="/minima.1683609030.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1683591568.js"></script>
+  <script defer type="text/javascript" src="/minima.1683609030.js"></script>
 </head>
 <script>
   
@@ -2365,7 +2365,6 @@ vec4 colorMap5(vec2 co){
     return mix(vec4(0.0), newcolor, min(mag, 1.0));
 }
 
-// this is just colormap5 but with some different parameters
 vec4 colorMap6(vec2 co){
     //return vec4(0.0);
     float angle = atan(co.y, co.x) / (2. * M_PI);
@@ -2396,6 +2395,54 @@ vec4 colorMap6(vec2 co){
     vec4 newcolor = vec4(okhsl_to_srgb(vec3(angle, min(mag, 1.0), clamp(mag * 0.25 - scale - scale2,0.0,0.75))), 1.0);
 
     return mix(vec4(0.0), newcolor, min(mag, 1.0));
+}
+
+vec4 colorMap7(vec2 co){
+    vec2 upper = texture(u_image, vec2(v_texCoord.x, mod(v_texCoord.y + epsilon.y, 1.))).rg;
+    vec2 lower = texture(u_image, vec2(v_texCoord.x, mod(v_texCoord.y - epsilon.y, 1.))).rg;
+    vec2 right = texture(u_image, vec2(mod(v_texCoord.x + epsilon.x, 1.), v_texCoord.y)).rg;
+    vec2 left  = texture(u_image, vec2(mod(v_texCoord.x - epsilon.x, 1.), v_texCoord.y)).rg;
+
+    vec2 upperright = texture(u_image, vec2(mod(v_texCoord.x + epsilon.x, 1.), mod(v_texCoord.y + epsilon.y, 1.))).rg;
+    vec2 lowerright = texture(u_image, vec2(mod(v_texCoord.x + epsilon.x, 1.), mod(v_texCoord.y - epsilon.y, 1.))).rg;
+    vec2 upperleft = texture(u_image, vec2(mod(v_texCoord.x - epsilon.x, 1.), mod(v_texCoord.y + epsilon.y, 1.))).rg;
+    vec2 lowerleft  = texture(u_image, vec2(mod(v_texCoord.x - epsilon.x, 1.), mod(v_texCoord.y - epsilon.y, 1.))).rg;
+
+    vec2 hor_grad = abs(upperleft + 2. * left + lowerleft - (upperright + 2. * right + lowerright));
+    vec2 vert_grad = abs(upperleft + 2. * upper + upperright - (lowerleft + 2. * lower + lowerright));
+
+    float length1 = length(vec4(hor_grad,vert_grad));
+
+    float edge_grad = mix(0.,.25,pow(clamp(pow(length1,1.0),0.0,1.0),.5));
+
+    float angle = atan(co.y, co.x) / (2. * M_PI);
+    float mag = pow(clamp(length(co),0.,2.),1.) * 2./pow(2.,1.);
+
+    float repetitions = 16.;
+    float strength = 6.;
+
+    float hor_min = max(mod(angle, 1./repetitions), mod(-angle, 1./repetitions));
+    float ver_min = max(mod(length(co), 1./repetitions), mod(-length(co), 1./repetitions));
+
+    float hor = pow(hor_min * repetitions, strength);
+    float ver = pow(ver_min * repetitions, strength);
+
+    float scale = - (hor + ver) / 8.;
+
+    float repetitions2 = repetitions * 4.;
+    float strength2 = 6.;
+
+    float hor_min2 = max(mod(angle, 1./repetitions2), mod(-angle, 1./repetitions2));
+    float ver_min2 = max(mod(length(co), 1./repetitions2), mod(-length(co), 1./repetitions2));
+
+    float hor2 = pow(hor_min2 * repetitions2, strength2);
+    float ver2 = pow(ver_min2 * repetitions2, strength2);
+
+    float scale2 = - (hor2 + ver2) / 32.;
+
+    vec4 newcolor = vec4(okhsl_to_srgb(vec3(angle, min(pow(mag,0.5), 1.0), clamp(mag * 0.2 - scale - scale2 + edge_grad,0.05,0.75))), 1.0);
+
+    return mix(vec4(0.0), newcolor, min(pow(mag,0.5), 1.0));
 }
 
 float circleMix(float mix1, float mix2, float a) {
@@ -2471,7 +2518,7 @@ void main() {
     //if (mode == 2) {color = lineGradient2(color.r, 1. / pow(2.,12.), pow(2.,4.), pow(2.,6.));} // pressure
     //if (mode == 2) {color = lineGradient3(color.r, 1. / pow(2.,12.), pow(2.,4.), pow(2.,6.));} // pressure
     //if (mode == 2) {color = logGradient(color.r, 1. / pow(2.,12.), pow(2.,1.), pow(2.,2.), pow(2.,3.));} // divergence
-    if (mode == 3) {color = colorMap6(color.rg);} // velocity
+    if (mode == 3) {color = colorMap7(color.rg);} // velocity
     //if (mode == 3) {color = colorMap2(color.rg);} // velocity
     //color = lineGradient(color.r, pow(2.,10.), pow(2.,8.), pow(2.,6.)); // divergence
     //color = logGradient(color.r, 1. / pow(2.,12.), pow(2.,1.), pow(2.,2.), pow(2.,3.)); // divergence
