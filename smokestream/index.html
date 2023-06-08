@@ -43,11 +43,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1683609030.css">
+  <link rel="stylesheet" href="/minima.1686247384.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1683609030.js"></script>
+  <script defer type="text/javascript" src="/minima.1686247384.js"></script>
 </head>
 <script>
   
@@ -1012,47 +1012,61 @@ void main() {
             float dx = (close.x - v_texCoord.x) * ratio;
             float dy = (close.y - v_texCoord.y); // dy = 0.; // interesting effect
 
-            // find out how affected a pixel should be due to its distance as well as the velocity (numbers chosen by experimentation)
-            vec2 effect = 50. * scale2(change) * exp(-(dx * dx + dy * dy) / (.001 * mix(1., 10., length(change))));
-            //effect = 50. * (scale2(change) + vec2(0.0,-0.005)) * exp(-(dx * dx + dy * dy) / (radius * .5)); // for the aurora
-            //effect = 50. * (scale2(change) + vec2(0.0,-0.002)) * exp(-(dx * dx + dy * dy) / (radius * .5)); // gives an interesting effect
-            float mag = (effect.x * effect.x + effect.y * effect.y) / 2.0;
-
-            // determine the color
-            vec4 color = vec4(0.3,0.,1.,1.0); // make a random color
-            //color = vec4(okhsl_to_srgb(vec3(time / 1024.0, 1.0, 0.5)), 1.0); // gentle and smooth rainbow (original)
-            //color = vec4(hsl2rgb(vec3(time / 1024.0 + (time + t * dt) * mag / (2.* 8192.0), 0.25, 0.5)), 1.0); // reaaaally cool oil slick
-            //color = vec4(okhsl_to_srgb(vec3((time + t) / 1024.0 + 0.9 * pow(mag, 0.5), 0.9, 0.5)), 1.0); // reaaaally cool oil slick
-            //color = vec4(okhsl_to_srgb(vec3((time + t) / 20000.0 + 0.5 * pow(mag, 0.5), 1.0, 0.5 + 0.1 * sin(dx*dy*10000.*3.))), 1.0); // this one is just slow
-            //color = vec4(okhsl_to_srgb(vec3(atan(dy, dx) / (2. * M_PI) + 0.9 * pow(mag, 0.5), 0.9, 0.5 + 0.1 * sin(dx*dy*10000.*3.))), 1.0); // very pretty, might be useful for debugging
-            if (initialDirection > 0.005) {
-                float exactHue = initialDirection + 0.5 * pow(mag, 0.5);
-                color = vec4(okhsl_to_srgb(vec3(exactHue, 1.0, 0.1 * (1.0 - float(dark)) + 0.5 + 0.15 * sin(dx*dy*10000.*3.))), 1.0); // control color by direction
-
-                // getting rid of green
-                /*if ((exactHue > 0.33) && (exactHue < 0.42)){
-                    color = vec4(okhsl_to_srgb(vec3(exactHue, 0.0, 0.1 * (1.0 - float(dark)) + 0.5 + 0.15 * sin(dx*dy*10000.*3.))), 1.0); // control color by direction
-                }*/
+            // idle click effect
+            if (change == vec2(0.0)) {
+                vec2 effect = 50. * scale3(vec2(0.001)) * exp(-(dx * dx + dy * dy) / .001);
+                float mag = (effect.x * effect.x + effect.y * effect.y) / 2.0;
+                //vec4 newColor = vec4(hsl2rgb(vec3(time / 17.0, 1.0, 0.5)), 1.0); // oil slick color
+                vec4 newColor = vec4(hsl2rgb(vec3(time/3333., 1.0, 0.5)), 1.0);
+                //vec4 newColor = vec4(hsl2rgb(vec3(time / 17.0, 1.0, 0.5)), 1.0); // oil slick color, looks great with a small radius
+                if (dark) {result = result + newColor * mag;}
+                else {result = mix(result, newColor, mag);}
             }
+
             else {
-                float addon = 0.0;
-                if ((change.y != 0.) || (change.x != 0.)) {addon = atan(change.y, change.x) / (2. * M_PI);}
-                color = vec4(okhsl_to_srgb(vec3(addon + 0.5 * pow(mag, 0.5), 1.0, 0.1 * (1.0 - float(dark)) + 0.5 + 0.15 * sin(dx*dy*10000.*3.))), 1.0); // control color by direction
+
+                // find out how affected a pixel should be due to its distance as well as the velocity (numbers chosen by experimentation)
+                vec2 effect = 50. * scale2(change) * exp(-(dx * dx + dy * dy) / (.001 * mix(1., 10., length(change))));
+                //effect = 50. * (scale2(change) + vec2(0.0,-0.005)) * exp(-(dx * dx + dy * dy) / (radius * .5)); // for the aurora
+                //effect = 50. * (scale2(change) + vec2(0.0,-0.002)) * exp(-(dx * dx + dy * dy) / (radius * .5)); // gives an interesting effect
+                float mag = (effect.x * effect.x + effect.y * effect.y) / 2.0;
+
+                // determine the color
+                vec4 color = vec4(0.3,0.,1.,1.0); // make a random color
+                //color = vec4(okhsl_to_srgb(vec3(time / 1024.0, 1.0, 0.5)), 1.0); // gentle and smooth rainbow (original)
+                //color = vec4(hsl2rgb(vec3(time / 1024.0 + (time + t * dt) * mag / (2.* 8192.0), 0.25, 0.5)), 1.0); // reaaaally cool oil slick
+                //color = vec4(okhsl_to_srgb(vec3((time + t) / 1024.0 + 0.9 * pow(mag, 0.5), 0.9, 0.5)), 1.0); // reaaaally cool oil slick
+                //color = vec4(okhsl_to_srgb(vec3((time + t) / 20000.0 + 0.5 * pow(mag, 0.5), 1.0, 0.5 + 0.1 * sin(dx*dy*10000.*3.))), 1.0); // this one is just slow
+                //color = vec4(okhsl_to_srgb(vec3(atan(dy, dx) / (2. * M_PI) + 0.9 * pow(mag, 0.5), 0.9, 0.5 + 0.1 * sin(dx*dy*10000.*3.))), 1.0); // very pretty, might be useful for debugging
+                if (initialDirection > 0.005) {
+                    float exactHue = initialDirection + 0.5 * pow(mag, 0.5);
+                    color = vec4(okhsl_to_srgb(vec3(exactHue, 1.0, 0.1 * (1.0 - float(dark)) + 0.5 + 0.15 * sin(dx*dy*10000.*3.))), 1.0); // control color by direction
+
+                    // getting rid of green
+                    /*if ((exactHue > 0.33) && (exactHue < 0.42)){
+                        color = vec4(okhsl_to_srgb(vec3(exactHue, 0.0, 0.1 * (1.0 - float(dark)) + 0.5 + 0.15 * sin(dx*dy*10000.*3.))), 1.0); // control color by direction
+                    }*/
+                }
+                else {
+                    float addon = 0.0;
+                    if ((change.y != 0.) || (change.x != 0.)) {addon = atan(change.y, change.x) / (2. * M_PI);}
+                    color = vec4(okhsl_to_srgb(vec3(addon + 0.5 * pow(mag, 0.5), 1.0, 0.1 * (1.0 - float(dark)) + 0.5 + 0.15 * sin(dx*dy*10000.*3.))), 1.0); // control color by direction
+                }
+                //color = vec4(okhsl_to_srgb(vec3((time + t) / (1024.0 * 1. * pow(change.x * change.y, 0.05) + 16.) + 0.9 * pow(mag, 0.5), 0.9, 0.5)), 1.0); // trying to make it cycle through more colors when slow, so that when it's real slow it'll effectively be gray 
+
+                // if dark mode is on, add the color to the background, which will cause brightening (like a glow)
+                if (dark) {result = result + mix(vec4(0.0), color, mag);} // if you want to add summing-to-white effects
+
+                // colors are mixed in light mode as it seems more natural (kinda like subtractive color mixing)
+                else {result = mix(result, color, mag);}
+
+                //result = vec4(0.1*sin(close * 200000.0), 0.0, 0.99); // really useful
+                //result = vec4(0.1*cos((close - 1.0) * 100.0), 0.0, 0.99); // really useful
+                //result = vec4((ratio - 1.) * 125., - (ratio - 1.) * 125., 0.0, 0.99);
+                //result = vec4(hsl2rgb(vec3(1.0, (ratio - 1.), 0.5)), 1.0);
+                //if (dx*dx < 0.001) {if (dy*dy < 0.001) {result = vec4(.5, 0., 0., 0.5);}}
+                //if (sqrt(dx*dx +dy*dy) < 0.03) {result = vec4(.5, 0., 0., 0.5);}
             }
-            //color = vec4(okhsl_to_srgb(vec3((time + t) / (1024.0 * 1. * pow(change.x * change.y, 0.05) + 16.) + 0.9 * pow(mag, 0.5), 0.9, 0.5)), 1.0); // trying to make it cycle through more colors when slow, so that when it's real slow it'll effectively be gray 
-
-            // if dark mode is on, add the color to the background, which will cause brightening (like a glow)
-            if (dark) {result = result + mix(vec4(0.0), color, mag);} // if you want to add summing-to-white effects
-
-            // colors are mixed in light mode as it seems more natural (kinda like subtractive color mixing)
-            else {result = mix(result, color, mag);}
-
-            //result = vec4(0.1*sin(close * 200000.0), 0.0, 0.99); // really useful
-            //result = vec4(0.1*cos((close - 1.0) * 100.0), 0.0, 0.99); // really useful
-            //result = vec4((ratio - 1.) * 125., - (ratio - 1.) * 125., 0.0, 0.99);
-            //result = vec4(hsl2rgb(vec3(1.0, (ratio - 1.), 0.5)), 1.0);
-            //if (dx*dx < 0.001) {if (dy*dy < 0.001) {result = vec4(.5, 0., 0., 0.5);}}
-            //if (sqrt(dx*dx +dy*dy) < 0.03) {result = vec4(.5, 0., 0., 0.5);}
         }
 
         if (toggle) {
@@ -2411,9 +2425,9 @@ vec4 colorMap7(vec2 co){
     vec2 hor_grad = abs(upperleft + 2. * left + lowerleft - (upperright + 2. * right + lowerright));
     vec2 vert_grad = abs(upperleft + 2. * upper + upperright - (lowerleft + 2. * lower + lowerright));
 
-    float length1 = length(vec4(hor_grad,vert_grad));
+    float sobel = length(vec4(hor_grad,vert_grad));
 
-    float edge_grad = mix(0.,.25,pow(clamp(pow(length1,1.0),0.0,1.0),.5));
+    float edge_grad = mix(0.,.25,pow(clamp(pow(sobel,1.0),0.0,1.0),.5));
 
     float angle = atan(co.y, co.x) / (2. * M_PI);
     float mag = pow(clamp(length(co),0.,2.),1.) * 2./pow(2.,1.);
@@ -2440,7 +2454,64 @@ vec4 colorMap7(vec2 co){
 
     float scale2 = - (hor2 + ver2) / 32.;
 
-    vec4 newcolor = vec4(okhsl_to_srgb(vec3(angle, min(pow(mag,0.5), 1.0), clamp(mag * 0.2 - scale - scale2 + edge_grad,0.05,0.75))), 1.0);
+    vec4 newcolor = vec4(okhsl_to_srgb(vec3(angle, min(pow(mag,.5), 1.0), clamp(mag * 0.2 - scale - scale2 + edge_grad,0.05,0.75))), 1.0);
+
+    return mix(vec4(0.0), newcolor, min(pow(mag,0.5), 1.0));
+}
+
+vec4 colorMap8(vec2 co){
+    vec2 upper = texture(u_image, vec2(v_texCoord.x, mod(v_texCoord.y + epsilon.y, 1.))).rg;
+    vec2 lower = texture(u_image, vec2(v_texCoord.x, mod(v_texCoord.y - epsilon.y, 1.))).rg;
+    vec2 right = texture(u_image, vec2(mod(v_texCoord.x + epsilon.x, 1.), v_texCoord.y)).rg;
+    vec2 left  = texture(u_image, vec2(mod(v_texCoord.x - epsilon.x, 1.), v_texCoord.y)).rg;
+
+    vec2 upperright = texture(u_image, vec2(mod(v_texCoord.x + epsilon.x, 1.), mod(v_texCoord.y + epsilon.y, 1.))).rg;
+    vec2 lowerright = texture(u_image, vec2(mod(v_texCoord.x + epsilon.x, 1.), mod(v_texCoord.y - epsilon.y, 1.))).rg;
+    vec2 upperleft = texture(u_image, vec2(mod(v_texCoord.x - epsilon.x, 1.), mod(v_texCoord.y + epsilon.y, 1.))).rg;
+    vec2 lowerleft  = texture(u_image, vec2(mod(v_texCoord.x - epsilon.x, 1.), mod(v_texCoord.y - epsilon.y, 1.))).rg;
+
+    vec2 hor_grad = abs(upperleft + 2. * left + lowerleft - (upperright + 2. * right + lowerright));
+    vec2 vert_grad = abs(upperleft + 2. * upper + upperright - (lowerleft + 2. * lower + lowerright));
+
+    float sobel = length(vec4(hor_grad,vert_grad));
+
+    float laplacian = pow(clamp(length(8. * co - (upper + lower + right + left + upperright + lowerright + upperleft + lowerleft)), 0.0,1.0),2.0);
+
+    float edge_grad = mix(0.,.25,pow(clamp(pow(sobel,1.0),0.0,1.0),.5));
+
+    float angle = atan(co.y, co.x) / (2. * M_PI);
+    float mag = pow(clamp(length(co),0.,2.),1.) * 2./pow(2.,1.);
+
+    float repetitions = 16.;
+    float strength = 6.;
+
+    float hor_min = max(mod(angle, 1./repetitions), mod(-angle, 1./repetitions));
+    float ver_min = max(mod(length(co), 1./repetitions), mod(-length(co), 1./repetitions));
+
+    float hor = pow(hor_min * repetitions, strength);
+    float ver = pow(ver_min * repetitions, strength);
+
+    float scale = - (hor + ver) / 8.;
+
+    float repetitions2 = repetitions * 4.;
+    float strength2 = 6.;
+
+    float hor_min2 = max(mod(angle, 1./repetitions2), mod(-angle, 1./repetitions2));
+    float ver_min2 = max(mod(length(co), 1./repetitions2), mod(-length(co), 1./repetitions2));
+
+    float hor2 = pow(hor_min2 * repetitions2, strength2);
+    float ver2 = pow(ver_min2 * repetitions2, strength2);
+
+    float scale2 = - (hor2 + ver2) / 32.;
+
+    vec4 newcolor = vec4(okhsl_to_srgb(vec3(angle, min(pow(mag,0.5), 1.0), (1.0-(.66*laplacian)) * clamp(mag * 0.2 - scale - scale2 + edge_grad,0.05,0.75))), 1.0);
+
+    /*
+    if (v_texCoord.x > 0.5) {
+        newcolor = vec4(okhsl_to_srgb(vec3(angle, min(pow(mag,0.5), 1.0), (1.0-(.66*laplacian)) * clamp(mag * 0.2 - scale - scale2 + edge_grad,0.05,0.75))), 1.0);}
+    else {
+        newcolor = vec4(okhsl_to_srgb(vec3(angle, min(pow(mag,0.5), 1.0), clamp(mag * 0.2 - scale - scale2 + edge_grad,0.05,0.75))), 1.0);}
+    */
 
     return mix(vec4(0.0), newcolor, min(pow(mag,0.5), 1.0));
 }
@@ -3302,7 +3373,7 @@ function render(time) {
     gl.uniform1f(advectionShader.uniforms.initialDirection, initialDirection);
     gl.uniform2f(advectionShader.uniforms.change, deltaX, deltaY);
     gl.uniform2f(advectionShader.uniforms.center, mouseX, mouseY);
-    gl.uniform1f(advectionShader.uniforms.time, time);
+    gl.uniform1f(advectionShader.uniforms.time, time % 100000);
     gl.uniform2f(advectionShader.uniforms.spriteChange, sprite1.location.x - sprite1.lastLocation.x, sprite1.location.y - sprite1.lastLocation.y);
     gl.uniform2f(advectionShader.uniforms.spriteCenter, sprite1.location.x, sprite1.location.y);
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
