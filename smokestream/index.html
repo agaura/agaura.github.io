@@ -43,11 +43,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1687893921.css">
+  <link rel="stylesheet" href="/minima.1687987292.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1687893921.js"></script>
+  <script defer type="text/javascript" src="/minima.1687987292.js"></script>
 </head>
 <script>
   
@@ -2984,13 +2984,8 @@ function initializeSprite(location, velocity, velocityPreference, direction, sta
         'velocityPreference': velocityPreference ? velocityPreference : Math.random(),
         'direction': direction ? direction : 2.0 * Math.random() * Math.PI,
         'start': start ? start : Math.random(),
-        'limits': limits ? limits : initializeCoord()
-    }
-    sprite = {...sprite,...{
-        'lastLocation': sprite.location
-        }
-    }
-    sprite = {...sprite,...{
+        'limits': limits ? limits : initializeCoord(),
+        'lastLocation': undefined,
         'update': function() {
             this.lastLocation = this.location,
             this.location = initializeCoord(
@@ -3000,7 +2995,6 @@ function initializeSprite(location, velocity, velocityPreference, direction, sta
             this.direction = (Math.pow(Math.random() * 2.0 - 1.0, 51.0) * Math.PI + this.direction) // very fly-like, in a bad way lol
             }
         }
-    }
     return sprite;
 }
 
