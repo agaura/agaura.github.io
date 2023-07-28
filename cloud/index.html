@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta property="og:title" content="OKLab Point Cloud" />
-<meta property="og:description" content="Here is a point cloud for exploring the OKLab color space. The vertical dimension has been slightly squished in order to make the proportions more square. Use the sliders to change the focus.
+<meta property="og:description" content="Here is a point cloud for exploring the OKLab color space. Use the sliders to change the focus, and feel free to interact with the gamut space itself, it can be rotated by clicking and dragging on it.
       
        
 // Copyright(c) 2021 Björn Ottosson // // Permission is hereby granted, free of charge, to any person obtaining a copy of // this softwareand associated documentation files(the &#34;" />
@@ -16,7 +16,7 @@
 
   <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="OKLab Point Cloud"/>
-<meta name="twitter:description" content="Here is a point cloud for exploring the OKLab color space. The vertical dimension has been slightly squished in order to make the proportions more square. Use the sliders to change the focus.
+<meta name="twitter:description" content="Here is a point cloud for exploring the OKLab color space. Use the sliders to change the focus, and feel free to interact with the gamut space itself, it can be rotated by clicking and dragging on it.
       
        
 // Copyright(c) 2021 Björn Ottosson // // Permission is hereby granted, free of charge, to any person obtaining a copy of // this softwareand associated documentation files(the &#34;"/>
@@ -49,11 +49,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1690564530.css">
+  <link rel="stylesheet" href="/minima.1690564959.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1690564530.js"></script>
+  <script defer type="text/javascript" src="/minima.1690564959.js"></script>
 </head>
 <script>
   
@@ -114,7 +114,7 @@ if (!doNotTrack) {
 <main>
 	<p></p>
 	<article class="md">
-		<p>  Here is a point cloud for exploring the OKLab color space. The vertical dimension has been slightly squished in order to make the proportions more square. Use the sliders to change the focus.</p>
+		<p>  Here is a point cloud for exploring the OKLab color space. Use the sliders to change the focus, and feel free to interact with the gamut space itself, it can be rotated by clicking and dragging on it.</p>
 <script src="https://d3js.org/d3.v6.min.js"></script>
 <script src="https://unpkg.com/d3-simple-slider"></script>
 <div id ="div" align="center" onmouseover="this.style.cursor='pointer';" style="touch-action: none"><canvas text-align='center' id="canvas"></canvas></div>
@@ -1327,6 +1327,7 @@ vec3 RGB2Lab(vec3 rgb){
 	d3.select(window).on('resize.updatesvg', updateWindow);
 
 </script>
+<p>  Note: the vertical dimension has been slightly squished in order to make the space more proportional and appear fuller.</p>
 
 	</article>
 </main>

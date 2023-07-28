@@ -14,7 +14,7 @@
       <pubDate>Wed, 26 Jul 2023 11:26:07 -0400</pubDate>
       
       <guid>https://agaura.github.io/cloud/</guid>
-      <description>Here is a point cloud for exploring the OKLab color space. The vertical dimension has been slightly squished in order to make the proportions more square. Use the sliders to change the focus.
+      <description>Here is a point cloud for exploring the OKLab color space. Use the sliders to change the focus, and feel free to interact with the gamut space itself, it can be rotated by clicking and dragging on it.
       
        
 // Copyright(c) 2021 Björn Ottosson // // Permission is hereby granted, free of charge, to any person obtaining a copy of // this softwareand associated documentation files(the &#34;</description>
