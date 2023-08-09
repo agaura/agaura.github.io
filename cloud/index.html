@@ -43,11 +43,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1691549120.css">
+  <link rel="stylesheet" href="/minima.1691605102.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1691549120.js"></script>
+  <script defer type="text/javascript" src="/minima.1691605102.js"></script>
 </head>
 <script>
   
@@ -111,14 +111,26 @@ if (!doNotTrack) {
 		<p>  Here is a point cloud containing $2^{15}$ shades of color for exploring the Oklab color space,<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> one of the most successful color models for displaying perceptual uniformity. In other words, it comes close to achieving the property where physical distances between colors in the point cloud match very closely with how different those colors feel to an average observer. Use the sliders to change the focus, and feel free to interact with the color space itself, it can be rotated by clicking and dragging on it.</p>
 <script src="https://d3js.org/d3.v6.min.js"></script>
 <script src="https://unpkg.com/d3-simple-slider"></script>
+<div align="center"/> View:
+<div align="center" id='radiobtn'>
+<br>
+<input type="radio" id="order" name="mode" value="0">
+<label for="0">Order</label>
+<input type="radio" id="flow" name="mode" value="1" checked="checked">
+<label for="1">Inner Flow</label>
+<input type="radio" id="edge" name="mode" value="2">
+<label for="2">Edgy Flow</label>
+</div>
 <div id ="div" align="center" onmouseover="this.style.cursor='pointer';" style="touch-action: none"><canvas text-align='center' id="canvas"></canvas></div>
 <div align="center" id="sliders"></div>
 <div align="center" id='radiobtn'>
 <br>
-<input type="checkbox" id="isolate" name="isolate" value="0">
+<input type="checkbox" id="isolate" name="isolate" >
 <label for="0">Isolate Focus</label>
-<input type="checkbox" id="truecloud" name="truecloud" value="1">
+<input type="checkbox" id="truecloud" name="truecloud" >
 <label for="1">True Cloud</label>
+<input type="checkbox" id="verticallock" name="verticallock" checked="checked">
+<label for="1">Vertical Rotation Lock</label>
 </div>
 <svg id = "hue" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
     <linearGradient id="Gradient2" x1="0" x2="0" y1="0" y2="1">
@@ -1059,6 +1071,8 @@ vec3 RGB2Lab(vec3 rgb){
     uniform float time;
     uniform bool isolate;
     uniform bool truecloud;
+    uniform bool order;
+    uniform bool edge;
 
     vec3 convert(vec3 shade, int label) {
         if (label == 0) {return shade-vec3(.5,.5,.5);}
@@ -1069,7 +1083,50 @@ vec3 RGB2Lab(vec3 rgb){
 
     void main() {
         //color = pow(position.xyz, vec3(2.5)); // pow allows there to be more black
-        color = pow(position.xyz, vec3(1.25)); // pow allows there to be more black
+
+        /*
+        float r1 = rand(vec2(rand(vec2(position.x*37.9,position.y*100. + 2.13*time)) * 36.7 + 1.*time, position.y * 56.5 + 3.95*time));
+        float r2 = rand(vec2((position.x + 32.1) * 100. + .23*time, (position.z + 22.1) * 3.534 + 1.09*time + r1 * 50.));
+        float r3 = rand(vec2((position.y + 3.4) * 200.1 + 1.78*time, (position.z + 6.9) * 15.5 + 300.13*time + r2 * 31.5 + r1));
+
+        r1 = rand(vec2((r1 +1.)*59.8 + (r2+1.)*7.9, time));
+        r2 = rand(vec2(position.y * r3 * 13.4 + 37.1*time, r2 * 12.9 + 0.12*time));
+        r3 = rand(vec2(r1 * 20., r2 + 0.85*time));
+
+        r1 = rand(vec2(position.x * r2 * 30. + 100.9*time, r1 * 50. + 0.31*time));
+        r2 = rand(vec2(r1 * 30.1, r3 + 0.9*time));
+        r3 = rand(vec2((r1 +1.)*90.1 + (r3+1.)*57.9, (r2 +1.)*time + (r3+1.)*9.1));
+
+        r1 = rand(vec2(r2 * 27., r3 * 2. + 1.12*time));
+        r2 = rand(vec2((r2 +1.)*time + (r3+1.)*9.1, 0.91*time + 27.6));
+        r3 = rand(vec2(position.z * r3 * 59.8 + 237.9*time, r1 * 1. + 0.53 * time));
+
+        r1 = sin((1.0 + r1) * (time) * 100000000. + rand(vec2(position.x * 100., position.x * 179.5)));
+        r2 = sin((1.0 + r2) * (time) * 100000000. + rand(vec2(position.y * 100., position.y * 179.5)));
+        r3 = sin((1.0 + r3) * (time) * 100000000. + rand(vec2(position.z * 100., position.z * 179.5))); */
+
+        float r1 = rand(vec2(position.x * 1502.13, position.y * 232.82 + position.z * 800.1));
+        float r2 = rand(vec2(position.y * 545.36, position.z * 646.2 + r1 * 250.));
+        float r3 = rand(vec2(position.x * 1408.33, position.z * 257.9 + r2 * 630.));
+
+        float speed = 1./500.;
+
+        float p1 = ((0.5 + 1.5 * r1) * sin((0.5 + 1.5 * r2) * time * speed + 150.*rand(vec2(position.x * 100.2 + 50. * r1, position.y * 17.6))) / 2. + 1.0) / 2.;
+        float p2 = ((0.5 + 1.5 * r2) * sin((0.5 + 1.5 * r3) * time * speed + 276.*rand(vec2(position.y * 256.4 + 67.8 * r2, position.z * 179.5))) / 2. + 1.0) / 2.;
+        float p3 = ((0.5 + 1.5 * r3) * sin((0.5 + 1.5 * r1) * time * speed + 2039.*rand(vec2(position.z * 98.3 + 98. * r3, position.x * 290.5))) / 2. + 1.0) / 2.;
+
+        if (edge) {
+            speed = 1./10000.;
+
+            p1 = (2. * sin((0.5 + 1.5 * r2) * time * speed + 150.*rand(vec2(position.x * 100.2 + 50. * r1, position.y * 17.6))) / 2. + 1.0) / 2.;
+            p2 = (2. * sin((0.5 + 1.5 * r3) * time * speed + 276.*rand(vec2(position.y * 256.4 + 67.8 * r2, position.z * 179.5))) / 2. + 1.0) / 2.;
+            p3 = (2. * sin((0.5 + 1.5 * r1) * time * speed + 2039.*rand(vec2(position.z * 98.3 + 98. * r3, position.x * 290.5))) / 2. + 1.0) / 2.;
+        }
+
+        float deviation = 1./16.;
+        if (edge) deviation = 1.;
+        if (!order) color = pow(position.xyz * (1.0 - deviation) + (deviation / 2.) + deviation * (vec3(p1,p2,p3) - 0.5), vec3(1.25)); // pow allows there to be more black
+        else color = pow(position.xyz, vec3(1.25));
         //color = position.xyz;
 
         vec3 newIdeal = ideal;
@@ -1079,23 +1136,18 @@ vec3 RGB2Lab(vec3 rgb){
         }
 
         float dist = clamp(distance(srgb_to_oklab(color),srgb_to_oklab(okhsl_to_srgb(newIdeal))),0.0,1.0);
-        gl_PointSize = (pow(1. - dist, focus * 40.0)) * (30. - 26. * (1.0 - focus)) + 1.;
+        gl_PointSize = (pow(1. - dist, focus * 40.0)) * (30. - 20. * (1.0 - focus)) + 1.;
 
         vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
 
         vec4 newPosition = vec4(convert(color,3), 1.0);
         //newPosition = newPosition.zxyw * vec4(1.,2.0,1.,1.0);
-        if (truecloud) newPosition = newPosition.zxyw * vec4(vec3(3.),1.);
+        if (truecloud) newPosition = newPosition.zxyw * vec4(vec3(2.8),1.);
         else newPosition = newPosition.zxyw * vec4(vec3(3.7,2.5,3.7),1.);
 
-        // removes moire effects, causes shifts with time
-        newPosition.x += 0.2 * rand(vec2((newPosition.x + 7.9) * (newPosition.z + 5.5) * 36.7 + 1.*time, (newPosition.y + 2.4) * 56.5 + 1.*time));
-        newPosition.y += 0.2 * rand(vec2((newPosition.x + 32.1) * 100. + 1.*time, (newPosition.z + 22.1) * 3.534 + 1.*time));
-        newPosition.z += 0.2 * rand(vec2((newPosition.y + 3.4) * 200.1 + 1.*time, (newPosition.z + 6.9) * 15.5 + 1.*time));
-
-        newPosition.x -= 0.09;
-        newPosition.y -= 0.25;
-        newPosition.z -= 0.11;
+        newPosition.x -= 0.0;
+        newPosition.y -= 0.1;
+        newPosition.z -= 0.0;
 
         //vec3 okcolor = srgb_to_okhsl(color);
         float alpha = pow(clamp(1.0 - dist * focus, 0.5, 1.0),3.0);
@@ -1138,8 +1190,8 @@ vec3 RGB2Lab(vec3 rgb){
 <script type="module">
     import * as THREE from 'https://cdn.skypack.dev/three@0.147.0';
 
-    const height = Math.min(480, 0.75 * screen.availWidth);
-    const width = height;
+    var height = Math.min(480, 0.75 * screen.availWidth);
+    var width = height;
 
     const scene = new THREE.Scene();
     const camera = new THREE.OrthographicCamera( 2 / - 2, 2 / 2, 2 / 2, 2 / - 2, 0, 1000 );
@@ -1173,6 +1225,8 @@ vec3 RGB2Lab(vec3 rgb){
             time: { value: .0 },
             isolate: { value: 0. },
             truecloud: {value: 0.},
+            order: {value: 0.},
+            edge: {value: 0.},
             focus: { value: .5 }
         }
     });
@@ -1258,8 +1312,10 @@ vec3 RGB2Lab(vec3 rgb){
             points.rotation.y += deltaX * 0.01;
             //points.rotation.x += deltaY * 0.01;
             //if (Math.abs(points.rotation.x) < maxVerticalOrientation) points.rotation.x += deltaY * 0.01;
-            if (deltaY * points.rotation.x < 0.) points.rotation.x += deltaY * 0.01;
-            else points.rotation.x += deltaY * 0.01 * (maxVerticalOrientation - Math.abs(points.rotation.x));
+            if (!document.getElementById("verticallock").checked) {
+                if (deltaY * points.rotation.x < 0.) points.rotation.x += deltaY * 0.01;
+                else points.rotation.x += deltaY * 0.01 * (maxVerticalOrientation - Math.abs(points.rotation.x));
+            }
         }, false);
 
     document.addEventListener('pointerup', function (event) {
@@ -1286,8 +1342,10 @@ vec3 RGB2Lab(vec3 rgb){
         if (events != 0){
             points.rotation.y += totalX / events * 0.01;
             //points.rotation.x += totalY / events * 0.01;
-            if (totalY / events * points.rotation.x < 0.) points.rotation.x += totalY / events * 0.01;
-            else points.rotation.x += totalY / events * 0.01 * (maxVerticalOrientation - Math.abs(points.rotation.x));
+            if (!document.getElementById("verticallock").checked) {
+                if (totalY / events * points.rotation.x < 0.) points.rotation.x += totalY / events * 0.01;
+                else points.rotation.x += totalY / events * 0.01 * (maxVerticalOrientation - Math.abs(points.rotation.x));
+            }
         }
         totalX = totalX * 0.966;
         totalY = totalY * 0.966;
@@ -1299,9 +1357,11 @@ vec3 RGB2Lab(vec3 rgb){
 
     function animate(time) {
         requestAnimationFrame(animate);
-        points.material.uniforms.time.value = time / 100000000;
+        points.material.uniforms.time.value = time;
         points.material.uniforms.isolate.value = document.getElementById("isolate").checked;
         points.material.uniforms.truecloud.value = document.getElementById("truecloud").checked;
+        points.material.uniforms.order.value = document.getElementById("order").checked;
+        points.material.uniforms.edge.value = document.getElementById("edge").checked;
         renderer.render(scene, camera);
     }
     animate();
@@ -1352,11 +1412,37 @@ vec3 RGB2Lab(vec3 rgb){
     makeSlider(0.5, "foc", [0.0,1.0], val => {points.material.uniforms.focus.value = val;});
 
     function updateWindow(){
-        const maxHeight = Math.min(300, screen.availHeight - 450);
-		const maxWidth = Math.min(maxHeight, 0.75 * screen.width);
+        height = Math.min(480, 0.75 * screen.availWidth);
+        width = height;
 		renderer.setSize(Math.min(maxHeight, maxWidth), Math.min(maxHeight, maxWidth));
 	}
 	d3.select(window).on('resize.updatesvg', updateWindow);
+
+    function keySwitch() {
+    switch(event.keyCode) {
+        case 79: 
+            document.getElementById("order").checked = true
+            break
+        case 73: 
+            document.getElementById("flow").checked = true
+            break
+        case 69: 
+            document.getElementById("edge").checked = true
+            break
+        case 70: 
+            document.getElementById("isolate").checked = !document.getElementById("isolate").checked
+            break
+        case 84: 
+            document.getElementById("truecloud").checked = !document.getElementById("truecloud").checked
+            break
+        case 86: 
+            document.getElementById("verticallock").checked = !document.getElementById("verticallock").checked
+            break
+
+        }
+    }
+
+    window.addEventListener('keydown', keySwitch);
 
 </script>
 <p>  Note: The &ldquo;True Cloud&rdquo; option is unchecked by default to make exploring the space easier, as the vertical dimension is squished to about 68% the size of the other two dimensions in order to make the space more boxy and appear fuller. In addition, the points also desaturate faster than they should when going towards the center, in effect overrepresenting grayer shades, which is done in order to make the grays more visible. Checking the &ldquo;True Cloud&rdquo; option turns it back into a faithful representation of Oklab.</p>
