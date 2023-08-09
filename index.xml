@@ -9,15 +9,12 @@
     <copyright>TH ↔ Þ</copyright>
     <lastBuildDate>Wed, 15 Mar 2023 15:58:16 -0400</lastBuildDate><atom:link href="https://agaura.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>OKLab Point Cloud</title>
+      <title>Oklab Point Cloud</title>
       <link>https://agaura.github.io/cloud/</link>
       <pubDate>Wed, 26 Jul 2023 11:26:07 -0400</pubDate>
       
       <guid>https://agaura.github.io/cloud/</guid>
-      <description>Here is a point cloud for exploring the OKLab color space. Use the sliders to change the focus, and feel free to interact with the gamut space itself, it can be rotated by clicking and dragging on it.
-      
-       
-// Copyright(c) 2021 Björn Ottosson // // Permission is hereby granted, free of charge, to any person obtaining a copy of // this softwareand associated documentation files(the &#34;</description>
+      <description>Here is a point cloud containing $2^{15}$ shades of color for exploring the Oklab color space,1 one of the most successful color models for displaying perceptual uniformity. In other words, it comes close to achieving the property where physical distances between colors in the point cloud match very closely with how different those colors feel to an average observer. Use the sliders to change the focus, and feel free to interact with the color space itself, it can be rotated by clicking and dragging on it.</description>
     </item>
     
     <item>

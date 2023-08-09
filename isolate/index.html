@@ -45,11 +45,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1690564959.css">
+  <link rel="stylesheet" href="/minima.1691549120.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1690564959.js"></script>
+  <script defer type="text/javascript" src="/minima.1691549120.js"></script>
 </head>
 <script>
   
@@ -656,6 +656,11 @@ float dither( float v, float r, float antiRad, float lim) {
     }
     return mix(lowerBound, upperBound, r);
 }
+float ditherSat( float v, float r, float antiRad) {
+    float lowerBound = max(-1., v - 2.*antiRad);
+    float upperBound = min(lowerBound + 2.0 * antiRad, 1.0);
+    return mix(lowerBound, upperBound, r);
+}
 uniform sampler2D u_image;
 uniform float time;
 uniform vec2 res;
@@ -701,9 +706,14 @@ out vec4 outColor;void main()
     //vec3 col = okhsl_to_srgb(vec3(ditherHue(((hsl.z > 0.85) || (hsl.z < 0.15)) ? 0.0 : hsl.x, r1, rand(vec2(r1, r2 * r3 * 100.0)), 0.5 - hue / 2.0),
     //   dither(((hsl.z > 0.85) || (hsl.z < 0.15)) ? 0.0 : hsl.y, r2, 1.0 - sat, 0.0),
     //   dither(hsl.z, r3, 1.0 - lum, lim)));
-	vec3 col = okhsl_to_srgb(vec3(ditherHue(hsl.x, r1, rand(vec2(r1, r2 * r3 * 100.0)), rand(vec2(r3 * 10.0, time)), 0.5 - hue / 2.0, ts),
-       dither(hsl.y, r2, 1.0 - sat, 0.0),
-       dither(hsl.z, r3, 1.0 - lum, lim)));
+	vec3 newcol = vec3(ditherHue(hsl.x, r1, rand(vec2(r1, r2 * r3 * 100.0)), rand(vec2(r3 * 10.0, time)), 0.5 - hue / 2.0, ts),
+       ditherSat(hsl.y, r2, 1.0 - sat),
+       dither(hsl.z, r3, 1.0 - lum, lim));
+	if (newcol.y < 0.) {
+		newcol.x += 0.5;
+		newcol.y = -newcol.y;
+	}
+	vec3 col = okhsl_to_srgb(newcol);
 	outColor = vec4(col, 1.0);
 	//vec4 almost = vec4(col,min(1.0,(pow(0.5,64.0) - (pow(abs(0.5 - v_texCoord.x),64.0) + pow(abs(0.5 - v_texCoord.y),64.0)))/pow(0.5,64.0)));
 	//outColor = almost.a * vec4(almost.rgb, 1.0); // see https://stackoverflow.com/questions/39341564/webgl-how-to-correctly-blend-alpha-channel-png for why I did this, I get issues with safari otherwise

@@ -3,11 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta property="og:title" content="OKLab Point Cloud" />
-<meta property="og:description" content="Here is a point cloud for exploring the OKLab color space. Use the sliders to change the focus, and feel free to interact with the gamut space itself, it can be rotated by clicking and dragging on it.
-      
-       
-// Copyright(c) 2021 Björn Ottosson // // Permission is hereby granted, free of charge, to any person obtaining a copy of // this softwareand associated documentation files(the &#34;" />
+  <meta property="og:title" content="Oklab Point Cloud" />
+<meta property="og:description" content="Here is a point cloud containing $2^{15}$ shades of color for exploring the Oklab color space,1 one of the most successful color models for displaying perceptual uniformity. In other words, it comes close to achieving the property where physical distances between colors in the point cloud match very closely with how different those colors feel to an average observer. Use the sliders to change the focus, and feel free to interact with the color space itself, it can be rotated by clicking and dragging on it." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://agaura.github.io/cloud/" /><meta property="article:section" content="" />
 <meta property="article:published_time" content="2023-07-26T11:26:07-04:00" />
@@ -15,11 +12,8 @@
 
 
   <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="OKLab Point Cloud"/>
-<meta name="twitter:description" content="Here is a point cloud for exploring the OKLab color space. Use the sliders to change the focus, and feel free to interact with the gamut space itself, it can be rotated by clicking and dragging on it.
-      
-       
-// Copyright(c) 2021 Björn Ottosson // // Permission is hereby granted, free of charge, to any person obtaining a copy of // this softwareand associated documentation files(the &#34;"/>
+<meta name="twitter:title" content="Oklab Point Cloud"/>
+<meta name="twitter:description" content="Here is a point cloud containing $2^{15}$ shades of color for exploring the Oklab color space,1 one of the most successful color models for displaying perceptual uniformity. In other words, it comes close to achieving the property where physical distances between colors in the point cloud match very closely with how different those colors feel to an average observer. Use the sliders to change the focus, and feel free to interact with the color space itself, it can be rotated by clicking and dragging on it."/>
 
   
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-BBWS173BMQ"></script>
@@ -37,7 +31,7 @@ if (!doNotTrack) {
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#262d33">
   <title>
     
-    Alexander Gaura - OKLab Point Cloud
+    Alexander Gaura - Oklab Point Cloud
     
   </title>
   
@@ -49,11 +43,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1690564959.css">
+  <link rel="stylesheet" href="/minima.1691549120.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1690564959.js"></script>
+  <script defer type="text/javascript" src="/minima.1691549120.js"></script>
 </head>
 <script>
   
@@ -101,7 +95,7 @@ if (!doNotTrack) {
   
   
 
-<h1 class="mt-6 mb-6" style="color: #456bc4;">OKLab Point Cloud</h1>
+<h1 class="mt-6 mb-6" style="color: #456bc4;">Oklab Point Cloud</h1>
 <div class="mb-3 text-xs flex justify-between sm:flex-col">
 	<div>
 	
@@ -114,11 +108,18 @@ if (!doNotTrack) {
 <main>
 	<p></p>
 	<article class="md">
-		<p>  Here is a point cloud for exploring the OKLab color space. Use the sliders to change the focus, and feel free to interact with the gamut space itself, it can be rotated by clicking and dragging on it.</p>
+		<p>  Here is a point cloud containing $2^{15}$ shades of color for exploring the Oklab color space,<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> one of the most successful color models for displaying perceptual uniformity. In other words, it comes close to achieving the property where physical distances between colors in the point cloud match very closely with how different those colors feel to an average observer. Use the sliders to change the focus, and feel free to interact with the color space itself, it can be rotated by clicking and dragging on it.</p>
 <script src="https://d3js.org/d3.v6.min.js"></script>
 <script src="https://unpkg.com/d3-simple-slider"></script>
 <div id ="div" align="center" onmouseover="this.style.cursor='pointer';" style="touch-action: none"><canvas text-align='center' id="canvas"></canvas></div>
 <div align="center" id="sliders"></div>
+<div align="center" id='radiobtn'>
+<br>
+<input type="checkbox" id="isolate" name="isolate" value="0">
+<label for="0">Isolate Focus</label>
+<input type="checkbox" id="truecloud" name="truecloud" value="1">
+<label for="1">True Cloud</label>
+</div>
 <svg id = "hue" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
     <linearGradient id="Gradient2" x1="0" x2="0" y1="0" y2="1">
         <stop offset="0%" stop-color="#d60071b0" />
@@ -1055,6 +1056,9 @@ vec3 RGB2Lab(vec3 rgb){
     uniform int label;
     uniform vec3 ideal;
     uniform float focus;
+    uniform float time;
+    uniform bool isolate;
+    uniform bool truecloud;
 
     vec3 convert(vec3 shade, int label) {
         if (label == 0) {return shade-vec3(.5,.5,.5);}
@@ -1068,23 +1072,35 @@ vec3 RGB2Lab(vec3 rgb){
         color = pow(position.xyz, vec3(1.25)); // pow allows there to be more black
         //color = position.xyz;
 
-        float dist = clamp(distance(srgb_to_oklab(color),srgb_to_oklab(okhsl_to_srgb(ideal))),0.0,1.0);
-        gl_PointSize = (pow(1. - dist, focus * 40.0)) * (30. - 29. * (1.0 - focus)) + 1.;
+        vec3 newIdeal = ideal;
+        if (ideal.y < 0.) {
+            newIdeal.x += 0.5;
+            newIdeal.y = -newIdeal.y;
+        }
+
+        float dist = clamp(distance(srgb_to_oklab(color),srgb_to_oklab(okhsl_to_srgb(newIdeal))),0.0,1.0);
+        gl_PointSize = (pow(1. - dist, focus * 40.0)) * (30. - 26. * (1.0 - focus)) + 1.;
 
         vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
 
         vec4 newPosition = vec4(convert(color,3), 1.0);
         //newPosition = newPosition.zxyw * vec4(1.,2.0,1.,1.0);
-        newPosition = newPosition.zxyw * vec4(vec3(3.5,2.7,3.5),1.);
+        if (truecloud) newPosition = newPosition.zxyw * vec4(vec3(3.),1.);
+        else newPosition = newPosition.zxyw * vec4(vec3(3.7,2.5,3.7),1.);
 
-        // removes moire effects
-        newPosition.x += 0.2 * rand(vec2(newPosition.x * newPosition.z * 36.7, newPosition.y * 56.5));
-        newPosition.y += 0.2 * rand(vec2(newPosition.x * 100., newPosition.z * 3.534));
-        newPosition.z += 0.2 * rand(vec2(newPosition.y * 200.1, newPosition.z * 15.5));
+        // removes moire effects, causes shifts with time
+        newPosition.x += 0.2 * rand(vec2((newPosition.x + 7.9) * (newPosition.z + 5.5) * 36.7 + 1.*time, (newPosition.y + 2.4) * 56.5 + 1.*time));
+        newPosition.y += 0.2 * rand(vec2((newPosition.x + 32.1) * 100. + 1.*time, (newPosition.z + 22.1) * 3.534 + 1.*time));
+        newPosition.z += 0.2 * rand(vec2((newPosition.y + 3.4) * 200.1 + 1.*time, (newPosition.z + 6.9) * 15.5 + 1.*time));
 
         newPosition.x -= 0.09;
         newPosition.y -= 0.25;
         newPosition.z -= 0.11;
+
+        //vec3 okcolor = srgb_to_okhsl(color);
+        float alpha = pow(clamp(1.0 - dist * focus, 0.5, 1.0),3.0);
+        if (isolate) if (alpha < 0.85) newPosition = vec4(0.);
+        //if (isolate) if ((alpha < 0.9) && (okcolor.y < 0.7)) newPosition = vec4(0.);
 
         gl_Position = projectionMatrix * modelViewMatrix * newPosition;
     }
@@ -1093,27 +1109,37 @@ vec3 RGB2Lab(vec3 rgb){
     varying vec3 color;
     uniform vec3 ideal;
     uniform float focus;
+    uniform bool isolate;
+    uniform bool truecloud;
 
     void main() {
+
+        vec3 newIdeal = ideal;
+        if (ideal.y < 0.) {
+            newIdeal.x += 0.5;
+            newIdeal.y = -newIdeal.y;
+        }
         
-        float dist = clamp(distance(srgb_to_oklab(color),srgb_to_oklab(okhsl_to_srgb(ideal))),0.0,1.0);
+        float dist = clamp(distance(srgb_to_oklab(color),srgb_to_oklab(okhsl_to_srgb(newIdeal))),0.0,1.0);
         float alpha = pow(clamp(1.0 - dist * focus, 0.5, 1.0),3.0);
         //float alpha = pow(clamp(1.0 - dist * focus, 0.9*pow(ideal.z,0.5), 1.0),4.0);
         //alpha = 1.;
 
-        vec3 temp = srgb_to_okhsl(color);
-        temp.y = pow(temp.y,1.75); // desaturates colors, making gray easier to see
-        vec3 new_color = okhsl_to_srgb(temp);
+        vec3 okcolor = srgb_to_okhsl(color);
+        if (!truecloud) okcolor.y = pow(okcolor.y,1.75); // desaturates colors, making gray easier to see
+        vec3 new_color = okhsl_to_srgb(okcolor);
 
         gl_FragColor.rgb = new_color * alpha;
         gl_FragColor.a = alpha;
+        if (isolate) if (alpha < 0.85) gl_FragColor.a = 0.0;
+        //if (isolate) if ((alpha < 0.9) && (okcolor.y < 0.7)) gl_FragColor.a = 0.0;
     }
 </script>
 <script type="module">
     import * as THREE from 'https://cdn.skypack.dev/three@0.147.0';
 
-    const height = Math.min(300, screen.availHeight - 450);
-    const width = Math.min(height, 0.75 * screen.width);
+    const height = Math.min(480, 0.75 * screen.availWidth);
+    const width = height;
 
     const scene = new THREE.Scene();
     const camera = new THREE.OrthographicCamera( 2 / - 2, 2 / 2, 2 / 2, 2 / - 2, 0, 1000 );
@@ -1144,13 +1170,16 @@ vec3 RGB2Lab(vec3 rgb){
                 type: "3f",
                 value: new THREE.Vector3(0, 1., 0.5)
             },
+            time: { value: .0 },
+            isolate: { value: 0. },
+            truecloud: {value: 0.},
             focus: { value: .5 }
         }
     });
 
-    const cube_height = 25
-    const cube_width = 25
-    const cube_depth = 25
+    const cube_height = 32
+    const cube_width = cube_height
+    const cube_depth = cube_height
 
     const geometry = new THREE.BufferGeometry();
     const positions = [];
@@ -1268,18 +1297,21 @@ vec3 RGB2Lab(vec3 rgb){
         }
     }
 
-    function animate() {
+    function animate(time) {
         requestAnimationFrame(animate);
+        points.material.uniforms.time.value = time / 100000000;
+        points.material.uniforms.isolate.value = document.getElementById("isolate").checked;
+        points.material.uniforms.truecloud.value = document.getElementById("truecloud").checked;
         renderer.render(scene, camera);
     }
     animate();
 
-    function makeSlider(def, icon, func) {
+    function makeSlider(def, icon, range, func) {
         var svgIcon = d3.select('svg#' + icon)
         var sliderFill = d3
             .sliderBottom()
-            .min(d3.min([0,1.0]))
-            .max(d3.max([0,1.0]))
+            .min(d3.min(range))
+            .max(d3.max(range))
             .width(Math.min(300,screen.width*0.55))
             .tickFormat(d3.format('.0%'))
             .ticks(5)
@@ -1307,17 +1339,17 @@ vec3 RGB2Lab(vec3 rgb){
 
     var colorFocus = [0,1.0,0.5]
 
-    makeSlider(0.0, "hue", val => {
+    makeSlider(0.0, "hue", [0.0,1.0], val => {
         colorFocus = [val, colorFocus[1], colorFocus[2]]
         points.material.uniforms.ideal.value = new THREE.Vector3(colorFocus[0], colorFocus[1], colorFocus[2]);});
         
-    makeSlider(1.0, "sat", val => {
+    makeSlider(1.0, "sat", [-1.0,1.0], val => {
         colorFocus = [colorFocus[0], val, colorFocus[2]]
         points.material.uniforms.ideal.value = new THREE.Vector3(colorFocus[0], colorFocus[1], colorFocus[2]);});
-    makeSlider(0.5, "val", val => {
+    makeSlider(0.5, "val", [0.0,1.0], val => {
         colorFocus = [colorFocus[0], colorFocus[1], val]
         points.material.uniforms.ideal.value = new THREE.Vector3(colorFocus[0], colorFocus[1], colorFocus[2]);});
-    makeSlider(0.5, "foc", val => {points.material.uniforms.focus.value = val;});
+    makeSlider(0.5, "foc", [0.0,1.0], val => {points.material.uniforms.focus.value = val;});
 
     function updateWindow(){
         const maxHeight = Math.min(300, screen.availHeight - 450);
@@ -1327,7 +1359,15 @@ vec3 RGB2Lab(vec3 rgb){
 	d3.select(window).on('resize.updatesvg', updateWindow);
 
 </script>
-<p>  Note: the vertical dimension has been slightly squished in order to make the space more proportional and appear fuller.</p>
+<p>  Note: The &ldquo;True Cloud&rdquo; option is unchecked by default to make exploring the space easier, as the vertical dimension is squished to about 68% the size of the other two dimensions in order to make the space more boxy and appear fuller. In addition, the points also desaturate faster than they should when going towards the center, in effect overrepresenting grayer shades, which is done in order to make the grays more visible. Checking the &ldquo;True Cloud&rdquo; option turns it back into a faithful representation of Oklab.</p>
+<section class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1" role="doc-endnote">
+<p>Björn Ottosson, <a href="https://bottosson.github.io/posts/oklab/">A perceptual color space for image processing</a>&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</section>
 
 	</article>
 </main>
@@ -1372,6 +1412,30 @@ vec3 RGB2Lab(vec3 rgb){
   </p>
 </footer>
 
-  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css"
+  integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"
+  integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp" crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"
+  integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous"></script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    renderMathInElement(document.body, {
+      
+      
+      delimiters: [
+        { left: '$$', right: '$$', display: true },
+        { left: '$', right: '$', display: false },
+        { left: '\\(', right: '\\)', display: false },
+        { left: '\\[', right: '\\]', display: true }
+      ],
+      
+      throwOnError: false
+    });
+  });
+</script>
 </body>
 </html>
