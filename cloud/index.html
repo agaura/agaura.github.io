@@ -43,11 +43,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1691605102.css">
+  <link rel="stylesheet" href="/minima.1691606835.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1691605102.js"></script>
+  <script defer type="text/javascript" src="/minima.1691606835.js"></script>
 </head>
 <script>
   
@@ -1082,28 +1082,6 @@ vec3 RGB2Lab(vec3 rgb){
     }
 
     void main() {
-        //color = pow(position.xyz, vec3(2.5)); // pow allows there to be more black
-
-        /*
-        float r1 = rand(vec2(rand(vec2(position.x*37.9,position.y*100. + 2.13*time)) * 36.7 + 1.*time, position.y * 56.5 + 3.95*time));
-        float r2 = rand(vec2((position.x + 32.1) * 100. + .23*time, (position.z + 22.1) * 3.534 + 1.09*time + r1 * 50.));
-        float r3 = rand(vec2((position.y + 3.4) * 200.1 + 1.78*time, (position.z + 6.9) * 15.5 + 300.13*time + r2 * 31.5 + r1));
-
-        r1 = rand(vec2((r1 +1.)*59.8 + (r2+1.)*7.9, time));
-        r2 = rand(vec2(position.y * r3 * 13.4 + 37.1*time, r2 * 12.9 + 0.12*time));
-        r3 = rand(vec2(r1 * 20., r2 + 0.85*time));
-
-        r1 = rand(vec2(position.x * r2 * 30. + 100.9*time, r1 * 50. + 0.31*time));
-        r2 = rand(vec2(r1 * 30.1, r3 + 0.9*time));
-        r3 = rand(vec2((r1 +1.)*90.1 + (r3+1.)*57.9, (r2 +1.)*time + (r3+1.)*9.1));
-
-        r1 = rand(vec2(r2 * 27., r3 * 2. + 1.12*time));
-        r2 = rand(vec2((r2 +1.)*time + (r3+1.)*9.1, 0.91*time + 27.6));
-        r3 = rand(vec2(position.z * r3 * 59.8 + 237.9*time, r1 * 1. + 0.53 * time));
-
-        r1 = sin((1.0 + r1) * (time) * 100000000. + rand(vec2(position.x * 100., position.x * 179.5)));
-        r2 = sin((1.0 + r2) * (time) * 100000000. + rand(vec2(position.y * 100., position.y * 179.5)));
-        r3 = sin((1.0 + r3) * (time) * 100000000. + rand(vec2(position.z * 100., position.z * 179.5))); */
 
         float r1 = rand(vec2(position.x * 1502.13, position.y * 232.82 + position.z * 800.1));
         float r2 = rand(vec2(position.y * 545.36, position.z * 646.2 + r1 * 250.));
@@ -1151,7 +1129,7 @@ vec3 RGB2Lab(vec3 rgb){
 
         //vec3 okcolor = srgb_to_okhsl(color);
         float alpha = pow(clamp(1.0 - dist * focus, 0.5, 1.0),3.0);
-        if (isolate) if (alpha < 0.85) newPosition = vec4(0.);
+        if (isolate) if (alpha < 0.85) newPosition = vec4(vec3(10.),0.0);
         //if (isolate) if ((alpha < 0.9) && (okcolor.y < 0.7)) newPosition = vec4(0.);
 
         gl_Position = projectionMatrix * modelViewMatrix * newPosition;
@@ -1181,9 +1159,9 @@ vec3 RGB2Lab(vec3 rgb){
         if (!truecloud) okcolor.y = pow(okcolor.y,1.75); // desaturates colors, making gray easier to see
         vec3 new_color = okhsl_to_srgb(okcolor);
 
+        if (isolate) if (alpha < 0.85) alpha = 0.0;
         gl_FragColor.rgb = new_color * alpha;
         gl_FragColor.a = alpha;
-        if (isolate) if (alpha < 0.85) gl_FragColor.a = 0.0;
         //if (isolate) if ((alpha < 0.9) && (okcolor.y < 0.7)) gl_FragColor.a = 0.0;
     }
 </script>
