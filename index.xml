@@ -9,12 +9,13 @@
     <copyright>TH ↔ Þ</copyright>
     <lastBuildDate>Wed, 15 Mar 2023 15:58:16 -0400</lastBuildDate><atom:link href="https://agaura.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Oklab Point Cloud</title>
+      <title>Color Space Point Cloud</title>
       <link>https://agaura.github.io/cloud/</link>
       <pubDate>Wed, 26 Jul 2023 11:26:07 -0400</pubDate>
       
       <guid>https://agaura.github.io/cloud/</guid>
-      <description>Here is a point cloud containing $2^{15}$ shades of color for exploring the Oklab color space,1 one of the most successful color models for displaying perceptual uniformity. In other words, it comes close to achieving the property where physical distances between colors in the point cloud match very closely with how different those colors feel to an average observer. Use the sliders to change the focus, and feel free to interact with the color space itself, it can be rotated by clicking and dragging on it.</description>
+      <description>Here is a point cloud containing $2^{15}$ particles for exploring the various color spaces, one of the most successful color models for displaying perceptual uniformity. Use the sliders to change the focus, and feel free to interact with the color space itself, it can be rotated by clicking and dragging on it.
+  View: Order  Mode: RGB XYZ CIELab OKLab CAM16-UCS    Isolate Focus True Cloud Vertical Rotation Lock  Color Blindness: Compact View  Trichromacy Protanopia Deuteranopia Tritanopia Achromatopsia</description>
     </item>
     
     <item>

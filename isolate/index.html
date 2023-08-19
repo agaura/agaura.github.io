@@ -45,11 +45,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1691606835.css">
+  <link rel="stylesheet" href="/minima.1692409411.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1691606835.js"></script>
+  <script defer type="text/javascript" src="/minima.1692409411.js"></script>
 </head>
 <script>
   
@@ -552,9 +552,11 @@ vec3 okhsv_to_srgb(vec3 hsv)
 	float L_vt = toe_inv(L_v);
 	float C_vt = C_v * L_vt / L_v;	float L_new = toe_inv(L);
 	C = C * L_new / L;
-	L = L_new;	vec3 rgb_scale = oklab_to_linear_srgb(vec3( L_vt, a_ * C_vt, b_ * C_vt ));
+	L = L_new;
+	vec3 rgb_scale = oklab_to_linear_srgb(vec3( L_vt, a_ * C_vt, b_ * C_vt ));
 	float scale_L = cbrt(1.f / max(max(rgb_scale.r, rgb_scale.g), max(rgb_scale.b, 0.f)));	L = L * scale_L;
-	C = C * scale_L;	vec3 rgb = oklab_to_linear_srgb(vec3( L, C * a_, C * b_ ));
+	C = C * scale_L;
+	vec3 rgb = oklab_to_linear_srgb(vec3( L, C * a_, C * b_ ));
 	return vec3(
 		srgb_transfer_function(rgb.r),
 		srgb_transfer_function(rgb.g),
@@ -713,6 +715,35 @@ out vec4 outColor;void main()
 		newcol.x += 0.5;
 		newcol.y = -newcol.y;
 	}
+
+// this is for testing properties of hue and lightness
+/*
+	if (lum < 0.01) {
+		if (uv.x < 0.5) newcol = vec3(hsl.z * 1.0, 0.75, 0.6);
+		else newcol = vec3(0.0, 0.0, hsl.z);
+
+		// rotating hue
+		newcol = mix(vec3(hsl.z * 1.0, 0.75, 0.6), vec3(0.0, 0.0, hsl.z), clamp(uv.x*1.5 - 0.25, 0.0,1.0));
+		newcol = vec3(hsl.z * 1.0, mix(0.75,0.0,clamp(uv.x*3. - 1., 0.0,1.0)), mix(0.6, hsl.z, clamp(uv.x*3. - 1., 0.0,1.0)));
+
+		// desaturating hue
+		newcol = vec3(0.8, mix(hsl.z * 2.0 - 1.,0.0,clamp(uv.x*3. - 1., 0.0,1.0)), mix(0.4, hsl.z, clamp(uv.x*1.5 - 0.25, 0.0,1.0)));
+		//newcol = vec3(0.8, mix(hsl.z,0.0,clamp(uv.x*3. - 1., 0.0,1.0)), mix(0.4, hsl.z, clamp(uv.x*1.5 - 0.25, 0.0,1.0)));
+
+		// limiting grayscale
+		newcol = vec3(0.8, mix(hsl.z * 2.0 - 1.,0.0,clamp(uv.x*3. - 1., 0.0,1.0)), mix(0.4, hsl.z * 0.2, clamp(uv.x*3. - 1., 0.0,1.0)));
+		//newcol = vec3(hsl.z * 1.0, mix(0.75,0.0,clamp(uv.x*3. - 1., 0.0,1.0)), mix(0.6, hsl.z *0.2, clamp(uv.x*3. - 1., 0.0,1.0)));
+		//newcol = vec3(hsl.z * 0.25, mix(0.75,0.0,clamp(uv.x*3. - 1., 0.0,1.0)), mix(0.6, hsl.z *0.2, clamp(uv.x*3. - 1., 0.0,1.0)));
+
+		newcol = vec3(hsl.z * 1.0, mix(0.75,0.0,clamp(uv.x*3. - 1., 0.0,1.0)), mix(0.6, hsl.z, clamp(uv.x*3. - 1., 0.0,1.0)));
+
+	}
+	*/
+
+
+
+
+
 	vec3 col = okhsl_to_srgb(newcol);
 	outColor = vec4(col, 1.0);
 	//vec4 almost = vec4(col,min(1.0,(pow(0.5,64.0) - (pow(abs(0.5 - v_texCoord.x),64.0) + pow(abs(0.5 - v_texCoord.y),64.0)))/pow(0.5,64.0)));

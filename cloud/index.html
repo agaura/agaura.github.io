@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta property="og:title" content="Oklab Point Cloud" />
-<meta property="og:description" content="Here is a point cloud containing $2^{15}$ shades of color for exploring the Oklab color space,1 one of the most successful color models for displaying perceptual uniformity. In other words, it comes close to achieving the property where physical distances between colors in the point cloud match very closely with how different those colors feel to an average observer. Use the sliders to change the focus, and feel free to interact with the color space itself, it can be rotated by clicking and dragging on it." />
+  <meta property="og:title" content="Color Space Point Cloud" />
+<meta property="og:description" content="Here is a point cloud containing $2^{15}$ particles for exploring the various color spaces, one of the most successful color models for displaying perceptual uniformity. Use the sliders to change the focus, and feel free to interact with the color space itself, it can be rotated by clicking and dragging on it.
+  View: Order  Mode: RGB XYZ CIELab OKLab CAM16-UCS    Isolate Focus True Cloud Vertical Rotation Lock  Color Blindness: Compact View  Trichromacy Protanopia Deuteranopia Tritanopia Achromatopsia" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://agaura.github.io/cloud/" /><meta property="article:section" content="" />
 <meta property="article:published_time" content="2023-07-26T11:26:07-04:00" />
@@ -12,8 +13,9 @@
 
 
   <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Oklab Point Cloud"/>
-<meta name="twitter:description" content="Here is a point cloud containing $2^{15}$ shades of color for exploring the Oklab color space,1 one of the most successful color models for displaying perceptual uniformity. In other words, it comes close to achieving the property where physical distances between colors in the point cloud match very closely with how different those colors feel to an average observer. Use the sliders to change the focus, and feel free to interact with the color space itself, it can be rotated by clicking and dragging on it."/>
+<meta name="twitter:title" content="Color Space Point Cloud"/>
+<meta name="twitter:description" content="Here is a point cloud containing $2^{15}$ particles for exploring the various color spaces, one of the most successful color models for displaying perceptual uniformity. Use the sliders to change the focus, and feel free to interact with the color space itself, it can be rotated by clicking and dragging on it.
+  View: Order  Mode: RGB XYZ CIELab OKLab CAM16-UCS    Isolate Focus True Cloud Vertical Rotation Lock  Color Blindness: Compact View  Trichromacy Protanopia Deuteranopia Tritanopia Achromatopsia"/>
 
   
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-BBWS173BMQ"></script>
@@ -31,7 +33,7 @@ if (!doNotTrack) {
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#262d33">
   <title>
     
-    Alexander Gaura - Oklab Point Cloud
+    Alexander Gaura - Color Space Point Cloud
     
   </title>
   
@@ -43,11 +45,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1691606835.css">
+  <link rel="stylesheet" href="/minima.1692409411.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1691606835.js"></script>
+  <script defer type="text/javascript" src="/minima.1692409411.js"></script>
 </head>
 <script>
   
@@ -95,7 +97,7 @@ if (!doNotTrack) {
   
   
 
-<h1 class="mt-6 mb-6" style="color: #456bc4;">Oklab Point Cloud</h1>
+<h1 class="mt-6 mb-6" style="color: #456bc4;">Color Space Point Cloud</h1>
 <div class="mb-3 text-xs flex justify-between sm:flex-col">
 	<div>
 	
@@ -108,18 +110,26 @@ if (!doNotTrack) {
 <main>
 	<p></p>
 	<article class="md">
-		<p>  Here is a point cloud containing $2^{15}$ shades of color for exploring the Oklab color space,<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> one of the most successful color models for displaying perceptual uniformity. In other words, it comes close to achieving the property where physical distances between colors in the point cloud match very closely with how different those colors feel to an average observer. Use the sliders to change the focus, and feel free to interact with the color space itself, it can be rotated by clicking and dragging on it.</p>
+		<p>  Here is a point cloud containing $2^{15}$ particles for exploring the various color spaces, one of the most successful color models for displaying perceptual uniformity. Use the sliders to change the focus, and feel free to interact with the color space itself, it can be rotated by clicking and dragging on it.</p>
 <script src="https://d3js.org/d3.v6.min.js"></script>
 <script src="https://unpkg.com/d3-simple-slider"></script>
-<div align="center"/> View:
-<div align="center" id='radiobtn'>
+<div align="center" id='view'>
 <br>
-<input type="radio" id="order" name="mode" value="0">
+View:   <input type="checkbox" id="order" name="view" value="0">
 <label for="0">Order</label>
-<input type="radio" id="flow" name="mode" value="1" checked="checked">
-<label for="1">Inner Flow</label>
-<input type="radio" id="edge" name="mode" value="2">
-<label for="2">Edgy Flow</label>
+</div>
+<div align="center" id='mode'>
+<br>
+Mode:   <input type="radio" id="rgb" name="mode" value="0">
+<label for="0">RGB</label>
+<input type="radio" id="XYZ" name="mode" value="1">
+<label for="1">XYZ</label>
+<input type="radio" id="cielab" name="mode" value="2">
+<label for="0">CIELab</label>
+<input type="radio" id="oklab" name="mode" value="3" checked="checked">
+<label for="1">OKLab</label>
+<input type="radio" id="cam16" name="mode" value="4">
+<label for="2">CAM16-UCS</label>
 </div>
 <div id ="div" align="center" onmouseover="this.style.cursor='pointer';" style="touch-action: none"><canvas text-align='center' id="canvas"></canvas></div>
 <div align="center" id="sliders"></div>
@@ -132,6 +142,30 @@ if (!doNotTrack) {
 <input type="checkbox" id="verticallock" name="verticallock" checked="checked">
 <label for="1">Vertical Rotation Lock</label>
 </div>
+<div align="center"/>
+<br>Color Blindness: 
+<br>
+<div align="center" id='blindview'>   
+<br>
+<input type="checkbox" id="compact" name="compact" >
+<label for="0">Compact View</label>
+</div>
+<div align="center" id='colorblindness'>   
+<br>
+<input type="radio" id="trichromacy" name="type" value="0" checked="checked">
+<label for="0">Trichromacy</label>
+<br>
+<input type="radio" id="protanopia" name="type" value="1">
+<label for="1">Protanopia</label>
+<input type="radio" id="deuteranopia" name="type" value="2">
+<label for="1">Deuteranopia</label>
+<input type="radio" id="tritanopia" name="type" value="3">
+<label for="1">Tritanopia</label>
+<br>
+<input type="radio" id="achromatopsia" name="type" value="4">
+<label for="1">Achromatopsia</label>
+</div>
+<div align="center" id="sliders2"></div>
 <svg id = "hue" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
     <linearGradient id="Gradient2" x1="0" x2="0" y1="0" y2="1">
         <stop offset="0%" stop-color="#d60071b0" />
@@ -210,6 +244,21 @@ c-8.331,8.331-8.331,21.839,0,30.17L140.497,170.667z"/>
 </g>
 </g>
 </svg></p>
+<svg id="eye" width="30" height="30" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+  <title>accessibility-blind</title>
+  <g id="Layer_2" data-name="Layer 2">
+    <g id="invisible_box" data-name="invisible box">
+      <rect width="48" height="48" fill="none"/>
+    </g>
+    <g id="icons_Q2" data-name="icons Q2">
+      <g>
+        <path d="M45.3,22.1C43.2,19.5,35.4,11,24,11a23,23,0,0,0-8.5,1.6L9.7,6.9A2,2,0,0,0,6.9,9.7L38.3,41.1a2,2,0,1,0,2.8-2.8l-4.7-4.8a32.1,32.1,0,0,0,8.9-7.6A3,3,0,0,0,45.3,22.1ZM33.4,30.6l-4-4A5.8,5.8,0,0,0,30,24a6,6,0,0,0-6-6,5.8,5.8,0,0,0-2.6.6l-2.8-2.8A19.1,19.1,0,0,1,24,15c8.8,0,15.3,6.2,17.7,9A29.7,29.7,0,0,1,33.4,30.6Z"/>
+        <path d="M10.4,17.6a2,2,0,0,0-2.8,2.8l15,15a2,2,0,0,0,2.8-2.8Z"/>
+        <path d="M5.4,22.6a1.9,1.9,0,0,0-2.8,0,1.9,1.9,0,0,0,0,2.8l7,7a2,2,0,0,0,2.8-2.8Z"/>
+      </g>
+    </g>
+  </g>
+</svg>
 <script type = "text" id = "colors">
 // Copyright(c) 2021 Björn Ottosson
 //
@@ -249,9 +298,11 @@ vec3 linear_srgb_to_oklab(vec3 c)
 {
     float l = 0.4122214708f * c.r + 0.5363325363f * c.g + 0.0514459929f * c.b;
     float m = 0.2119034982f * c.r + 0.6806995451f * c.g + 0.1073969566f * c.b;
-    float s = 0.0883024619f * c.r + 0.2817188376f * c.g + 0.6299787005f * c.b;	float l_ = cbrt(l);
+    float s = 0.0883024619f * c.r + 0.2817188376f * c.g + 0.6299787005f * c.b;
+    float l_ = cbrt(l);
     float m_ = cbrt(m);
-    float s_ = cbrt(s);	return vec3(
+    float s_ = cbrt(s);
+    return vec3(
         0.2104542553f * l_ + 0.7936177850f * m_ - 0.0040720468f * s_,
         1.9779984951f * l_ - 2.4285922050f * m_ + 0.4505937099f * s_,
         0.0259040371f * l_ + 0.7827717662f * m_ - 0.8086757660f * s_
@@ -995,6 +1046,13 @@ vec3 RGBtoXYZ(vec3 shade) {
     return conversion * shade;
 }
 
+vec3 sRGBtoXYZ(vec3 shade) {
+    mat3 conversion = mat3( 0.4124564 , 0.3575761 , 0.1804375,
+    0.2126729 , 0.7151522 , 0.0721750,
+    0.0193339 , 0.1191920 , 0.9503041);
+    return conversion * shade;
+}
+
 vec3 XYZtoLab(vec3 shade) {
     vec3 d65_ref = vec3(0.9504, 1.0000, 1.0888); // this reference was used for the XYZ conversion
     vec3 xyz_rat = shade / d65_ref;
@@ -1021,6 +1079,10 @@ vec3 XYZtoLab(vec3 shade) {
 
 vec3 RGBtoLab(vec3 shade) {
     return XYZtoLab(RGBtoXYZ(shade));
+}
+
+vec3 sRGBtoLab(vec3 shade) {
+    return XYZtoLab(sRGBtoXYZ(shade));
 }
 
 float rand(vec2 co) {
@@ -1061,51 +1123,341 @@ vec3 RGB2Lab(vec3 rgb){
 
     return vec3(L,a,b) / 100.;
 }
+
+
+
+
+// from https://www.shadertoy.com/view/wdVyWc
+
+#define diag3(v) mat3((v).x, 0.0, 0.0, 0.0, (v).y, 0.0, 0.0, 0.0, (v).z)
+#define xy_to_XYZ(x, y) vec3(x/y, 1.0, (1.0 - x - y)/y)
+
+const vec3 D65 = xy_to_XYZ(0.31271, 0.32902);
+const mat3 sRGB = mat3(xy_to_XYZ(0.64, 0.33), xy_to_XYZ(0.30, 0.60), xy_to_XYZ(0.15, 0.06));
+const mat3 sRGB_TO_XYZ_D65 = sRGB*diag3(inverse(sRGB)*D65);
+const mat3 XYZ_D65_TO_sRGB = inverse(sRGB_TO_XYZ_D65);
+
+vec3 sRGB_OETF(vec3 c) {
+    vec3 a = 12.92*c;
+    vec3 b = 1.055*pow(c, vec3(1.0/2.4)) - 0.055;
+    return mix(a, b, greaterThan(c, vec3(0.00313066844250063)));
+}
+
+vec3 sRGB_EOTF(vec3 c) {
+    vec3 a = c/12.92;
+    vec3 b = pow((c + 0.055)/1.055, vec3(2.4));
+    return mix(a, b, greaterThan(c, vec3(0.0404482362771082)));
+}
+
+#define adapt_aux(x) pow(F_L*abs(x), vec3(0.42))
+#define adapt(x) 400.0*sign(x)*adapt_aux(x)/(27.13 + adapt_aux(x))
+#define unadapt(x) sign(x)/F_L*pow(27.13*abs(x)/(400.0 - abs(x)), vec3(1.0/0.42))
+
+const mat3 M16 = mat3(
+    +0.401288, -0.250268, -0.002079,
+    +0.650173, +1.204414, +0.048952,
+    -0.051461, +0.045854, +0.953127
+);
+
+// sRGB conditions, average surround
+const vec3 XYZ_w = D65;
+const float Y_w = XYZ_w.y;
+const float Y_b = 0.2;
+const float L_w = 64.0/radians(180.0);
+const float L_A = L_w*Y_b/Y_w;
+const float F = 1.0;
+const float c = 0.69;
+const float N_c = F;
+
+// step 0*
+const vec3 RGB_w = M16*XYZ_w;
+const float D = 1.0; // clamp(F*(1.0 - 1.0/3.6*exp((-L_A - 42.0)/92.0)), 0.0, 1.0);
+const vec3 D_RGB = D*(Y_w/RGB_w) + 1.0 - D;
+const float k4 = pow(1.0/(5.0*L_A + 1.0), 4.0);
+const float F_L = k4*L_A + 0.1*pow(1.0 - k4, 2.0)*pow(5.0*L_A, 1.0/3.0);
+const float n = Y_b/Y_w;
+const float z = 1.48 + sqrt(n);
+const float N_bb = 0.725/pow(n, 0.2);
+const float N_cb = N_bb;
+const vec3 RGB_cw = D_RGB*RGB_w;
+const vec3 RGB_aw = adapt(RGB_cw);
+const float A_w = dot(vec3(2.0, 1.0, 0.05), RGB_aw)*N_bb;
+
+vec3 XYZ_D65_to_CAM16(vec3 XYZ) {
+    // step 1
+    vec3 RGB = M16*XYZ;
+    // step 2
+    vec3 RGB_c = D_RGB*RGB;
+    // step 3*
+    vec3 RGB_a = adapt(RGB_c);
+    // step 4*
+    const mat3x4 m = 1.0/1980.0*mat3x4(
+        3960.0, 1980.0, 220.0, 1980.0,
+        1980.0, -2160.0, 220.0, 1980.0,
+        99.0, 180.0, -440.0, 2079.0
+    );
+    vec4 aux = m*RGB_a; // p_2, a, b, u
+    float h = atan(aux.z, aux.y);
+    // step 5
+    float e_t = 0.25*(cos(h + 2.0) + 3.8);
+    // step 6*
+    float A = aux.x*N_bb;
+    // step 7
+    float J = pow(A/A_w, c*z);
+    // step 8
+    // step 9*
+    float t = 5e4/13.0*N_c*N_cb*e_t*length(aux.yz)/(aux.w + 0.305);
+    float alpha = pow(t, 0.9)*pow(1.64 - pow(0.29, n), 0.73);
+    float C = 0.01*alpha*sqrt(J);
+    float M = C*pow(F_L, 0.25);
+    return vec3(J, M, h);
+}
+
+vec3 CAM16_to_XYZ_D65(vec3 JMh) {
+    // step 1
+    // step 1-1
+    // step 1-2*
+    float C = JMh.y/pow(F_L, 0.25);
+    float alpha = JMh.x == 0.0 ? JMh.x : 100.0*C/sqrt(JMh.x);
+    float t = pow(alpha/pow(1.64 - pow(0.29, n), 0.73), 1.0/0.9);
+    // step 1-3
+    // step 2*
+    float e_t = 0.25*(cos(JMh.z + 2.0) + 3.8);
+    float A = A_w*pow(JMh.x, 1.0/(c*z));
+    float p_1 = 5e4/13.0*N_c*N_cb*e_t;
+    float p_2 = A/N_bb;
+    // step 3*
+    vec2 cs = vec2(cos(JMh.z), sin(JMh.z));
+    float r = 23.0*(p_2 + 0.305)*t/(23.0*p_1 + t*dot(vec2(11.0, 108.0), cs));
+    vec2 ab = r*cs;
+    // step 4
+    const mat3 m = 1.0/1403.0*mat3(
+        460.0, 460.0, 460.0,
+        451.0, -891.0, -220.0,
+        288.0, -261.0, -6300.0
+    );
+    vec3 RGB_a = m*vec3(p_2, ab);
+    // step 5*
+    vec3 RGB_c = unadapt(RGB_a);
+    // step 6
+    vec3 RGB = RGB_c/D_RGB;
+    // step 7
+    return inverse(M16)*RGB;
+}
+
+vec3 XYZ_D65_to_CAM16_UCS(vec3 XYZ) {
+    vec3 JMh = XYZ_D65_to_CAM16(XYZ);
+    float J = 1.7*JMh.x/(1.0 + 0.7*JMh.x);
+    float M = log(1.0 + 2.28*JMh.y)/2.28;
+    return vec3(J, M, JMh.z);
+}
+
+vec3 CAM16_UCS_to_XYZ_D65(vec3 JMh) {
+    float J = JMh.x/(1.0 - 0.7*(JMh.x - 1.0));
+    float M = (exp(2.28*JMh.y) - 1.0)/2.28;
+    return CAM16_to_XYZ_D65(vec3(J, M, JMh.z));
+}
+
+vec3 polar_to_standard(vec3 shade){
+    return vec3(shade.x, shade.y * vec2(cos(shade.z), sin(shade.z)));
+}
+
+
+
+
+
+// from https://dev.to/ndesmic/exploring-color-math-through-color-blindness-2m2h
+
+mat3 identity = mat3(
+  1 , 0, 0,
+  0 , 1 , 0 ,
+  0 , 0 , 1);
+
+mat3 protanopia = mat3(
+    0.170556992,0.829443014,0.,
+    0.170556991,0.829443008,0.,
+    -0.004517144,0.004517144, 1.);
+
+mat3 deuteranopia = mat3(
+    0.33066007,0.66933993,0.,
+    0.33066007,0.66933993,0.,
+    -0.02785538,0.02785538, 1.);
+
+mat3 tritanopia = mat3(
+    1.,0.1273989,-0.1273989,
+    0.,0.8739093,0.1260907,
+    0.,0.8739093,0.1260907);
+
+mat3 achromatopsia = mat3(
+    .2126,0.7152,0.0722,
+    .2126,0.7152,0.0722,
+    .2126,0.7152,0.0722);
+
+mat3 rotateX(float theta) {
+    return mat3(
+        1.0, 0., 0.,
+        0., cos(theta), -sin(theta),
+        0., sin(theta), cos(theta)
+    );
+}
+
+mat3 rotateY(float theta) {
+    return mat3(
+        cos(theta), 0., sin(theta),
+        0., 1., 0.,
+        -sin(theta), 0., cos(theta)
+    );
+}
+
+mat3 rotateZ(float theta) {
+    return mat3(
+        cos(theta), -sin(theta), 0.,
+        sin(theta), cos(theta), 0.,
+        0., 0., 1.
+    );
+}
 </script>
 <script type="x-shader/x-vertex" id="RGBVertexShader">
     varying vec3 color;
+    varying float alpha;
     uniform float pointSize;
-    uniform int label;
     uniform vec3 ideal;
     uniform float focus;
     uniform float time;
+    uniform float severity;
     uniform bool isolate;
     uniform bool truecloud;
     uniform bool order;
     uniform bool edge;
+    uniform int mode;
+    uniform int type;
+    uniform bool compact;
+    uniform float theta1;
+    uniform float theta2;
+    uniform float theta3;
 
-    vec3 convert(vec3 shade, int label) {
-        if (label == 0) {return shade-vec3(.5,.5,.5);}
-        else if (label == 1) {return RGBtoXYZ(shade);}
-        else if (label == 2) {return RGB2Lab(shade)-vec3(.5,.0,.0);}
-        else if (label == 3) {return srgb_to_oklab(shade)-vec3(.5,.0,.0);}
+    vec3 blindness_transform(vec3 shade) {
+
+        mat3 transform = mat3(0.);
+        if (type == 1) transform = protanopia;
+        else if (type == 2) transform = deuteranopia;
+        else if (type == 3) transform = tritanopia;
+        else if (type == 4) transform = achromatopsia;
+        vec3 color = vec3(
+        srgb_transfer_function_inv(shade.x),
+        srgb_transfer_function_inv(shade.y),
+        srgb_transfer_function_inv(shade.z)) * (transform * severity + identity * (1. - severity));
+        return clamp(vec3(
+            srgb_transfer_function(color.x),
+            srgb_transfer_function(color.y),
+            srgb_transfer_function(color.z)),0.0,1.0);
     }
 
-    void main() {
+    vec3 convert(vec3 shade, bool adj) {
+        if (mode == 0) {
+            //if (adj) return 1.*(rotateZ(3.*M_PI/16.)*rotateY(M_PI/4.)*rotateX(M_PI/2.)*shade)-vec3(1.,.0,.0);
+            if (adj) return 1.5*(rotateX(0.83*M_PI)*rotateZ(0.305*M_PI)*rotateX(M_PI/4.)*shade)-vec3(1.2,.0,.0);
+            //if (adj) return 1.*(rotateZ(theta3)*rotateY(theta2)*rotateX(theta1)*shade)-vec3(.5,.0,.0);
+            else return 1.0*shade;
+            }
+        else if (mode == 1) {
+            //if (adj) return 1.5*(sRGBtoXYZ(shade)-vec3(.0,.5,.5));
+            //if (adj) return 1.5*(rotateZ(theta3)*rotateY(theta2)*rotateX(theta1)*sRGBtoXYZ(shade))-vec3(1.25,.0,.0);
+            if (adj) return 1.5*(rotateX(0.38 * M_PI)*rotateZ(0.315 * M_PI)*rotateY(0.276* M_PI)*rotateX(0.4* M_PI)*sRGBtoXYZ(shade))-vec3(1.25,.0,.0);
+            else return RGBtoXYZ(shade);
+            }
+        else if (mode == 2) {
+            if (adj) return 1.*(RGB2Lab(vec3(srgb_transfer_function_inv(shade.x),
+                srgb_transfer_function_inv(shade.y),
+                srgb_transfer_function_inv(shade.z)))-vec3(.5,.0,.0));
+            else return RGB2Lab(shade);
+            }
+        else if (mode == 3) {
+            if (adj) return 2.8*(srgb_to_oklab(shade)-vec3(.5,.0,.0));
+            else return srgb_to_oklab(shade);}
+        else if (mode == 4) {
+            if (adj) return 2.5*(polar_to_standard(XYZ_D65_to_CAM16_UCS(sRGB_TO_XYZ_D65*vec3                (
+                srgb_transfer_function_inv(shade.x),
+                srgb_transfer_function_inv(shade.y),
+                srgb_transfer_function_inv(shade.z))))-vec3(.5,.0,.0));
+            else return polar_to_standard(XYZ_D65_to_CAM16_UCS(sRGB_TO_XYZ_D65*shade));}
+    }
 
-        float r1 = rand(vec2(position.x * 1502.13, position.y * 232.82 + position.z * 800.1));
-        float r2 = rand(vec2(position.y * 545.36, position.z * 646.2 + r1 * 250.));
-        float r3 = rand(vec2(position.x * 1408.33, position.z * 257.9 + r2 * 630.));
+    vec3 randomizer(vec3 starter, bool edge) {
+        float r1 = rand(vec2(starter.x * 1502.13, starter.y * 232.82 + starter.z * 800.1));
+        float r2 = rand(vec2(starter.y * 545.36, starter.z * 646.2 + r1 * 250.));
+        float r3 = rand(vec2(starter.x * 1408.33, starter.z * 257.9 + r2 * 630.));
 
         float speed = 1./500.;
 
-        float p1 = ((0.5 + 1.5 * r1) * sin((0.5 + 1.5 * r2) * time * speed + 150.*rand(vec2(position.x * 100.2 + 50. * r1, position.y * 17.6))) / 2. + 1.0) / 2.;
-        float p2 = ((0.5 + 1.5 * r2) * sin((0.5 + 1.5 * r3) * time * speed + 276.*rand(vec2(position.y * 256.4 + 67.8 * r2, position.z * 179.5))) / 2. + 1.0) / 2.;
-        float p3 = ((0.5 + 1.5 * r3) * sin((0.5 + 1.5 * r1) * time * speed + 2039.*rand(vec2(position.z * 98.3 + 98. * r3, position.x * 290.5))) / 2. + 1.0) / 2.;
+        float p1 = ((0.5 + 1.5 * r1) * sin((0.5 + 1.5 * r2) * time * speed + 150.*rand(vec2(starter.x * 100.2 + 50. * r1, starter.y * 17.6))) / 2. + 1.0) / 2.;
+        float p2 = ((0.5 + 1.5 * r2) * sin((0.5 + 1.5 * r3) * time * speed + 276.*rand(vec2(starter.y * 256.4 + 67.8 * r2, starter.z * 179.5))) / 2. + 1.0) / 2.;
+        float p3 = ((0.5 + 1.5 * r3) * sin((0.5 + 1.5 * r1) * time * speed + 2039.*rand(vec2(starter.z * 98.3 + 98. * r3, starter.x * 290.5))) / 2. + 1.0) / 2.;
 
         if (edge) {
             speed = 1./10000.;
 
-            p1 = (2. * sin((0.5 + 1.5 * r2) * time * speed + 150.*rand(vec2(position.x * 100.2 + 50. * r1, position.y * 17.6))) / 2. + 1.0) / 2.;
-            p2 = (2. * sin((0.5 + 1.5 * r3) * time * speed + 276.*rand(vec2(position.y * 256.4 + 67.8 * r2, position.z * 179.5))) / 2. + 1.0) / 2.;
-            p3 = (2. * sin((0.5 + 1.5 * r1) * time * speed + 2039.*rand(vec2(position.z * 98.3 + 98. * r3, position.x * 290.5))) / 2. + 1.0) / 2.;
+            p1 = (2. * sin((0.5 + 1.5 * r2) * time * speed + 150.*rand(vec2(starter.x * 100.2 + 50. * r1, starter.y * 17.6))) / 2. + 1.0) / 2.;
+            p2 = (2. * sin((0.5 + 1.5 * r3) * time * speed + 276.*rand(vec2(starter.y * 256.4 + 67.8 * r2, starter.z * 179.5))) / 2. + 1.0) / 2.;
+            p3 = (2. * sin((0.5 + 1.5 * r1) * time * speed + 2039.*rand(vec2(starter.z * 98.3 + 98. * r3, starter.x * 290.5))) / 2. + 1.0) / 2.;
         }
 
+        return vec3(p1,p2,p3);
+    }
+
+    float stable_randomizer(vec3 starter) {
+        float r1 = rand(vec2(starter.x * 1502.13, starter.y * 232.82 + starter.z * 800.1));
+        float r2 = rand(vec2(starter.y * 545.36, starter.z * 646.2 + r1 * 250.));
+        float r3 = rand(vec2(starter.x * 1408.33, starter.z * 257.9 + r2 * 630.));
+
+        float p1 = rand(vec2(starter.x * 100.2 + 50. * r1, starter.y * 17.6));
+        float p2 = rand(vec2(starter.y * 256.4 + 67.8 * r2, starter.z * 179.5));
+        float p3 = rand(vec2(starter.z * 98.3 + 98. * r3, starter.x * 290.5));
+
+        p1 = rand(vec2(starter.x * 100.2 + 50. * r1, starter.y * 17.6));
+        p2 = rand(vec2(starter.y * 256.4 + 67.8 * r2, starter.z * 179.5));
+        p3 = rand(vec2(starter.z * 98.3 + 98. * r3, starter.x * 290.5));
+
+        return rand(vec2(89.8*p1,rand(vec2(107.9*p2,56.03*p3))));
+    }
+
+    vec3 placement(vec3 pos) {
+        // freedom of movement for each particle
         float deviation = 1./16.;
-        if (edge) deviation = 1.;
-        if (!order) color = pow(position.xyz * (1.0 - deviation) + (deviation / 2.) + deviation * (vec3(p1,p2,p3) - 0.5), vec3(1.25)); // pow allows there to be more black
-        else color = pow(position.xyz, vec3(1.25));
-        //color = position.xyz;
+        float r = stable_randomizer(pos);
+        bool edge = false;
+        if (r < 0.25) {
+            deviation = 1.;
+            edge = true;
+        }
+
+        // adjustment to make the grid more nicely distributed
+        float distribution = 1.;
+        if (mode == 2) distribution = 1.5;
+        else if (mode == 3) distribution = 1.2;
+        else if (mode == 4) distribution = 1.;
+
+        // actual placement
+        if (!order) return pow(pos.xyz * (1.0 - deviation) + (deviation / 2.) + deviation * (randomizer(pos, edge) - 0.5), vec3(distribution));
+        else return pow(pos.xyz, vec3(distribution));
+    }
+
+    vec3 space_embed_ideal(vec3 shade) {
+        // allows saturation to go negative "naturally"
+        vec3 newIdeal = shade;
+        if (shade.y < 0.) {
+            newIdeal.x += 0.5;
+            newIdeal.y = -newIdeal.y;
+        }
+
+        vec3 conversion = convert(okhsl_to_srgb(newIdeal), true);
+        
+        //return vec3(shade.z, conversion.yz);
+        return conversion;
+
+    }
+
+    void main() {
 
         vec3 newIdeal = ideal;
         if (ideal.y < 0.) {
@@ -1113,55 +1465,76 @@ vec3 RGB2Lab(vec3 rgb){
             newIdeal.y = -newIdeal.y;
         }
 
-        float dist = clamp(distance(srgb_to_oklab(color),srgb_to_oklab(okhsl_to_srgb(newIdeal))),0.0,1.0);
-        gl_PointSize = (pow(1. - dist, focus * 40.0)) * (30. - 20. * (1.0 - focus)) + 1.;
+        float inv_prop = 2.;
+        if (type == 4) inv_prop = 4.;
+        float dist = 0.;
+        vec4 newPosition = vec4(0.0);
 
-        vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+        if (type > 0) {
+            if (compact ||
+                (int(position.x * 32.) % int(inv_prop) == 0) || 
+                (int(position.y * 32.) % int(inv_prop) == 0) ||
+                (int(position.z * 32.) % int(inv_prop) == 0)) {
+                    color = placement(position);
+                    if (compact) {
+                        newPosition = vec4(convert(blindness_transform(color), true), 1.0);
+                        dist = clamp(0.5*distance(convert(blindness_transform(color),true),convert(blindness_transform(okhsl_to_srgb(newIdeal)),true)),0.0,1.0);
+                    }
+                    else {
+                        dist = clamp(0.5*distance(convert(color,true),space_embed_ideal(ideal)),0.0,1.0);
+                        color = blindness_transform(color);
+                        newPosition = vec4(convert(color, true), 1.0);
+                    }
+                    gl_PointSize = (pow(1. - dist, focus * 40.0)) * (30. - 20. * (1.0 - focus)) + 1.;
+                }
+            else {
+                if (order) color = placement(position + pow(severity, 0.25) * (inv_prop/(inv_prop - 1.) * mod(position, inv_prop/32.) - mod(position, inv_prop/32.) - 1./32.));
+                else color = placement(position + inv_prop/(inv_prop - 1.) * mod(position, inv_prop/32.) - mod(position, inv_prop/32.) - 1./32.);
+                dist = clamp(0.5*distance(convert(blindness_transform(color),true),convert(blindness_transform(okhsl_to_srgb(newIdeal)),true)),0.0,1.0);
+                gl_PointSize = (pow(1. - dist, focus * 40.0)) * (21. - 20. * (1.0 - focus)) + 1.; // makes points bigger when they are near the focus
+                newPosition = vec4(convert(color, true), 1.0);
+            }
+        }
+        else {
+            color = placement(position);
+            dist = clamp(0.5*distance(convert(color,true),space_embed_ideal(ideal)),0.0,1.0);
+            gl_PointSize = (pow(1. - dist, focus * 40.0)) * (30. - 20. * (1.0 - focus)) + 1.;
+            newPosition = vec4(convert(color, true), 1.0);
+        }
+        alpha = pow(clamp(1.0 - dist * focus, 0.5, 1.0),3.0);
 
-        vec4 newPosition = vec4(convert(color,3), 1.0);
-        //newPosition = newPosition.zxyw * vec4(1.,2.0,1.,1.0);
-        if (truecloud) newPosition = newPosition.zxyw * vec4(vec3(2.8),1.);
-        else newPosition = newPosition.zxyw * vec4(vec3(3.7,2.5,3.7),1.);
+        newPosition = newPosition.zxyw;
+        if (!truecloud) {
+            if (mode == 1) newPosition = newPosition * vec4(vec3(1.3,1.,1.7),1.);
+            if (mode == 2) newPosition = newPosition * vec4(vec3(1.,1.8,1.),1.);
+            if (mode == 3) newPosition = newPosition * vec4(vec3(1.3,0.9,1.3),1.);
+        }
 
         newPosition.x -= 0.0;
         newPosition.y -= 0.1;
         newPosition.z -= 0.0;
 
-        //vec3 okcolor = srgb_to_okhsl(color);
-        float alpha = pow(clamp(1.0 - dist * focus, 0.5, 1.0),3.0);
+        alpha = pow(clamp(1.0 - dist * focus, 0.5, 1.0),3.0);
         if (isolate) if (alpha < 0.85) newPosition = vec4(vec3(10.),0.0);
-        //if (isolate) if ((alpha < 0.9) && (okcolor.y < 0.7)) newPosition = vec4(0.);
 
         gl_Position = projectionMatrix * modelViewMatrix * newPosition;
     }
 </script>
 <script type="x-shader/x-fragment" id="RGBFragmentShader">
     varying vec3 color;
-    uniform vec3 ideal;
-    uniform float focus;
+    varying float alpha;
     uniform bool isolate;
     uniform bool truecloud;
 
     void main() {
 
-        vec3 newIdeal = ideal;
-        if (ideal.y < 0.) {
-            newIdeal.x += 0.5;
-            newIdeal.y = -newIdeal.y;
-        }
-        
-        float dist = clamp(distance(srgb_to_oklab(color),srgb_to_oklab(okhsl_to_srgb(newIdeal))),0.0,1.0);
-        float alpha = pow(clamp(1.0 - dist * focus, 0.5, 1.0),3.0);
-        //float alpha = pow(clamp(1.0 - dist * focus, 0.9*pow(ideal.z,0.5), 1.0),4.0);
-        //alpha = 1.;
-
         vec3 okcolor = srgb_to_okhsl(color);
         if (!truecloud) okcolor.y = pow(okcolor.y,1.75); // desaturates colors, making gray easier to see
         vec3 new_color = okhsl_to_srgb(okcolor);
 
-        if (isolate) if (alpha < 0.85) alpha = 0.0;
         gl_FragColor.rgb = new_color * alpha;
         gl_FragColor.a = alpha;
+        if (isolate) if (alpha < 0.85) gl_FragColor = vec4(0.0);
         //if (isolate) if ((alpha < 0.9) && (okcolor.y < 0.7)) gl_FragColor.a = 0.0;
     }
 </script>
@@ -1195,7 +1568,6 @@ vec3 RGB2Lab(vec3 rgb){
         fragmentShader: document.getElementById('colors').text + document.getElementById('RGBFragmentShader').textContent,
         uniforms: {
             pointSize: { value: .1 },
-            label: { value: 2 },
             ideal: {
                 type: "3f",
                 value: new THREE.Vector3(0, 1., 0.5)
@@ -1204,7 +1576,13 @@ vec3 RGB2Lab(vec3 rgb){
             isolate: { value: 0. },
             truecloud: {value: 0.},
             order: {value: 0.},
-            edge: {value: 0.},
+            mode: {value: 1},
+            type: {value: 0},
+            compact: {value: 0},
+            severity: {value: 0.8},
+            theta1: {value: 0.0},
+            theta2: {value: 0.0},
+            theta3: {value: 0.0},
             focus: { value: .5 }
         }
     });
@@ -1263,7 +1641,9 @@ vec3 RGB2Lab(vec3 rgb){
 
     var mouseDown = false,
     mouseX = 0,
-    mouseY = 0;
+    mouseY = 0,
+    deltaX,
+    deltaY;
     var events = 0,
     totalX = 0,
     totalY = 0,
@@ -1280,8 +1660,8 @@ vec3 RGB2Lab(vec3 rgb){
     document.addEventListener('pointermove', function (event) {
         if (!mouseDown) {return} // is the button pressed?
             event.preventDefault();
-            var deltaX = event.clientX - mouseX,
-                deltaY = event.clientY - mouseY;
+            deltaX = event.clientX - mouseX
+            deltaY = event.clientY - mouseY
             mouseX = event.clientX;
             mouseY = event.clientY;
             totalX += deltaX;
@@ -1299,10 +1679,10 @@ vec3 RGB2Lab(vec3 rgb){
     document.addEventListener('pointerup', function (event) {
         event.preventDefault();
         mouseDown = false;
-        var deltaX = event.clientX - mouseX,
-            deltaY = event.clientY - mouseY;
-        var avgX = totalX / events,
-            avgY = totalY / events;
+        if ((mouseX == event.clientX - deltaX) && (mouseY == event.clientY - deltaY)) {
+            totalX = 0;
+            totalY = 0;
+        }
         beginMomentumTracking();
     }, false);
 
@@ -1339,12 +1719,14 @@ vec3 RGB2Lab(vec3 rgb){
         points.material.uniforms.isolate.value = document.getElementById("isolate").checked;
         points.material.uniforms.truecloud.value = document.getElementById("truecloud").checked;
         points.material.uniforms.order.value = document.getElementById("order").checked;
-        points.material.uniforms.edge.value = document.getElementById("edge").checked;
+        points.material.uniforms.mode.value = parseInt(document.querySelector('input[name="mode"]:checked').value);
+        points.material.uniforms.type.value = parseInt(document.querySelector('input[name="type"]:checked').value);
         renderer.render(scene, camera);
+        points.material.uniforms.compact.value = document.getElementById("compact").checked;
     }
     animate();
 
-    function makeSlider(def, icon, range, func) {
+    function makeSlider(name, def, icon, range, func) {
         var svgIcon = d3.select('svg#' + icon)
         var sliderFill = d3
             .sliderBottom()
@@ -1363,7 +1745,7 @@ vec3 RGB2Lab(vec3 rgb){
             )
             .on('onchange', func);
         var gFill = d3
-            .select('div#sliders')
+            .select('div#' + name)
             .append('svg')
             .attr('width', Math.min(400,screen.width*0.7))
             .attr('height', 65)
@@ -1377,17 +1759,21 @@ vec3 RGB2Lab(vec3 rgb){
 
     var colorFocus = [0,1.0,0.5]
 
-    makeSlider(0.0, "hue", [0.0,1.0], val => {
+    makeSlider('sliders', 0.0, "hue", [0.0,1.0], val => {
         colorFocus = [val, colorFocus[1], colorFocus[2]]
         points.material.uniforms.ideal.value = new THREE.Vector3(colorFocus[0], colorFocus[1], colorFocus[2]);});
         
-    makeSlider(1.0, "sat", [-1.0,1.0], val => {
+    makeSlider('sliders', 1.0, "sat", [-1.0,1.0], val => {
         colorFocus = [colorFocus[0], val, colorFocus[2]]
         points.material.uniforms.ideal.value = new THREE.Vector3(colorFocus[0], colorFocus[1], colorFocus[2]);});
-    makeSlider(0.5, "val", [0.0,1.0], val => {
+    makeSlider('sliders', 0.5, "val", [0.0,1.0], val => {
         colorFocus = [colorFocus[0], colorFocus[1], val]
         points.material.uniforms.ideal.value = new THREE.Vector3(colorFocus[0], colorFocus[1], colorFocus[2]);});
-    makeSlider(0.5, "foc", [0.0,1.0], val => {points.material.uniforms.focus.value = val;});
+    makeSlider('sliders', 0.5, "foc", [0.0,1.0], val => {points.material.uniforms.focus.value = val;});
+    makeSlider('sliders2', 0.8, "eye", [0.0,1.0], val => {points.material.uniforms.severity.value = val;});
+    //makeSlider('sliders', 0., "foc", [0.0,2.0], val => {points.material.uniforms.theta1.value = val * Math.PI;});
+    //makeSlider('sliders', 0., "foc", [0.0,2.0], val => {points.material.uniforms.theta2.value = val * Math.PI;});
+    //makeSlider('sliders', 0., "foc", [0.0,2.0], val => {points.material.uniforms.theta3.value = val * Math.PI;});
 
     function updateWindow(){
         height = Math.min(480, 0.75 * screen.availWidth);
@@ -1422,16 +1808,8 @@ vec3 RGB2Lab(vec3 rgb){
 
     window.addEventListener('keydown', keySwitch);
 
-</script>
-<p>  Note: The &ldquo;True Cloud&rdquo; option is unchecked by default to make exploring the space easier, as the vertical dimension is squished to about 68% the size of the other two dimensions in order to make the space more boxy and appear fuller. In addition, the points also desaturate faster than they should when going towards the center, in effect overrepresenting grayer shades, which is done in order to make the grays more visible. Checking the &ldquo;True Cloud&rdquo; option turns it back into a faithful representation of Oklab.</p>
-<section class="footnotes" role="doc-endnotes">
-<hr>
-<ol>
-<li id="fn:1" role="doc-endnote">
-<p>Björn Ottosson, <a href="https://bottosson.github.io/posts/oklab/">A perceptual color space for image processing</a>&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
-</li>
-</ol>
-</section>
+</script><blockquote>
+</blockquote>
 
 	</article>
 </main>

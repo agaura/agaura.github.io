@@ -43,11 +43,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1691606835.css">
+  <link rel="stylesheet" href="/minima.1692409411.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1691606835.js"></script>
+  <script defer type="text/javascript" src="/minima.1692409411.js"></script>
 </head>
 <script>
   
@@ -1944,6 +1944,102 @@ vec4 sobel2(float co, float thresh, float sat_band_limit, float lum_band_limit){
     //return vec4(vec3(edge_grad),1.0);
 }
 
+vec4 huetest(float co, float thresh, float sat_band_limit, float lum_band_limit){
+
+    float upper = texture(u_image, vec2(v_texCoord.x, mod(v_texCoord.y + epsilon.y, 1.))).r;
+    float lower = texture(u_image, vec2(v_texCoord.x, mod(v_texCoord.y - epsilon.y, 1.))).r;
+    float right = texture(u_image, vec2(mod(v_texCoord.x + epsilon.x, 1.), v_texCoord.y)).r;
+    float left  = texture(u_image, vec2(mod(v_texCoord.x - epsilon.x, 1.), v_texCoord.y)).r;
+
+    float upperright = texture(u_image, vec2(mod(v_texCoord.x + epsilon.x, 1.), mod(v_texCoord.y + epsilon.y, 1.))).r;
+    float lowerright = texture(u_image, vec2(mod(v_texCoord.x + epsilon.x, 1.), mod(v_texCoord.y - epsilon.y, 1.))).r;
+    float upperleft = texture(u_image, vec2(mod(v_texCoord.x - epsilon.x, 1.), mod(v_texCoord.y + epsilon.y, 1.))).r;
+    float lowerleft  = texture(u_image, vec2(mod(v_texCoord.x - epsilon.x, 1.), mod(v_texCoord.y - epsilon.y, 1.))).r;
+
+    float hor_grad = abs(upperleft + 2. * left + lowerleft - (upperright + 2. * right + lowerright));
+    float vert_grad = abs(upperleft + 2. * upper + upperright - (lowerleft + 2. * lower + lowerright));
+
+    float length = length(vec2(hor_grad,vert_grad));
+
+    float edge_grad = mix(0.,0.15,pow(clamp(2.0*(pow(length,1.) / thresh) / lum_band_limit,0.0,1.0),4.));
+
+    
+
+    float scale = (co) / thresh;
+
+    
+    //return vec4(okhsl_to_srgb((vec3(scale,0.5 + 1. * clamp(10.*pow(edge_grad,0.25),0.0,0.5),0.3 + clamp(pow(edge_grad,0.25),0.0,0.5)))),1.0);
+    //return vec4(okhsl_to_srgb((vec3(scale/100. + 0.05*sin(scale*2.),0.5 + 1. * clamp(10.*pow(edge_grad,0.25),0.0,0.5),0.3 + clamp(pow(edge_grad,0.25),0.0,0.5)))),1.0);
+    //return vec4(okhsl_to_srgb((vec3(scale/100. + 0.05*sin(scale*2.),0.15 + 1./.85 * clamp(10.*pow(edge_grad,0.25),0.0,0.5),0.15 + clamp(pow(edge_grad,0.25),0.0,0.75)))),1.0);
+    return vec4(okhsl_to_srgb((vec3(scale/100. + 0.05*sin(scale*2.) + 0.0*clamp(pow(edge_grad,0.25),0.0,0.75),0.25 + clamp(10.*pow(edge_grad,0.25),0.0,0.66),0.5))),1.0);
+}
+
+vec4 huetest2(float co, float thresh, float sat_band_limit, float lum_band_limit){
+
+    float upper = texture(u_image, vec2(v_texCoord.x, mod(v_texCoord.y + epsilon.y, 1.))).r;
+    float lower = texture(u_image, vec2(v_texCoord.x, mod(v_texCoord.y - epsilon.y, 1.))).r;
+    float right = texture(u_image, vec2(mod(v_texCoord.x + epsilon.x, 1.), v_texCoord.y)).r;
+    float left  = texture(u_image, vec2(mod(v_texCoord.x - epsilon.x, 1.), v_texCoord.y)).r;
+
+    float upperright = texture(u_image, vec2(mod(v_texCoord.x + epsilon.x, 1.), mod(v_texCoord.y + epsilon.y, 1.))).r;
+    float lowerright = texture(u_image, vec2(mod(v_texCoord.x + epsilon.x, 1.), mod(v_texCoord.y - epsilon.y, 1.))).r;
+    float upperleft = texture(u_image, vec2(mod(v_texCoord.x - epsilon.x, 1.), mod(v_texCoord.y + epsilon.y, 1.))).r;
+    float lowerleft  = texture(u_image, vec2(mod(v_texCoord.x - epsilon.x, 1.), mod(v_texCoord.y - epsilon.y, 1.))).r;
+
+    float hor_grad = abs(upperleft + 2. * left + lowerleft - (upperright + 2. * right + lowerright));
+    float vert_grad = abs(upperleft + 2. * upper + upperright - (lowerleft + 2. * lower + lowerright));
+
+    float length = length(vec2(hor_grad,vert_grad));
+
+    float edge_grad = mix(0.,0.15,pow(clamp(2.0*(pow(length,1.) / thresh) / lum_band_limit,0.0,1.0),4.));
+
+    
+
+    float scale = abs(co) / thresh;
+
+    float travelled = fract(scale) * 3.;
+    float mix_strength = fract(travelled);
+
+    float sat_scale = clamp(scale / sat_band_limit,0.,2.);
+    float sat_grad = pow(sat_scale - 1.,.85) * 0.25 + 0.75;
+    if (sat_scale < 1.0) {
+        sat_grad = pow(sat_scale,1.) * 0.4 + 0.35;
+    }
+
+    float lum_grad = mix(0.1,0.6,clamp(scale / lum_band_limit,0.0,1.0));
+    if (sign(co) > 0.) {
+        lum_grad = mix(0.3,0.6,clamp(scale / lum_band_limit,0.0,1.0));
+        if (scale < 2.) {
+            lum_grad = mix(0.1,0.3,scale / 2.);
+        }
+    }
+    //lum_grad += (2. - (2. / 0.55) * (lum_grad - 0.2)) * edge_grad;
+    //lum_grad = lum_grad + 0.1 * clamp(10.*pow(edge_grad,0.25),0.0,1.);
+    lum_grad = clamp(mix(lum_grad, 1.5 - (0.5 / 0.65) * (lum_grad - 0.1), pow(edge_grad,0.25)),0.0,0.85);
+    //lum_grad = mix(lum_grad, 0.9, pow(edge_grad,0.25));
+
+    if (scale < 1.) {
+        sat_grad = mix(0.,0.35 + pow(1. / sat_band_limit,0.85) * 0.4, pow(scale,.5));
+    }
+    //sat_grad = clamp(sat_grad + clamp(1000.*edge_grad,0.0,pow(sat_grad,0.25)*0.5),0.0,1.0);
+    //sat_grad = clamp(sat_grad + clamp(10.*pow(edge_grad,0.25),0.0,0.5),0.0,1.0);
+    //sat_grad = clamp(sat_grad + clamp(10000.*edge_grad,0.0,0.5),0.0,1.0);
+    //sat_grad = clamp(sat_grad + pow(sat_grad, 0.5) * clamp(10.*pow(edge_grad,0.25),0.0,0.5),0.0,1.0);
+    sat_grad = clamp(sat_grad + clamp(10.*pow(edge_grad,0.25),0.0,0.5),0.0,1.0);
+
+    
+    //return vec4(okhsl_to_srgb((vec3(scale,0.01 + 1.75 * clamp(10.*pow(edge_grad,0.25),0.0,0.5),abs(scale)/33. + clamp(pow(edge_grad,0.25),0.0,0.5)))),1.0);
+    //return vec4(okhsl_to_srgb((vec3(scale + 100.*clamp(pow(edge_grad,0.25),0.0,0.5),0.01 + 1.75 * clamp(10.*pow(edge_grad,0.25),0.0,0.5),abs(scale)/33.))),1.0);
+    //return vec4(okhsl_to_srgb((vec3(scale / 10. + 10.*clamp(10.*pow(edge_grad,0.25),0.0,0.5),0.25 + 1.75 * clamp(10.*pow(edge_grad,0.25),0.0,0.5),0.2 * (sin(abs(scale*10.)) + 1.) / 2. + 0.15 + abs(scale)/100.))),1.0);
+    //return vec4(okhsl_to_srgb((vec3(mix(scale / 10.,0.05,clamp(5.*clamp(10.*pow(edge_grad,0.25),0.0,0.5),0.0,1.0)),0.25 + 1.75 * clamp(10.*pow(edge_grad,0.25),0.0,0.5),0.2 * (sin(abs(scale*10.)) + 1.) / 2. + 0.15 + abs(scale)/100.))),1.0);
+
+    //vec4 newcolor = vec4(okhsl_to_srgb((vec3(mix(scale / 10.,0.05,clamp(5.*clamp(10.*pow(edge_grad,0.25),0.0,0.5),0.0,1.0)),0.25 + 1.75 * clamp(10.*pow(edge_grad,0.25),0.0,0.5),0.1 * (sin(abs(scale*6.28)) + 1.) / 2. + 0.15 + abs(scale)/100.))),1.0);
+    //vec4 newcolor = vec4(okhsl_to_srgb((vec3(scale / 10. + 10.*clamp(10.*pow(edge_grad,0.25),0.0,0.5),0.25 + 0.75*sat_grad,0.25 * (sin(abs(scale*6.28)) + 1.) / 2. + 0.15 + abs(scale)/100.))),1.0);
+    vec4 newcolor = vec4(okhsl_to_srgb((vec3(mix(scale / 10.,0.05,clamp(5.*clamp(10.*pow(edge_grad,0.25),0.0,0.5),0.0,1.0)),0.25 + 0.75*sat_grad,0.25 * (sin(abs(scale*6.28)) + 1.) / 2. + 0.15 + abs(scale)/100.))),1.0);
+
+    return mix(vec4(0.0), newcolor, pow(sat_grad,2.0));
+}
+
 vec4 superedge(float co, float thresh, float sat_band_limit, float lum_band_limit){
 
     float upper = texture(u_image, vec2(v_texCoord.x, mod(v_texCoord.y + epsilon.y, 1.))).r;
@@ -2710,7 +2806,20 @@ void main() {
     //if (mode == 1) {color = lineGradient4(color.r, 1. / pow(2.,10.), pow(2.,8.), pow(2.,10.));} // pressure
     //if (mode == 1) {color = edge(color.r, 1. / pow(2.,7.), pow(2.,4.), pow(2.,6.));} // pressure
     //if (mode == 1) {color = sobel(color.r, 1. / pow(2.,7.), pow(2.,4.), pow(2.,6.));} // pressure
+    //if (mode == 1) {color = huetest(color.r, 1. / pow(2.,7.), pow(2.,4.), pow(2.,6.));} // pressure
+    //if (mode == 1) {color = huetest2(color.r, 1. / pow(2.,7.), pow(2.,4.), pow(2.,6.));} // pressure
+    //if (mode == 1) {color = mix(huetest2(color.r, 1. / pow(2.,7.), pow(2.,4.), pow(2.,6.)),sobel2(color.r, 1. / pow(2.,7.), pow(2.,4.), pow(2.,6.)),clamp(v_texCoord.y*1.5 - 0.25, 0.0,1.0));} // pressure
+    /*if (mode == 1) {
+        if (v_texCoord.y < 0.5) {
+            color = huetest2(color.r, 1. / pow(2.,7.), pow(2.,4.), pow(2.,6.));
+        }
+        else {
+            color = sobel2(color.r, 1. / pow(2.,7.), pow(2.,4.), pow(2.,6.));
+        }
+    }
+    */
     if (mode == 1) {color = sobel2(color.r, 1. / pow(2.,7.), pow(2.,4.), pow(2.,6.));} // pressure
+
     //if (mode == 2) {color = logGradient(color.r, 1. / pow(2.,12.), pow(2.,0.5), pow(2.,3.), pow(2.,4.));} // divergence
     //if (mode == 2) {color = logGradient(color.r, 1. / pow(2.,10.), pow(2.,0.5), pow(2.,3.), pow(2.,4.));} // divergence
     //if (mode == 2) {color = logGradient(color.r, 1. / pow(2.,10.), pow(2.,.5), pow(2.,3.), pow(2.,5.));} // divergence
