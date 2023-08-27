@@ -45,11 +45,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1692934668.css">
+  <link rel="stylesheet" href="/minima.1693152329.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1692934668.js"></script>
+  <script defer type="text/javascript" src="/minima.1693152329.js"></script>
 </head>
 <script>
   
@@ -1596,7 +1596,7 @@ mat3 rotateZ(float theta) {
 <script type="module">
     import * as THREE from 'https://cdn.skypack.dev/three@0.147.0';
 
-    var height = Math.min(480, 0.75 * screen.availWidth);
+    var height = Math.min(480, screen.availWidth);
     var width = height;
 
     const scene = new THREE.Scene();
@@ -1831,9 +1831,9 @@ mat3 rotateZ(float theta) {
     //makeSlider('sliders', 0., "foc", [0.0,2.0], val => {points.material.uniforms.theta3.value = val * Math.PI;});
 
     function updateWindow(){
-        height = Math.min(480, 0.75 * screen.availWidth);
+        height = Math.min(480, screen.availWidth);
         width = height;
-		renderer.setSize(Math.min(maxHeight, maxWidth), Math.min(maxHeight, maxWidth));
+		renderer.setSize(width, height);
 	}
 	d3.select(window).on('resize.updatesvg', updateWindow);
 
