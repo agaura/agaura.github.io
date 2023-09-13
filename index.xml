@@ -14,8 +14,7 @@
       <pubDate>Wed, 26 Jul 2023 11:26:07 -0400</pubDate>
       
       <guid>https://agaura.github.io/cloud/</guid>
-      <description>Here is a point cloud containing $2^{15}$ particles for exploring the various color spaces, one of the most successful color models for displaying perceptual uniformity. Use the sliders to change the focus, and feel free to interact with the color space itself, it can be rotated by clicking and dragging on it.
-  View: Order  Mode: RGB XYZ CIELab OKLab CAM16-UCS    Isolate Focus True Cloud Vertical Rotation Lock  Color Blindness: Compact View  Trichromacy Protanopia Deuteranopia Tritanopia Achromatopsia</description>
+      <description>Here is a point cloud containing $2^{15}$ particles for exploring the various color spaces. They have various purposes, but CIELab, OKLab, and CAM16-UCS are all designed to be perceptually uniform. This design is built to make it easy to see the differences (and surprising variability) between these spaces which are all supposed to be perceptually uniform, and contrast them against the famous RGB space and the XYZ space (which is a convenient space for conversions).</description>
     </item>
     
     <item>

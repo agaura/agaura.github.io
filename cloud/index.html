@@ -4,8 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta property="og:title" content="Color Space Point Cloud" />
-<meta property="og:description" content="Here is a point cloud containing $2^{15}$ particles for exploring the various color spaces, one of the most successful color models for displaying perceptual uniformity. Use the sliders to change the focus, and feel free to interact with the color space itself, it can be rotated by clicking and dragging on it.
-  View: Order  Mode: RGB XYZ CIELab OKLab CAM16-UCS    Isolate Focus True Cloud Vertical Rotation Lock  Color Blindness: Compact View  Trichromacy Protanopia Deuteranopia Tritanopia Achromatopsia" />
+<meta property="og:description" content="Here is a point cloud containing $2^{15}$ particles for exploring the various color spaces. They have various purposes, but CIELab, OKLab, and CAM16-UCS are all designed to be perceptually uniform. This design is built to make it easy to see the differences (and surprising variability) between these spaces which are all supposed to be perceptually uniform, and contrast them against the famous RGB space and the XYZ space (which is a convenient space for conversions)." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://agaura.github.io/cloud/" /><meta property="article:section" content="" />
 <meta property="article:published_time" content="2023-07-26T11:26:07-04:00" />
@@ -14,8 +13,7 @@
 
   <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Color Space Point Cloud"/>
-<meta name="twitter:description" content="Here is a point cloud containing $2^{15}$ particles for exploring the various color spaces, one of the most successful color models for displaying perceptual uniformity. Use the sliders to change the focus, and feel free to interact with the color space itself, it can be rotated by clicking and dragging on it.
-  View: Order  Mode: RGB XYZ CIELab OKLab CAM16-UCS    Isolate Focus True Cloud Vertical Rotation Lock  Color Blindness: Compact View  Trichromacy Protanopia Deuteranopia Tritanopia Achromatopsia"/>
+<meta name="twitter:description" content="Here is a point cloud containing $2^{15}$ particles for exploring the various color spaces. They have various purposes, but CIELab, OKLab, and CAM16-UCS are all designed to be perceptually uniform. This design is built to make it easy to see the differences (and surprising variability) between these spaces which are all supposed to be perceptually uniform, and contrast them against the famous RGB space and the XYZ space (which is a convenient space for conversions)."/>
 
   
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-BBWS173BMQ"></script>
@@ -45,11 +43,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1693153192.css">
+  <link rel="stylesheet" href="/minima.1694577700.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1693153192.js"></script>
+  <script defer type="text/javascript" src="/minima.1694577700.js"></script>
 </head>
 <script>
   
@@ -110,13 +108,20 @@ if (!doNotTrack) {
 <main>
 	<p></p>
 	<article class="md">
-		<p>  Here is a point cloud containing $2^{15}$ particles for exploring the various color spaces, one of the most successful color models for displaying perceptual uniformity. Use the sliders to change the focus, and feel free to interact with the color space itself, it can be rotated by clicking and dragging on it.</p>
+		<p>  Here is a point cloud containing $2^{15}$ particles for exploring the various color spaces. They have various purposes, but CIELab, OKLab, and CAM16-UCS are all designed to be perceptually uniform. This design is built to make it easy to see the differences (and surprising variability) between these spaces which are all supposed to be perceptually uniform, and contrast them against the famous RGB space and the XYZ space (which is a convenient space for conversions).</p>
+<p>  Use the sliders to change the focus, and feel free to interact with the color space itself, it can be rotated by clicking and dragging on it.</p>
 <script src="https://d3js.org/d3.v6.min.js"></script>
 <script src="https://unpkg.com/d3-simple-slider"></script>
 <div align="center" id='view'>
 <br>
 View:   <input type="checkbox" id="order" name="view" value="0">
 <label for="0">Order</label>
+<input type="checkbox" id="truecloud" name="truecloud" >
+<label for="1">True Cloud</label>
+<input type="checkbox" id="verticallock" name="verticallock" checked="checked">
+<label for="1">Vertical Lock</label>
+<input type="checkbox" id="pole" name="pole" checked="checked">
+<label for="1">Pole</label>
 </div>
 <div align="center" id='mode'>
 <br>
@@ -126,21 +131,24 @@ Mode:   <input type="radio" id="rgb" name="mode" value="0">
 <label for="1">XYZ</label>
 <input type="radio" id="cielab" name="mode" value="2">
 <label for="0">CIELab</label>
-<input type="radio" id="oklab" name="mode" value="3" checked="checked">
-<label for="1">OKLab</label>
 <input type="radio" id="cam16" name="mode" value="4">
 <label for="2">CAM16-UCS</label>
+<input type="radio" id="oklab" name="mode" value="3" checked="checked">
+<label for="1">OKLab</label>
 </div>
 <div id ="div" align="center" onmouseover="this.style.cursor='pointer';" style="touch-action: none"><canvas text-align='center' id="canvas"></canvas></div>
 <div align="center" id="sliders"></div>
-<div align="center" id='radiobtn'>
+<div align="center"/>
+<br>
+Focus:
+<br>
+<div align="center">
 <br>
 <input type="checkbox" id="isolate" name="isolate" >
-<label for="0">Isolate Focus</label>
-<input type="checkbox" id="truecloud" name="truecloud" >
-<label for="1">True Cloud</label>
-<input type="checkbox" id="verticallock" name="verticallock" checked="checked">
-<label for="1">Vertical Rotation Lock</label>
+<label for="0">Isolate</label>
+<input type="checkbox" id="orientation" name="view" value="0">
+<label for="1">Follow</label>
+<br>
 </div>
 <div align="center"/>
 <br>Color Blindness: 
@@ -164,6 +172,7 @@ Mode:   <input type="radio" id="rgb" name="mode" value="0">
 <br>
 <input type="radio" id="achromatopsia" name="type" value="4">
 <label for="1">Achromatopsia</label>
+<br>
 </div>
 <div align="center" id="sliders2"></div>
 <svg id = "hue" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
@@ -313,9 +322,11 @@ vec3 oklab_to_linear_srgb(vec3 c)
 {
     float l_ = c.x + 0.3963377774f * c.y + 0.2158037573f * c.z;
     float m_ = c.x - 0.1055613458f * c.y - 0.0638541728f * c.z;
-    float s_ = c.x - 0.0894841775f * c.y - 1.2914855480f * c.z;	float l = l_ * l_ * l_;
+    float s_ = c.x - 0.0894841775f * c.y - 1.2914855480f * c.z;
+    float l = l_ * l_ * l_;
     float m = m_ * m_ * m_;
-    float s = s_ * s_ * s_;	return vec3(
+    float s = s_ * s_ * s_;
+    return vec3(
         +4.0767416621f * l - 3.3077115913f * m + 0.2309699292f * s,
         -1.2684380046f * l + 2.6097574011f * m - 0.3413193965f * s,
         -0.0041960863f * l - 0.7034186147f * m + 1.7076147010f * s
@@ -1335,80 +1346,63 @@ mat3 rotateZ(float theta) {
     uniform float theta1;
     uniform float theta2;
     uniform float theta3;
+    uniform bool orientationLock;
+    uniform float orientation;
 
     vec3 blindness_transform(vec3 shade) {
 
         mat3 transform = mat3(0.);
-        if (type == 1) transform = protanopia;
-        else if (type == 2) transform = deuteranopia;
-        else if (type == 3) transform = tritanopia;
-        else if (type == 4) transform = achromatopsia;
-        vec3 color = vec3(
-        srgb_transfer_function_inv(shade.x),
-        srgb_transfer_function_inv(shade.y),
-        srgb_transfer_function_inv(shade.z)) * (transform * severity + identity * (1. - severity));
-        return clamp(vec3(
-            srgb_transfer_function(color.x),
-            srgb_transfer_function(color.y),
-            srgb_transfer_function(color.z)),0.0,1.0);
-    }
-
-    vec3 old_convert(vec3 shade, bool adj) {
-        if (mode == 0) {
-            //if (adj) return 1.*(rotateZ(3.*M_PI/16.)*rotateY(M_PI/4.)*rotateX(M_PI/2.)*shade)-vec3(1.,.0,.0);
-            if (adj) return 1.5*(rotateX(0.83*M_PI)*rotateZ(0.305*M_PI)*rotateX(M_PI/4.)*shade)-vec3(1.2,.0,.0);
-            //if (adj) return 1.*(rotateZ(theta3)*rotateY(theta2)*rotateX(theta1)*shade)-vec3(.5,.0,.0);
-            else return 1.0*shade;
-            }
-        else if (mode == 1) {
-            //if (adj) return 1.5*(sRGBtoXYZ(shade)-vec3(.0,.5,.5));
-            //if (adj) return 1.5*(rotateZ(theta3)*rotateY(theta2)*rotateX(theta1)*sRGBtoXYZ(shade))-vec3(1.25,.0,.0);
-            if (adj) return 1.5*(rotateX(0.38 * M_PI)*rotateZ(0.315 * M_PI)*rotateY(0.276* M_PI)*rotateX(0.4* M_PI)*sRGBtoXYZ(shade))-vec3(1.25,.0,.0);
-            else return RGBtoXYZ(shade);
-            }
-        else if (mode == 2) {
-            if (adj) return 1.*(RGB2Lab(vec3(srgb_transfer_function_inv(shade.x),
+        vec3 color = vec3(0.0);
+        if (type != 5) {
+            if (type == 1) transform = protanopia;
+            else if (type == 2) transform = deuteranopia;
+            else if (type == 3) transform = tritanopia;
+            else if (type == 4) transform = achromatopsia;
+            color = vec3(
+                srgb_transfer_function_inv(shade.x),
                 srgb_transfer_function_inv(shade.y),
-                srgb_transfer_function_inv(shade.z)))-vec3(.5,.0,.0));
-            else return RGB2Lab(shade);
-            }
-        else if (mode == 3) {
-            if (adj) return 2.8*(srgb_to_oklab(shade)-vec3(.5,.0,.0));
-            else return srgb_to_oklab(shade);}
-        else if (mode == 4) {
-            // this color space seems to avoid distributing colors around grays, so this is to fix that
-            vec3 okhsl = srgb_to_okhsl(shade);
-            vec3 new_shade = clamp(okhsl_to_srgb(vec3(okhsl.x, mix(okhsl.y,pow(okhsl.y,2.),0.5+0.5*pow(okhsl.y,.5)), okhsl.z)),0.0,1.0);
-            if (adj) return 2.5*(polar_to_standard(XYZ_D65_to_CAM16_UCS(sRGB_TO_XYZ_D65*vec3                (
-                srgb_transfer_function_inv(new_shade.x),
-                srgb_transfer_function_inv(new_shade.y),
-                srgb_transfer_function_inv(new_shade.z))))-vec3(.5,.0,.0));
-            else return polar_to_standard(XYZ_D65_to_CAM16_UCS(sRGB_TO_XYZ_D65*new_shade));}
+                srgb_transfer_function_inv(shade.z)) * (transform * severity + identity * (1. - severity));
+            return clamp(vec3(
+                srgb_transfer_function(color.x),
+                srgb_transfer_function(color.y),
+                srgb_transfer_function(color.z)),0.0,1.0);
+        }
+        
+        color = srgb_to_okhsl(shade);
+        //vec3 destination = okhsl_to_srgb(vec3(ideal.r, color.gb));
+        //vec3 newColor = srgb_to_okhsl(mix(shade, destination, severity));
+        //return okhsl_to_srgb(vec3(newColor.r, color.g, newColor.b));
+        //return okhsl_to_srgb(vec3(color.r, mix(1.0,color.g,1.-severity), mix(0.5,color.b,1.-severity)));
+        //return clamp(okhsl_to_srgb(vec3(mix(0.5, mod(color.r - ideal.r - 0.5,1.0), 1.-severity) + ideal.r + 0.5, color.gb)),vec3(0.0),vec3(1.0));
+        return okhsl_to_srgb(vec3(ideal.r, color.gb));
     }
 
     vec3 convert(vec3 shade) {
+        vec3 conversion = vec3(0.0);
         if (mode == 0) {
-            return 1.5*(rotateX(0.83*M_PI)*rotateZ(0.305*M_PI)*rotateX(M_PI/4.)*shade)-vec3(1.2,.0,.0);
+            conversion = 1.5*(rotateX(0.83*M_PI)*rotateZ(0.305*M_PI)*rotateX(M_PI/4.)*shade)-vec3(1.2,.0,.0);
         }
         else if (mode == 1) {
-            return 1.5*(rotateX(0.38 * M_PI)*rotateZ(0.315 * M_PI)*rotateY(0.276* M_PI)*rotateX(0.4* M_PI)*sRGBtoXYZ(shade))-vec3(1.25,.0,.0);
+            conversion = 1.5*(rotateX(0.38 * M_PI)*rotateZ(0.315 * M_PI)*rotateY(0.276* M_PI)*rotateX(0.4* M_PI)*sRGBtoXYZ(shade))-vec3(1.25,.0,.0);
         }
         else if (mode == 2) {
-            return 1.*(RGB2Lab(vec3(srgb_transfer_function_inv(shade.x),
+            conversion =  1.*(RGB2Lab(vec3(srgb_transfer_function_inv(shade.x),
                 srgb_transfer_function_inv(shade.y),
                 srgb_transfer_function_inv(shade.z)))-vec3(.5,.0,.0));
         }
         else if (mode == 3) {
-            return 2.8*(srgb_to_oklab(shade)-vec3(.5,.0,.0));
+            conversion = 2.8*(srgb_to_oklab(shade)-vec3(.5,.0,.0));
         }
         else if (mode == 4) {
             // this color space seems to avoid distributing colors around grays, so this is to fix that
             vec3 new_shade = shade;
-            return 2.5*(polar_to_standard(XYZ_D65_to_CAM16_UCS(sRGB_TO_XYZ_D65*vec3(
+            conversion = 2.5*(polar_to_standard(XYZ_D65_to_CAM16_UCS(sRGB_TO_XYZ_D65*vec3(
                 srgb_transfer_function_inv(new_shade.x),
                 srgb_transfer_function_inv(new_shade.y),
                 srgb_transfer_function_inv(new_shade.z))))-vec3(.5,.0,.0));
         }
+        if (orientationLock) return conversion * rotateX((-ideal.r - orientation + 0.25) * 2.*M_PI);
+        return conversion * rotateX((-orientation + 0.25) * 2.*M_PI);
     }
 
     vec3 randomizer(vec3 starter, bool edge) {
@@ -1449,6 +1443,7 @@ mat3 rotateZ(float theta) {
         return rand(vec2(89.8*p1,rand(vec2(107.9*p2,56.03*p3))));
     }
 
+    // take a cube of points and returns the cube but with the points moving in a cloud
     vec3 placement(vec3 pos) {
         // freedom of movement for each particle
         float deviation = 1./16.;
@@ -1470,25 +1465,14 @@ mat3 rotateZ(float theta) {
             new_pos = clamp(okhsl_to_srgb(vec3(okhsl.x, mix(okhsl.y,pow(okhsl.y,2.),0.5+0.5*pow(okhsl.y,.5)), okhsl.z)),0.0,1.0);
         }
 
+        if (type == 5) {
+            vec3 xxx = srgb_to_okhsl(new_pos.rgb);
+            new_pos = clamp(okhsl_to_srgb(vec3(xxx.r, pow(xxx.g, 2.0), xxx.b)),0.0,1.0);
+        }
+
         // actual placement
         if (!order) return pow(new_pos.xyz * (1.0 - deviation) + (deviation / 2.) + deviation * (randomizer(new_pos, edge) - 0.5), vec3(distribution));
         else return pow(new_pos.xyz, vec3(distribution)); // multiplying new_pos by 65./64. seems very desirable, but there's something wonky with the colorblindness types
-    }
-
-    // defunct
-    vec3 space_embed_ideal(vec3 shade) {
-        // allows saturation to go negative "naturally"
-        vec3 newIdeal = shade;
-        if (shade.y < 0.) {
-            newIdeal.x += 0.5;
-            newIdeal.y = -newIdeal.y;
-        }
-
-        vec3 conversion = convert(okhsl_to_srgb(newIdeal));
-        
-        //return vec3(shade.z, conversion.yz);
-        return conversion;
-
     }
 
     bool is_sent_to_colorblind_subspace(vec3 pos, float dim_size, int inv_prop) {
@@ -1501,6 +1485,7 @@ mat3 rotateZ(float theta) {
 
         // allows saturation to go negative "naturally"
         vec3 newIdeal = ideal;
+        //newIdeal = vec3(264./360.,1.,0.45);
         if (ideal.y < 0.) {
             newIdeal.x += 0.5;
             newIdeal.y = -newIdeal.y;
@@ -1515,6 +1500,7 @@ mat3 rotateZ(float theta) {
         float dim_size = 32.; // this should probably be a uniform
         float inv_prop = 2.;
         if (type == 4) inv_prop = 4.;
+        if (type == 5) inv_prop = 10000000000.;
         float dist = 0.;
         vec4 newPosition = vec4(0.0);
 
@@ -1526,7 +1512,12 @@ mat3 rotateZ(float theta) {
 
                 color = placement(position);
                 newPosition = vec4(convert(blindness_transform(color)), 1.0);
-                dist = clamp(0.5*distance(newPosition.xyz,convert(blindness_transform(rgbIdeal))),0.0,1.0);
+                if (type == 5) {
+                    color = blindness_transform(color);
+                    newPosition = vec4(convert(color),1.0);
+                    }
+                if (type == 5) dist = 0.1;
+                else dist = clamp(0.5*distance(newPosition.xyz,convert(blindness_transform(rgbIdeal))),0.0,1.0);
                 gl_PointSize = (pow(1. - dist, focus * 40.0)) * (30. - 20. * (1.0 - focus)) + 1.;
             }
 
@@ -1552,6 +1543,7 @@ mat3 rotateZ(float theta) {
 
             color = placement(position);
             dist = clamp(0.5*distance(convert(color),convert(rgbIdeal)),0.0,1.0);
+            //dist = clamp(0.5*distance(convert(color),2.8*vec3(0.45201-0.5, -0.03246, -0.31153)),0.0,1.0);
             gl_PointSize = (pow(1. - dist, focus * 40.0)) * (30. - 20. * (1.0 - focus)) + 1.;
             newPosition = vec4(convert(color), 1.0);
         }
@@ -1580,6 +1572,7 @@ mat3 rotateZ(float theta) {
     varying float alpha;
     uniform bool isolate;
     uniform bool truecloud;
+    uniform int type;
 
     void main() {
 
@@ -1590,6 +1583,7 @@ mat3 rotateZ(float theta) {
         gl_FragColor.rgb = new_color * alpha;
         gl_FragColor.a = alpha;
         if (isolate) if (alpha < 0.85) gl_FragColor = vec4(0.0);
+        if (type == 5) gl_FragColor.a = 1.0;
         //if (isolate) if ((alpha < 0.9) && (okcolor.y < 0.7)) gl_FragColor.a = 0.0;
     }
 </script>
@@ -1638,7 +1632,9 @@ mat3 rotateZ(float theta) {
             theta1: {value: 0.0},
             theta2: {value: 0.0},
             theta3: {value: 0.0},
-            focus: { value: .5 }
+            focus: { value: .5 },
+            orientationLock: {value: 0.},
+            orientation: {value: 0.}
         }
     });
 
@@ -1703,6 +1699,21 @@ mat3 rotateZ(float theta) {
     totalX = 0,
     totalY = 0,
     momentumID;
+    var orientation = 0.0;
+    var colorFocus = [0,1.0,0.5]
+
+    var orientationCheckbox = document.getElementById("orientation");
+    orientationCheckbox.onchange = function(){
+        if (document.getElementById("orientation").checked) orientation -= colorFocus[0];
+        else orientation += colorFocus[0];
+        orientation = orientation % 1.
+    }
+
+    var poleCheckbox = document.getElementById("pole");
+    poleCheckbox.onchange = function(){
+        if (document.getElementById("pole").checked) line.visible = true;
+        else line.visible = false;
+    }
 
     div.addEventListener('pointerdown', function (event) {
         event.preventDefault();
@@ -1776,8 +1787,10 @@ mat3 rotateZ(float theta) {
         points.material.uniforms.order.value = document.getElementById("order").checked;
         points.material.uniforms.mode.value = parseInt(document.querySelector('input[name="mode"]:checked').value);
         points.material.uniforms.type.value = parseInt(document.querySelector('input[name="type"]:checked').value);
-        renderer.render(scene, camera);
         points.material.uniforms.compact.value = document.getElementById("compact").checked;
+        points.material.uniforms.orientationLock.value = document.getElementById("orientation").checked;
+        points.material.uniforms.orientation.value = orientation;
+        renderer.render(scene, camera);
     }
     animate();
 
@@ -1811,8 +1824,6 @@ mat3 rotateZ(float theta) {
         gFill.append('g').attr('transform', 'translate(-50,-12)').node().appendChild(svgIcon.node())
         //svgIcon.attr('transform', 'translate(30,30)')
     }
-
-    var colorFocus = [0,1.0,0.5]
 
     makeSlider('sliders', 0.0, "hue", [0.0,1.0], val => {
         colorFocus = [val, colorFocus[1], colorFocus[2]]
