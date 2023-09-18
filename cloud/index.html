@@ -43,11 +43,11 @@ if (!doNotTrack) {
   
   
   
-  <link rel="stylesheet" href="/minima.1694577700.css">
+  <link rel="stylesheet" href="/minima.1695073981.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1694577700.js"></script>
+  <script defer type="text/javascript" src="/minima.1695073981.js"></script>
 </head>
 <script>
   
@@ -131,10 +131,10 @@ Mode:   <input type="radio" id="rgb" name="mode" value="0">
 <label for="1">XYZ</label>
 <input type="radio" id="cielab" name="mode" value="2">
 <label for="0">CIELab</label>
-<input type="radio" id="cam16" name="mode" value="4">
-<label for="2">CAM16-UCS</label>
 <input type="radio" id="oklab" name="mode" value="3" checked="checked">
 <label for="1">OKLab</label>
+<input type="radio" id="cam16" name="mode" value="4">
+<label for="2">CAM16-UCS</label>
 </div>
 <div id ="div" align="center" onmouseover="this.style.cursor='pointer';" style="touch-action: none"><canvas text-align='center' id="canvas"></canvas></div>
 <div align="center" id="sliders"></div>
@@ -149,6 +149,12 @@ Focus:
 <input type="checkbox" id="orientation" name="view" value="0">
 <label for="1">Follow</label>
 <br>
+<input type="radio" id="sphere" name="focus" value="0" checked="checked">
+<label for="1">Spherical</label>
+<input type="radio" id="verticle" name="focus" value="1">
+<label for="1">Vertical</label>
+<input type="radio" id="horizontal" name="focus" value="2">
+<label for="1">Horizontal</label>
 </div>
 <div align="center"/>
 <br>Color Blindness: 
@@ -173,6 +179,8 @@ Focus:
 <input type="radio" id="achromatopsia" name="type" value="4">
 <label for="1">Achromatopsia</label>
 <br>
+<input type="radio" id="lightblindness" name="type" value="5">
+<label for="1">Lightness Blindness (impossible/for fun)</label>
 </div>
 <div align="center" id="sliders2"></div>
 <svg id = "hue" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
