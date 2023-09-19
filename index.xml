@@ -9,6 +9,15 @@
     <copyright>TH ↔ Þ</copyright>
     <lastBuildDate>Wed, 15 Mar 2023 15:58:16 -0400</lastBuildDate><atom:link href="https://agaura.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>Hue Experiment</title>
+      <link>https://agaura.github.io/hueexperiment/</link>
+      <pubDate>Fri, 25 Aug 2023 13:21:49 -0400</pubDate>
+      
+      <guid>https://agaura.github.io/hueexperiment/</guid>
+      <description>Introduction  When looking through the various &amp;ldquo;uniform&amp;rdquo; color spaces, a common problem occurs: I am 99% certain the hues are not uniform. I feel like I&amp;rsquo;m being gaslit. In what world is yellow the opposite color of blue? In what world are red, green, and blue equally spaced? Is it not obvious that green and blue are similar, while red is much farther from the other two (particularly from green)?</description>
+    </item>
+    
+    <item>
       <title>Color Space Point Cloud</title>
       <link>https://agaura.github.io/cloud/</link>
       <pubDate>Wed, 26 Jul 2023 11:26:07 -0400</pubDate>
