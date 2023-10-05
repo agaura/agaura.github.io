@@ -14,7 +14,7 @@
       <pubDate>Wed, 26 Jul 2023 11:26:07 -0400</pubDate>
       
       <guid>https://agaura.github.io/cloud/</guid>
-      <description>Here is a point cloud containing $2^{15}$ particles for exploring the various color spaces. They have various purposes, but CIELab, OKLab, and CAM16-UCS are all designed to be perceptually uniform. This design is built to make it easy to see the differences (and surprising variability) between these spaces which are all supposed to be perceptually uniform, and contrast them against the famous RGB space and the XYZ space (which is a convenient space for conversions).</description>
+      <description>Here is a point cloud containing $2^{15}$ particles for exploring the various color spaces (or, more accurately, exploring the projection of sRGB into these spaces). They have various purposes, but CIELab, OKLab, and CAM16-UCS are all designed to be perceptually uniform. This design is built to make it easy to see the differences and surprising variability between these three spaces, and contrast them against the famous RGB space and the XYZ space (which is a convenient space for conversions and characterization of colors).</description>
     </item>
     
     <item>
