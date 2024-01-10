@@ -9,17 +9,6 @@
     <copyright>TH ↔ Þ</copyright>
     <lastBuildDate>Wed, 06 Dec 2023 16:26:55 -0500</lastBuildDate><atom:link href="https://agaura.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Color Mixing</title>
-      <link>https://agaura.github.io/colormixing/</link>
-      <pubDate>Thu, 04 Jan 2024 21:43:14 -0500</pubDate>
-      
-      <guid>https://agaura.github.io/colormixing/</guid>
-      <description>Introduction  An important aspect topic in color science is color mixing.
-    ▶️
-      // an attribute is an input (in) to a vertex shader. // It will receive data from a buffer in vec2 a_position; in vec2 a_texCoord;// Used to pass in the resolution of the canvas uniform vec2 u_resolution;// Used to pass the texture coordinates to the fragment shader out vec2 v_texCoord;// all shaders have a main function void main() { // convert the position from pixels to 0.</description>
-    </item>
-    
-    <item>
       <title>A True Rainbow</title>
       <link>https://agaura.github.io/rainbow/</link>
       <pubDate>Wed, 06 Dec 2023 16:26:55 -0500</pubDate>
