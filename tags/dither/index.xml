@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>TH ↔ Þ</copyright>
-    <lastBuildDate>Wed, 15 Mar 2023 15:58:16 -0400</lastBuildDate><atom:link href="https://agaura.github.io/tags/dither/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 15 Jan 2024 18:52:17 -0500</lastBuildDate><atom:link href="https://agaura.github.io/tags/dither/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Color Mixing Prediction by Dither</title>
+      <link>https://agaura.github.io/colormixing/</link>
+      <pubDate>Mon, 15 Jan 2024 18:52:17 -0500</pubDate>
+      
+      <guid>https://agaura.github.io/colormixing/</guid>
+      <description>Introduction  There was a very interesting article I came across that I highly recommend discussing the gamma function that addressed color mixing. Essentially: color mixing is often done inaccurately. For example, if you mix two sRGB colors by just averaging them, that color will not be the same color as if you just shined two flashlights of those colors (at 50% brightness) and overlapped them. This is because sRGB colors do not represent the amount of red, green, and blue light you need to mix a color.</description>
+    </item>
+    
     <item>
       <title>Smokestream</title>
       <link>https://agaura.github.io/smokestream/</link>
