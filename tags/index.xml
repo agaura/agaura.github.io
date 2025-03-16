@@ -2,25 +2,25 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Alexander Gaura</title>
-    <link>http://localhost:1313/tags/</link>
+    <link>https://agaura.github.io/tags/</link>
     <description>Recent content in Tags on Alexander Gaura</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>TH ↔ Þ</copyright>
     <lastBuildDate>Mon, 15 Jan 2024 18:52:17 -0500</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://agaura.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Dither</title>
-      <link>http://localhost:1313/tags/dither/</link>
+      <link>https://agaura.github.io/tags/dither/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/dither/</guid>
+      <guid>https://agaura.github.io/tags/dither/</guid>
       <description></description>
     </item>
     <item>
       <title>Shader</title>
-      <link>http://localhost:1313/tags/shader/</link>
+      <link>https://agaura.github.io/tags/shader/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/shader/</guid>
+      <guid>https://agaura.github.io/tags/shader/</guid>
       <description></description>
     </item>
   </channel>
