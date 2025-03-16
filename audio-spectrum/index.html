@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta property="og:url" content="http://localhost:1313/audio-spectrum/">
+  <meta property="og:site_name" content="Alexander Gaura">
+  <meta property="og:title" content="Audio Spectrum">
+  <meta property="og:description" content="Audio Graph Below you can find a graph representing the spectrum of the audio input. The graph is interactive, so feel free trying to click and drag the graph or zoom to see better. Additionally, two different gradients are used depending on whether you are viewing in dark mode or light mode, so click the ⚪️/⚫️ button to switch.
+▶️">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:published_time" content="2022-11-28T12:06:38+01:00">
+    <meta property="article:modified_time" content="2022-11-28T12:06:38+01:00">
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Audio Spectrum">
+  <meta name="twitter:description" content="Audio Graph Below you can find a graph representing the spectrum of the audio input. The graph is interactive, so feel free trying to click and drag the graph or zoom to see better. Additionally, two different gradients are used depending on whether you are viewing in dark mode or light mode, so click the ⚪️/⚫️ button to switch.
+▶️">
+
+  
+  
+    
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-BBWS173BMQ"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-BBWS173BMQ');
+        }
+      </script>
+    
+  
+
+
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#262d33">
+  <title>
+    
+    Alexander Gaura - Audio Spectrum
+    
+  </title>
+  
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  
+  
+  
+  <link rel="stylesheet" href="/minima.1742162478.css">
+
+  
+  
+  <script defer type="text/javascript" src="/minima.1742162478.js"></script>
+</head>
+<script>
+  
+  let theme_2b_used = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+
+  try {
+    if (!('theme' in localStorage)) {
+      const default_theme = 'system';
+      
+      
+      if (default_theme === 'dark' || default_theme === 'light') {
+        theme_2b_used = default_theme;
+      }
+
+      
+      localStorage.theme = theme_2b_used;
+    }
+    
+    document.querySelector('html').classList.add(localStorage.theme);
+  } catch (e) {
+    console.error(e);
+  }
+</script>
+
+
+<body class=" sm:mx-5 sm:my-0">
+  <header class="flex justify-between items-center mb-6 sm:my-3">
+  <div class="flex items-center">
+    
+    <div id="theme-switcher" class="text-4xl cursor-pointer">⚫️</div>
+  </div>
+  <nav class="flex items-center
+    whitespace-nowrap overflow-x-auto overflow-y-hidden">
+    
+    <a class="ml-5" href="/">Home</a>
+    
+    <a class="ml-5" href="/categories/writing">Writing</a>
+    
+    <a class="ml-5" href="/categories/projects">Projects</a>
+    
+    <a class="ml-5" href="/about">About</a>
+    
+  </nav>
+</header>
+  
+  
+
+<h1 class="mt-6 mb-6">Audio Spectrum</h1>
+<div class="mb-3 text-xs flex justify-between sm:flex-col">
+	<div>
+	
+		Posted at &mdash; Nov 28, 2022
+	
+		
+	</div>
+	
+</div>
+<main>
+	<p></p>
+	<article class="md">
+		<h1 id="audio-graph">Audio Graph</h1>
+<p>   Below you can find a graph representing the spectrum of the audio input. The graph is interactive, so feel free trying to click and drag the graph or zoom to see better. Additionally, two different gradients are used depending on whether you are viewing in dark mode or light mode, so click the ⚪️/⚫️ button to switch.</p>
+<p><b style="font-size:30px" id='btn' onmouseover="this.style.cursor='pointer';" width = 20px>▶️</b></p>
+<div id="container" style="display:none">
+</div>
+<style>
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 2px;
+}
+.axis line{
+  stroke: #808080;
+}
+.axis path{
+  stroke: #808080;
+}
+.axis text{
+  fill: #808080;
+}  
+.axis-grid line{
+  stroke: #80808020;
+}
+.axis-grid path{
+  stroke: #80808020;
+}
+</style>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://unpkg.com/d3-simple-slider"></script>
+<script src="https://unpkg.com/topojson@3"></script>
+<script src="https://webgl2fundamentals.org/webgl/resources/webgl-utils.js"></script>
+<script>
+var vertexShaderSource = `#version 300 es
+     // an attribute is an input (in) to a vertex shader.
+// It will receive data from a buffer
+in vec2 a_position;
+in vec2 a_texCoord;// Used to pass in the resolution of the canvas
+uniform vec2 u_resolution;// Used to pass the texture coordinates to the fragment shader
+out vec2 v_texCoord;// all shaders have a main function
+void main() {// convert the position from pixels to 0.0 to 1.0
+vec2 zeroToOne = a_position / u_resolution;// convert from 0->1 to 0->2
+vec2 zeroToTwo = zeroToOne * 2.0;// convert from 0->2 to -1->+1 (clipspace)
+vec2 clipSpace = zeroToTwo - 1.0;
+gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);// pass the texCoord to the fragment shader
+// The GPU will interpolate this value between points.
+v_texCoord = a_texCoord * vec2(1.0,-1.0) + vec2(0.0,1.0);
+}
+`;
+
+var scaleVert = `#version 300 es
+     // an attribute is an input (in) to a vertex shader.
+// It will receive data from a buffer
+in vec2 a_position;
+in vec2 a_texCoord;// Used to pass in the resolution of the canvas
+uniform vec2 u_resolution;// Used to pass the texture coordinates to the fragment shader
+uniform float k;
+uniform float tx;
+uniform float ty;
+out vec2 v_texCoord;// all shaders have a main function
+void main() {// convert the position from pixels to 0.0 to 1.0
+vec2 zeroToOne = a_position / vec2(1950.,1024.);// convert from 0->1 to 0->2
+vec2 zeroToTwo = zeroToOne * 2.0;// convert from 0->2 to -1->+1 (clipspace)
+vec2 clipSpace = zeroToTwo - 1.0;
+gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);// pass the texCoord to the fragment shader
+v_texCoord = 1./k * (vec2(-tx / 1950., ty / 1024.) + a_texCoord * vec2(1.0,-1.0) + vec2(0.0, 1.0)) + vec2(1.0 - u_resolution.x/1950., (k - 1.) * (u_resolution.y/1024.) / k);
+}
+`;
+
+var iterFrag = `#version 300 es
+// fragment shaders don't have a default precision so we need
+// to pick one. highp is a good default. It means "high precision"
+precision highp float;float rand(vec2 co) {
+    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+}// Copyright(c) 2021 Björn Ottosson
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy of
+// this softwareand associated documentation files(the "Software"), to deal in
+// the Software without restriction, including without limitation the rights to
+// use, copy, modify, merge, publish, distribute, sublicense, and /or sell copies
+// of the Software, and to permit persons to whom the Software is furnished to do
+// so, subject to the following conditions :
+// The above copyright noticeand this permission notice shall be included in all
+// copies or substantial portions of the Software.
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
+uniform sampler2D u_image;
+uniform sampler2D prev_image;
+uniform float time;
+uniform vec2 res;
+// the texCoords passed in from the vertex shader.
+in vec2 v_texCoord;// we need to declare an output for the fragment shader
+out vec4 outColor;
+
+void main()
+{
+    vec2 uv = v_texCoord;
+
+    vec2 pixel = 1.0 / res;
+
+	float speed = 1.0; // should be an integer
+
+    if (uv.x < 1.0 - pixel.x * speed) {outColor = texture(prev_image, uv + vec2(speed * pixel.x,0.0));}
+    else {outColor = vec4(texture(u_image, uv.yx).r, 0.0, 0.0, 1.0);}
+
+	/*
+	if ((uv.x < 0.01) && (uv.y < 0.01)) {outColor = vec4(1.0,0.0,0.0,1.0);}
+	if ((uv.x < 0.01) && (uv.y > 0.99)) {outColor = vec4(0.75,0.0,0.0,1.0);}
+	if ((uv.x > 0.99) && (uv.y < 0.01)) {outColor = vec4(0.5,0.0,0.0,1.0);}
+	if ((uv.x > 0.99) && (uv.y > 0.99)) {outColor = vec4(0.25,0.0,0.0,1.0);}
+
+	outColor = vec4((uv.x + uv.y) / 2.,0.0,0.0,1.0);
+
+    outColor = vec4(uv.x,0.0,0.0,1.0);
+	*/
+}`;
+
+var colorFrag = `#version 300 es
+// fragment shaders don't have a default precision so we need
+// to pick one. highp is a good default. It means "high precision"
+precision highp float;float rand(vec2 co) {
+    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+}// Copyright(c) 2021 Björn Ottosson
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy of
+// this softwareand associated documentation files(the "Software"), to deal in
+// the Software without restriction, including without limitation the rights to
+// use, copy, modify, merge, publish, distribute, sublicense, and /or sell copies
+// of the Software, and to permit persons to whom the Software is furnished to do
+// so, subject to the following conditions :
+// The above copyright noticeand this permission notice shall be included in all
+// copies or substantial portions of the Software.
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+#define M_PI 3.1415926535897932384626433832795
+float cbrt( float x )
+{
+    return sign(x)*pow(abs(x),1.0f/3.0f);
+}float srgb_transfer_function(float a)
+{
+	return .0031308f >= a ? 12.92f * a : 1.055f * pow(a, .4166666666666667f) - .055f;
+}float srgb_transfer_function_inv(float a)
+{
+	return .04045f < a ? pow((a + .055f) / 1.055f, 2.4f) : a / 12.92f;
+}vec3 linear_srgb_to_oklab(vec3 c)
+{
+	float l = 0.4122214708f * c.r + 0.5363325363f * c.g + 0.0514459929f * c.b;
+	float m = 0.2119034982f * c.r + 0.6806995451f * c.g + 0.1073969566f * c.b;
+	float s = 0.0883024619f * c.r + 0.2817188376f * c.g + 0.6299787005f * c.b;	float l_ = cbrt(l);
+	float m_ = cbrt(m);
+	float s_ = cbrt(s);	return vec3(
+		0.2104542553f * l_ + 0.7936177850f * m_ - 0.0040720468f * s_,
+		1.9779984951f * l_ - 2.4285922050f * m_ + 0.4505937099f * s_,
+		0.0259040371f * l_ + 0.7827717662f * m_ - 0.8086757660f * s_
+	);
+}vec3 oklab_to_linear_srgb(vec3 c)
+{
+	float l_ = c.x + 0.3963377774f * c.y + 0.2158037573f * c.z;
+	float m_ = c.x - 0.1055613458f * c.y - 0.0638541728f * c.z;
+	float s_ = c.x - 0.0894841775f * c.y - 1.2914855480f * c.z;	float l = l_ * l_ * l_;
+	float m = m_ * m_ * m_;
+	float s = s_ * s_ * s_;	return vec3(
+		+4.0767416621f * l - 3.3077115913f * m + 0.2309699292f * s,
+		-1.2684380046f * l + 2.6097574011f * m - 0.3413193965f * s,
+		-0.0041960863f * l - 0.7034186147f * m + 1.7076147010f * s
+	);
+}// Finds the maximum saturation possible for a given hue that fits in sRGB
+// Saturation here is defined as S = C/L
+// a and b must be normalized so a^2 + b^2 == 1
+float compute_max_saturation(float a, float b)
+{
+	// Max saturation will be when one of r, g or b goes below zero.	// Select different coefficients depending on which component goes below zero first
+	float k0, k1, k2, k3, k4, wl, wm, ws;	if (-1.88170328f * a - 0.80936493f * b > 1.f)
+	{
+		// Red component
+		k0 = +1.19086277f; k1 = +1.76576728f; k2 = +0.59662641f; k3 = +0.75515197f; k4 = +0.56771245f;
+		wl = +4.0767416621f; wm = -3.3077115913f; ws = +0.2309699292f;
+	}
+	else if (1.81444104f * a - 1.19445276f * b > 1.f)
+	{
+		// Green component
+		k0 = +0.73956515f; k1 = -0.45954404f; k2 = +0.08285427f; k3 = +0.12541070f; k4 = +0.14503204f;
+		wl = -1.2684380046f; wm = +2.6097574011f; ws = -0.3413193965f;
+	}
+	else
+	{
+		// Blue component
+		k0 = +1.35733652f; k1 = -0.00915799f; k2 = -1.15130210f; k3 = -0.50559606f; k4 = +0.00692167f;
+		wl = -0.0041960863f; wm = -0.7034186147f; ws = +1.7076147010f;
+	}	// Approximate max saturation using a polynomial:
+	float S = k0 + k1 * a + k2 * b + k3 * a * a + k4 * a * b;	// Do one step Halley's method to get closer
+	// this gives an error less than 10e6, except for some blue hues where the dS/dh is close to infinite
+	// this should be sufficient for most applications, otherwise do two/three steps
+    float k_l = +0.3963377774f * a + 0.2158037573f * b;
+	float k_m = -0.1055613458f * a - 0.0638541728f * b;
+	float k_s = -0.0894841775f * a - 1.2914855480f * b;	{
+		float l_ = 1.f + S * k_l;
+		float m_ = 1.f + S * k_m;
+		float s_ = 1.f + S * k_s;		float l = l_ * l_ * l_;
+		float m = m_ * m_ * m_;
+		float s = s_ * s_ * s_;		float l_dS = 3.f * k_l * l_ * l_;
+		float m_dS = 3.f * k_m * m_ * m_;
+		float s_dS = 3.f * k_s * s_ * s_;		float l_dS2 = 6.f * k_l * k_l * l_;
+		float m_dS2 = 6.f * k_m * k_m * m_;
+		float s_dS2 = 6.f * k_s * k_s * s_;		float f = wl * l + wm * m + ws * s;
+		float f1 = wl * l_dS + wm * m_dS + ws * s_dS;
+		float f2 = wl * l_dS2 + wm * m_dS2 + ws * s_dS2;		S = S - f * f1 / (f1 * f1 - 0.5f * f * f2);
+	}	return S;
+}// finds L_cusp and C_cusp for a given hue
+// a and b must be normalized so a^2 + b^2 == 1
+vec2 find_cusp(float a, float b)
+{
+	// First, find the maximum saturation (saturation S = C/L)
+	float S_cusp = compute_max_saturation(a, b);	// Convert to linear sRGB to find the first point where at least one of r,g or b >= 1:
+	vec3 rgb_at_max = oklab_to_linear_srgb(vec3( 1, S_cusp * a, S_cusp * b ));
+	float L_cusp = cbrt(1.f / max(max(rgb_at_max.r, rgb_at_max.g), rgb_at_max.b));
+	float C_cusp = L_cusp * S_cusp;	return vec2( L_cusp , C_cusp );
+}// Finds intersection of the line defined by 
+// L = L0 * (1 - t) + t * L1;
+// C = t * C1;
+// a and b must be normalized so a^2 + b^2 == 1
+float find_gamut_intersection(float a, float b, float L1, float C1, float L0, vec2 cusp)
+{
+	// Find the intersection for upper and lower half seprately
+	float t;
+	if (((L1 - L0) * cusp.y - (cusp.x - L0) * C1) <= 0.f)
+	{
+		// Lower half	
+        t = cusp.y * L0 / (C1 * cusp.x + cusp.y * (L0 - L1));
+	}
+	else
+	{
+		// Upper half		// First intersect with triangle
+		t = cusp.y * (L0 - 1.f) / (C1 * (cusp.x - 1.f) + cusp.y * (L0 - L1));		// Then one step Halley's method
+		{
+			float dL = L1 - L0;
+			float dC = C1;			float k_l = +0.3963377774f * a + 0.2158037573f * b;
+			float k_m = -0.1055613458f * a - 0.0638541728f * b;
+			float k_s = -0.0894841775f * a - 1.2914855480f * b;			float l_dt = dL + dC * k_l;
+			float m_dt = dL + dC * k_m;
+			float s_dt = dL + dC * k_s;
+			// If higher accuracy is required, 2 or 3 iterations of the following block can be used:
+			{
+				float L = L0 * (1.f - t) + t * L1;
+				float C = t * C1;				float l_ = L + C * k_l;
+				float m_ = L + C * k_m;
+				float s_ = L + C * k_s;				float l = l_ * l_ * l_;
+				float m = m_ * m_ * m_;
+				float s = s_ * s_ * s_;				float ldt = 3.f * l_dt * l_ * l_;
+				float mdt = 3.f * m_dt * m_ * m_;
+				float sdt = 3.f * s_dt * s_ * s_;				float ldt2 = 6.f * l_dt * l_dt * l_;
+				float mdt2 = 6.f * m_dt * m_dt * m_;
+				float sdt2 = 6.f * s_dt * s_dt * s_;				float r = 4.0767416621f * l - 3.3077115913f * m + 0.2309699292f * s - 1.f;
+				float r1 = 4.0767416621f * ldt - 3.3077115913f * mdt + 0.2309699292f * sdt;
+				float r2 = 4.0767416621f * ldt2 - 3.3077115913f * mdt2 + 0.2309699292f * sdt2;				float u_r = r1 / (r1 * r1 - 0.5f * r * r2);
+				float t_r = -r * u_r;				float g = -1.2684380046f * l + 2.6097574011f * m - 0.3413193965f * s - 1.f;
+				float g1 = -1.2684380046f * ldt + 2.6097574011f * mdt - 0.3413193965f * sdt;
+				float g2 = -1.2684380046f * ldt2 + 2.6097574011f * mdt2 - 0.3413193965f * sdt2;				float u_g = g1 / (g1 * g1 - 0.5f * g * g2);
+				float t_g = -g * u_g;				float b = -0.0041960863f * l - 0.7034186147f * m + 1.7076147010f * s - 1.f;
+				float b1 = -0.0041960863f * ldt - 0.7034186147f * mdt + 1.7076147010f * sdt;
+				float b2 = -0.0041960863f * ldt2 - 0.7034186147f * mdt2 + 1.7076147010f * sdt2;				float u_b = b1 / (b1 * b1 - 0.5f * b * b2);
+				float t_b = -b * u_b;				t_r = u_r >= 0.f ? t_r : 10000.f;
+				t_g = u_g >= 0.f ? t_g : 10000.f;
+				t_b = u_b >= 0.f ? t_b : 10000.f;				t += min(t_r, min(t_g, t_b));
+			}
+		}
+	}	return t;
+}float find_gamut_intersection(float a, float b, float L1, float C1, float L0)
+{
+	// Find the cusp of the gamut triangle
+	vec2 cusp = find_cusp(a, b);	return find_gamut_intersection(a, b, L1, C1, L0, cusp);
+}vec3 gamut_clip_preserve_chroma(vec3 rgb)
+{
+	if (rgb.r < 1.f && rgb.g < 1.f && rgb.b < 1.f && rgb.r > 0.f && rgb.g > 0.f && rgb.b > 0.f)
+		return rgb;	vec3 lab = linear_srgb_to_oklab(rgb);	float L = lab.x;
+	float eps = 0.00001f;
+	float C = max(eps, sqrt(lab.y * lab.y + lab.z * lab.z));
+	float a_ = lab.y / C;
+	float b_ = lab.z / C;	float L0 = clamp(L, 0.f, 1.f);	float t = find_gamut_intersection(a_, b_, L, C, L0);
+	float L_clipped = L0 * (1.f - t) + t * L;
+	float C_clipped = t * C;	return oklab_to_linear_srgb(vec3( L_clipped, C_clipped * a_, C_clipped * b_ ));
+}vec3 gamut_clip_project_to_0_5(vec3 rgb)
+{
+	if (rgb.r < 1.f && rgb.g < 1.f && rgb.b < 1.f && rgb.r > 0.f && rgb.g > 0.f && rgb.b > 0.f)
+		return rgb;	vec3 lab = linear_srgb_to_oklab(rgb);	float L = lab.x;
+	float eps = 0.00001f;
+	float C = max(eps, sqrt(lab.y * lab.y + lab.z * lab.z));
+	float a_ = lab.y / C;
+	float b_ = lab.z / C;	float L0 = 0.5;	float t = find_gamut_intersection(a_, b_, L, C, L0);
+	float L_clipped = L0 * (1.f - t) + t * L;
+	float C_clipped = t * C;	return oklab_to_linear_srgb(vec3( L_clipped, C_clipped * a_, C_clipped * b_ ));
+}vec3 gamut_clip_project_to_L_cusp(vec3 rgb)
+{
+	if (rgb.r < 1.f && rgb.g < 1.f && rgb.b < 1.f && rgb.r > 0.f && rgb.g > 0.f && rgb.b > 0.f)
+		return rgb;	vec3 lab = linear_srgb_to_oklab(rgb);	float L = lab.x;
+	float eps = 0.00001f;
+	float C = max(eps, sqrt(lab.y * lab.y + lab.z * lab.z));
+	float a_ = lab.y / C;
+	float b_ = lab.z / C;	// The cusp is computed here and in find_gamut_intersection, an optimized solution would only compute it once.
+	vec2 cusp = find_cusp(a_, b_);	float L0 = cusp.x;	float t = find_gamut_intersection(a_, b_, L, C, L0);	float L_clipped = L0 * (1.f - t) + t * L;
+	float C_clipped = t * C;	return oklab_to_linear_srgb(vec3( L_clipped, C_clipped * a_, C_clipped * b_ ));
+}vec3 gamut_clip_adaptive_L0_0_5(vec3 rgb, float alpha)
+{
+	if (rgb.r < 1.f && rgb.g < 1.f && rgb.b < 1.f && rgb.r > 0.f && rgb.g > 0.f && rgb.b > 0.f)
+		return rgb;	vec3 lab = linear_srgb_to_oklab(rgb);	float L = lab.x;
+	float eps = 0.00001f;
+	float C = max(eps, sqrt(lab.y * lab.y + lab.z * lab.z));
+	float a_ = lab.y / C;
+	float b_ = lab.z / C;	float Ld = L - 0.5f;
+	float e1 = 0.5f + abs(Ld) + alpha * C;
+	float L0 = 0.5f * (1.f + sign(Ld) * (e1 - sqrt(e1 * e1 - 2.f * abs(Ld))));	float t = find_gamut_intersection(a_, b_, L, C, L0);
+	float L_clipped = L0 * (1.f - t) + t * L;
+	float C_clipped = t * C;	return oklab_to_linear_srgb(vec3( L_clipped, C_clipped * a_, C_clipped * b_ ));
+}vec3 gamut_clip_adaptive_L0_L_cusp(vec3 rgb, float alpha)
+{
+	if (rgb.r < 1.f && rgb.g < 1.f && rgb.b < 1.f && rgb.r > 0.f && rgb.g > 0.f && rgb.b > 0.f)
+		return rgb;	vec3 lab = linear_srgb_to_oklab(rgb);	float L = lab.x;
+	float eps = 0.00001f;
+	float C = max(eps, sqrt(lab.y * lab.y + lab.z * lab.z));
+	float a_ = lab.y / C;
+	float b_ = lab.z / C;	// The cusp is computed here and in find_gamut_intersection, an optimized solution would only compute it once.
+	vec2 cusp = find_cusp(a_, b_);	float Ld = L - cusp.x;
+	float k = 2.f * (Ld > 0.f ? 1.f - cusp.x : cusp.x);	float e1 = 0.5f * k + abs(Ld) + alpha * C / k;
+	float L0 = cusp.x + 0.5f * (sign(Ld) * (e1 - sqrt(e1 * e1 - 2.f * k * abs(Ld))));	float t = find_gamut_intersection(a_, b_, L, C, L0);
+	float L_clipped = L0 * (1.f - t) + t * L;
+	float C_clipped = t * C;	return oklab_to_linear_srgb(vec3( L_clipped, C_clipped * a_, C_clipped * b_ ));
+}float toe(float x)
+{
+	float k_1 = 0.206f;
+	float k_2 = 0.03f;
+	float k_3 = (1.f + k_1) / (1.f + k_2);
+	return 0.5f * (k_3 * x - k_1 + sqrt((k_3 * x - k_1) * (k_3 * x - k_1) + 4.f * k_2 * k_3 * x));
+}float toe_inv(float x)
+{
+	float k_1 = 0.206f;
+	float k_2 = 0.03f;
+	float k_3 = (1.f + k_1) / (1.f + k_2);
+	return (x * x + k_1 * x) / (k_3 * (x + k_2));
+}vec2 to_ST(vec2 cusp)
+{
+	float L = cusp.x;
+	float C = cusp.y;
+	return vec2( C / L, C / (1.f - L) );
+}// Returns a smooth approximation of the location of the cusp
+// This polynomial was created by an optimization process
+// It has been designed so that S_mid < S_max and T_mid < T_max
+vec2 get_ST_mid(float a_, float b_)
+{
+	float S = 0.11516993f + 1.f / (
+		+7.44778970f + 4.15901240f * b_
+		+ a_ * (-2.19557347f + 1.75198401f * b_
+			+ a_ * (-2.13704948f - 10.02301043f * b_
+				+ a_ * (-4.24894561f + 5.38770819f * b_ + 4.69891013f * a_
+					)))
+		);	float T = 0.11239642f + 1.f / (
+		+1.61320320f - 0.68124379f * b_
+		+ a_ * (+0.40370612f + 0.90148123f * b_
+			+ a_ * (-0.27087943f + 0.61223990f * b_
+				+ a_ * (+0.00299215f - 0.45399568f * b_ - 0.14661872f * a_
+					)))
+		);	return vec2( S, T );
+}vec3 get_Cs(float L, float a_, float b_)
+{
+	vec2 cusp = find_cusp(a_, b_);	float C_max = find_gamut_intersection(a_, b_, L, 1.f, L, cusp);
+	vec2 ST_max = to_ST(cusp);
+	// Scale factor to compensate for the curved part of gamut shape:
+	float k = C_max / min((L * ST_max.x), (1.f - L) * ST_max.y);	float C_mid;
+	{
+		vec2 ST_mid = get_ST_mid(a_, b_);		// Use a soft minimum function, instead of a sharp triangle shape to get a smooth value for chroma.
+		float C_a = L * ST_mid.x;
+		float C_b = (1.f - L) * ST_mid.y;
+		C_mid = 0.9f * k * sqrt(sqrt(1.f / (1.f / (C_a * C_a * C_a * C_a) + 1.f / (C_b * C_b * C_b * C_b))));
+	}	float C_0;
+	{
+		// for C_0, the shape is independent of hue, so vec2 are constant. Values picked to roughly be the average values of vec2.
+		float C_a = L * 0.4f;
+		float C_b = (1.f - L) * 0.8f;		// Use a soft minimum function, instead of a sharp triangle shape to get a smooth value for chroma.
+		C_0 = sqrt(1.f / (1.f / (C_a * C_a) + 1.f / (C_b * C_b)));
+	}	return vec3( C_0, C_mid, C_max );
+}vec3 okhsl_to_srgb(vec3 hsl)
+{
+	float h = hsl.x;
+	float s = hsl.y;
+	float l = hsl.z;	if (l == 1.0f)
+	{
+		return vec3( 1.f, 1.f, 1.f );
+	}	else if (l == 0.f)
+	{
+		return vec3( 0.f, 0.f, 0.f );
+	}	float a_ = cos(2.f * M_PI * h);
+	float b_ = sin(2.f * M_PI * h);
+	float L = toe_inv(l);	vec3 cs = get_Cs(L, a_, b_);
+	float C_0 = cs.x;
+	float C_mid = cs.y;
+	float C_max = cs.z;
+    float mid = 0.8f;
+	float mid_inv = 1.25f;	float C, t, k_0, k_1, k_2;	if (s < mid)
+	{
+		t = mid_inv * s;		k_1 = mid * C_0;
+		k_2 = (1.f - k_1 / C_mid);		C = t * k_1 / (1.f - k_2 * t);
+	}
+	else
+	{
+		t = (s - mid)/ (1.f - mid);		k_0 = C_mid;
+		k_1 = (1.f - mid) * C_mid * C_mid * mid_inv * mid_inv / C_0;
+		k_2 = (1.f - (k_1) / (C_max - C_mid));		C = k_0 + t * k_1 / (1.f - k_2 * t);
+	}	vec3 rgb = oklab_to_linear_srgb(vec3( L, C * a_, C * b_ ));
+	return vec3(
+		srgb_transfer_function(rgb.r),
+		srgb_transfer_function(rgb.g),
+		srgb_transfer_function(rgb.b)
+	);
+}vec3 srgb_to_okhsl(vec3 rgb)
+{
+	vec3 lab = linear_srgb_to_oklab(vec3(
+		srgb_transfer_function_inv(rgb.r),
+		srgb_transfer_function_inv(rgb.g),
+		srgb_transfer_function_inv(rgb.b)
+		));	float C = sqrt(lab.y * lab.y + lab.z * lab.z);
+	float a_ = lab.y / C;
+	float b_ = lab.z / C;	float L = lab.x;
+	float h = 0.5f + 0.5f * atan(-lab.z, -lab.y) / M_PI;	vec3 cs = get_Cs(L, a_, b_);
+	float C_0 = cs.x;
+	float C_mid = cs.y;
+	float C_max = cs.z;	// Inverse of the interpolation in okhsl_to_srgb:
+    float mid = 0.8f;
+	float mid_inv = 1.25f;	float s;
+	if (C < C_mid)
+	{
+		float k_1 = mid * C_0;
+		float k_2 = (1.f - k_1 / C_mid);		float t = C / (k_1 + k_2 * C);
+		s = t * mid;
+	}
+	else
+	{
+		float k_0 = C_mid;
+		float k_1 = (1.f - mid) * C_mid * C_mid * mid_inv * mid_inv / C_0;
+		float k_2 = (1.f - (k_1) / (C_max - C_mid));		float t = (C - k_0) / (k_1 + k_2 * (C - k_0));
+		s = mid + (1.f - mid) * t;
+	}	float l = toe(L);
+	return vec3( h, s, l );
+}
+vec3 okhsv_to_srgb(vec3 hsv)
+{
+	float h = hsv.x;
+	float s = hsv.y;
+	float v = hsv.z;	float a_ = cos(2.f * M_PI * h);
+	float b_ = sin(2.f * M_PI * h);
+	vec2 cusp = find_cusp(a_, b_);
+	vec2 ST_max = to_ST(cusp);
+	float S_max = ST_max.x;
+	float T_max = ST_max.y;
+	float S_0 = 0.5f;
+	float k = 1.f- S_0 / S_max;	// first we compute L and V as if the gamut is a perfect triangle:	// L, C when v==1:
+	float L_v = 1.f   - s * S_0 / (S_0 + T_max - T_max * k * s);
+	float C_v = s * T_max * S_0 / (S_0 + T_max - T_max * k * s);	float L = v * L_v;
+	float C = v * C_v;	// then we compensate for both toe and the curved top part of the triangle:
+	float L_vt = toe_inv(L_v);
+	float C_vt = C_v * L_vt / L_v;	float L_new = toe_inv(L);
+	C = C * L_new / L;
+	L = L_new;	vec3 rgb_scale = oklab_to_linear_srgb(vec3( L_vt, a_ * C_vt, b_ * C_vt ));
+	float scale_L = cbrt(1.f / max(max(rgb_scale.r, rgb_scale.g), max(rgb_scale.b, 0.f)));	L = L * scale_L;
+	C = C * scale_L;	vec3 rgb = oklab_to_linear_srgb(vec3( L, C * a_, C * b_ ));
+	return vec3(
+		srgb_transfer_function(rgb.r),
+		srgb_transfer_function(rgb.g),
+		srgb_transfer_function(rgb.b)
+	);
+}vec3 srgb_to_okhsv(vec3 rgb)
+{
+	vec3 lab = linear_srgb_to_oklab(vec3(
+		srgb_transfer_function_inv(rgb.r),
+		srgb_transfer_function_inv(rgb.g),
+		srgb_transfer_function_inv(rgb.b)
+		));	float C = sqrt(lab.y * lab.y + lab.z * lab.z);
+	float a_ = lab.y / C;
+	float b_ = lab.z / C;	float L = lab.x;
+	float h = 0.5f + 0.5f * atan(-lab.z, -lab.y) / M_PI;	vec2 cusp = find_cusp(a_, b_);
+	vec2 ST_max = to_ST(cusp);
+	float S_max = ST_max.x;
+	float T_max = ST_max.y;
+	float S_0 = 0.5f;
+	float k = 1.f - S_0 / S_max;	// first we find L_v, C_v, L_vt and C_vt
+    float t = T_max / (C + L * T_max);
+	float L_v = t * L;
+	float C_v = t * C;	float L_vt = toe_inv(L_v);
+	float C_vt = C_v * L_vt / L_v;	// we can then use these to invert the step that compensates for the toe and the curved top part of the triangle:
+	vec3 rgb_scale = oklab_to_linear_srgb(vec3( L_vt, a_ * C_vt, b_ * C_vt ));
+	float scale_L = cbrt(1.f / max(max(rgb_scale.r, rgb_scale.g), max(rgb_scale.b, 0.f)));	L = L / scale_L;
+	C = C / scale_L;	C = C * toe(L) / L;
+	L = toe(L);	// we can now compute v and s:
+    float v = L / L_v;
+	float s = (S_0 + T_max) * C_v / ((T_max * S_0) + T_max * k * C_v);	return vec3 (h, s, v );
+}vec3 hsl2rgb(  vec3 c )
+{
+    vec3 rgb = clamp( abs(mod(c.x*6.0+vec3(0.0,4.0,2.0),6.0)-3.0)-1.0, 0.0, 1.0 );    return c.z + c.y * (rgb-0.5)*(1.0-abs(2.0*c.z-1.0));
+}vec3 rgb2hsl( vec3 c ){
+  float h = 0.0;
+	float s = 0.0;
+	float l = 0.0;
+	float r = c.r;
+	float g = c.g;
+	float b = c.b;
+	float cMin = min( r, min( g, b ) );
+	float cMax = max( r, max( g, b ) );	l = ( cMax + cMin ) / 2.0;
+	if ( cMax > cMin ) {
+		float cDelta = cMax - cMin;
+        //s = l < .05 ? cDelta / ( cMax + cMin ) : cDelta / ( 2.0 - ( cMax + cMin ) ); Original
+		s = l < .0 ? cDelta / ( cMax + cMin ) : cDelta / ( 2.0 - ( cMax + cMin ) );
+		if ( r == cMax ) {
+			h = ( g - b ) / cDelta;
+		} else if ( g == cMax ) {
+			h = 2.0 + ( b - r ) / cDelta;
+		} else {
+			h = 4.0 + ( r - g ) / cDelta;
+		}		if ( h < 0.0) {
+			h += 6.0;
+		}
+		h = h / 6.0;
+	}
+	return vec3( h, s, l );
+}
+bool inDither( float h, float antiHue, float antiRad) {
+	return (((h > antiHue - antiRad) && (h < antiHue + antiRad))) ||
+	(((h - 1.0f > antiHue - antiRad) && (h - 1.0f < antiHue + antiRad))) ||
+	(((1.0f + h > antiHue - antiRad) && (1.0f + h < antiHue + antiRad)));
+}
+float ditherHue( float h, float r, float rp, float antiRad) {
+	float rightBound = h - antiRad * rp;
+    if (rightBound < -0.5f) rightBound = rightBound + 1.0f;
+    float leftBound = h + antiRad * rp;
+    if (leftBound > 0.5f) leftBound = leftBound - 1.0f;
+	if ((h > h - antiRad) && (h < h + antiRad))
+        if (((h - (h - antiRad)) / (2.0f * antiRad)) < r)
+            h = rightBound;
+        else h = leftBound;
+    else if ((h - 1.0f > h - antiRad) && (h - 1.0f < h + antiRad))
+        if (((h - 1.0f - (h - antiRad)) / (2.0f * antiRad)) < r)
+            h = rightBound;
+        else h = leftBound;
+    else if ((1.0f + h > h - antiRad) && (1.0f + h < h + antiRad))
+        if (((1.0f + h - (h - antiRad)) / (2.0f * antiRad)) < r)
+            h = rightBound;
+        else h = leftBound;
+	if (h < 0.0) h = h + 1.0;
+	return h;
+}
+float dither( float v, float r, float antiRad, float lim) {
+    float lowerBound = max(0.0, v - antiRad);
+    if (v - antiRad < lim) lowerBound = mix(max(0.0, v - antiRad), lim, antiRad);
+    float upperBound = min(lowerBound + 2.0 * antiRad, 1.0 - lim);
+    if (v + antiRad > 1.0 - lim) {
+        upperBound = mix(min(1.0, v + antiRad), 1.0 - lim, antiRad);
+        lowerBound = max(lowerBound, upperBound - 2.0 * antiRad);
+    }
+    return mix(lowerBound, upperBound, r);
+}
+
+vec4 lineGradient4(float co, float thresh, float sat_band_limit, float lum_band_limit){
+
+    float scale = abs(co) / thresh;
+
+    float travelled = fract(scale) * 3.;
+    float mix_strength = fract(travelled);
+
+    float sat_scale = clamp(scale / sat_band_limit,0.,2.);
+    float sat_grad = pow(sat_scale - 1.,.85) * 0.25 + 0.75;
+    if (sat_scale < 1.0) {
+        sat_grad = pow(sat_scale,1.) * 0.4 + 0.35;
+    }
+    float lum_grad = mix(0.2,0.75,clamp(scale / lum_band_limit,0.0,1.0));
+    if (sign(co) > 0.) {
+        lum_grad = mix(0.5,0.65,clamp(scale / lum_band_limit,0.0,1.0));
+        if (scale < 2.) {
+            lum_grad = mix(0.2,0.5,scale / 2.);
+        }
+    }
+    if (scale < 1.) {
+        sat_grad = mix(0.,0.35 + pow(1. / sat_band_limit,0.85) * 0.4, pow(scale,.5));
+    }
+
+    float neg_range = 0.2;
+    float pos_range = 0.2;
+
+    float neg_shift = 0.5;
+    float pos_shift = 0.43;
+
+    float pos_way = pow(clamp(1. * scale / lum_band_limit,0.0,1.0),0.5);
+    float pos_thresh = 2.;
+    pos_way = pos_way * pos_thresh;
+    float pos_hue_shift = - mix(0.,.33,(pos_way - 1.) / (pos_thresh - 1.));
+    if (pos_way < 1.) {pos_hue_shift = mix(1.6,0.,pos_way);}
+    //if (pos_way < 1.) {pos_hue_shift = - mix(0.4,0.,pow((pos_way-.5)*2.,1.));}
+    //if (pos_way < .5) {pos_hue_shift = - mix(0.,0.4,pow(pos_way/.5,4.));}
+
+    //float pos_hue_shift = - mix(0.,0.65,pow(clamp(2. * scale / lum_band_limit,0.0,1.0),0.6));
+
+    float neg_way = pow(clamp(1.25 * scale / lum_band_limit,0.0,1.0),0.33);
+    float neg_thresh = 2.;
+    neg_way = neg_way * neg_thresh;
+    float neg_hue_shift = mix(0.,0.35,(neg_way - 1.) / (neg_thresh - 1.));
+    if (neg_way < 1.) {neg_hue_shift = mix(0.45,0.,pow(neg_way,4.));}
+
+    vec4 graycolor = vec4(0.0);
+    if (sign(co) < 0.0) {graycolor = vec4(okhsl_to_srgb(vec3(neg_range / 2.0 + neg_shift, 0.5, lum_grad)), 1.0);}
+    else {graycolor = vec4(okhsl_to_srgb(vec3(pos_range / 2.0 + pos_shift, 0.5, lum_grad)), 1.0);}
+
+    vec4 newcolor = vec4(0.0);
+    if (travelled < 1.0) {
+        float color_grad = 0.0;
+        if (sign(co) < 0.0) {color_grad = mix_strength * neg_range + neg_shift + neg_hue_shift;}
+        else {color_grad = - mix_strength * pos_range + pos_shift + pos_hue_shift;}
+
+        newcolor = vec4(okhsl_to_srgb(vec3(color_grad, sat_grad, lum_grad)), 1.0);
+    }
+    else if (travelled < 2.0) {
+        float color_grad = 0.0;
+        if (sign(co) < 0.0) {color_grad = - mix_strength * neg_range / 2.0 + neg_range + neg_shift + neg_hue_shift;}
+        else {color_grad = mix_strength * pos_range / 2.0 - pos_range + pos_shift + pos_hue_shift;}
+
+        vec4 vividcolor = vec4(okhsl_to_srgb(vec3(color_grad, sat_grad, lum_grad)), 1.0);
+        newcolor = mix(vividcolor, graycolor, mix_strength * 0.5);
+    }
+    else {
+        float color_grad = 0.0;
+        if (sign(co) < 0.0) {color_grad = - mix_strength * neg_range / 2.0 + neg_range / 2.0 + neg_shift + neg_hue_shift;}
+        else {color_grad = mix_strength * pos_range / 2.0 - pos_range / 2.0 + pos_shift + pos_hue_shift;}
+
+        vec4 vividcolor = vec4(okhsl_to_srgb(vec3(color_grad, sat_grad, lum_grad)), 1.0);
+        newcolor = mix(graycolor, vividcolor, mix_strength * 0.5 + 0.5);
+    }
+
+    return mix(vec4(0.0), newcolor, pow(sat_grad,2.0));
+}
+
+vec4 lineGradient(float val){
+	float alpha = pow(clamp(val*2.,0.0,1.0 - 16./256.), 0.9) + 16./256.;
+	//if (val == 0.0) {return vec4(0.0);}
+	//if (val < 0.96) {return vec4(alpha * okhsl_to_srgb(vec3(val * (1./.96) * 0.61 + 0.71, 1.0, val * 0.75 + 0.2)), alpha);}
+	//return vec4(alpha * okhsl_to_srgb(vec3(0.61 + 0.71, 1.0, 0.96 * 0.75 + 0.2 + (val - 0.96) / 0.04 * (1. - 0.96 * 0.75 - 0.2))), alpha);
+	float sat = mod(val * 256.,2.0)*0.5 + 0.4;
+
+	if (val == 0.0) {
+		return vec4(0.0);
+	}
+	if ((val > 0.0) && (val <= 1.)) {
+		return alpha * vec4(okhsl_to_srgb(vec3(val * 256./8. * 0.61 + 0.71, sat, val * 0.7 + 0.2)), 1.0);
+	}
+	return vec4(0.0);
+	//return vec4(alpha * okhsl_to_srgb(vec3(val * 0.61 + 0.71, 1.0, val * 0.7 + 0.2)), alpha);
+}
+
+uniform sampler2D u_image;
+uniform sampler2D prev_image;
+uniform float time;
+uniform vec2 res;
+uniform vec3 hue;
+uniform bool dark;
+// the texCoords passed in from the vertex shader.
+in vec2 v_texCoord;// we need to declare an output for the fragment shader
+out vec4 outColor;
+
+void main()
+{
+    vec2 uv = v_texCoord;
+    vec3 hsl = hue;
+
+    vec2 pixel = 1.0 / res;
+	float alpha = pow(texture(u_image, uv).r, 0.9);
+
+	if (dark) {
+    	outColor = vec4(alpha * okhsl_to_srgb(vec3(texture(u_image, uv).r * 0.61 + 0.71, 1.0, texture(u_image, uv).r * 0.7 + 0.2)), alpha);
+		//outColor = lineGradient4(texture(u_image, uv).r, 1. / pow(2.,6.), pow(2.,5.), pow(2.,6.));
+		//outColor = lineGradient(texture(u_image, uv).r);
+	}
+	else {
+		outColor = vec4(alpha * okhsl_to_srgb(vec3(-texture(u_image, uv).r * 0.75 + 0.43, 1.0, -texture(u_image, uv).r * 0.9 + 1.0)), alpha);
+	}
+}`;
+
+var toggle = false,
+	k = 1,
+	tx = 0,
+	ty = 0
+const defaultSvgWidth = 640, defaultSvgHeight = 360
+
+var svg = d3.select("#container").append("svg").attr("style", "position: absolute;"),
+    margin = {top: 15, right: 10, bottom: 30, left: 30},
+    graph = {width: defaultSvgWidth - margin.left - margin.right, height: defaultSvgHeight - margin.top - margin.bottom}
+    backgroundElements = svg.append("g").attr("style", "translate: " + (margin.left - 1) + "px " + margin.top + "px")
+	svg_canvas = d3.select("#container").append("div").attr("style","translate: " + margin.left + "px " + margin.top + "px").append("svg")
+		.attr('width', graph.width)
+    	.attr('height', graph.height + margin.bottom) // there are two svgs because of this issue: https://bugs.webkit.org/show_bug.cgi?id=83189
+	foregroundElements = svg_canvas.append("g"),
+	lowerHz = 0,
+	upperHz = 24 * graph.height/1024,
+	lowerTime = -10, // this should probably be a function of graph.width
+	upperTime = 0,
+	x = d3.scaleLinear()
+        .range([0, graph.width])
+        .domain([lowerTime,upperTime]),
+    y = d3.scaleLinear()
+        .range([graph.height, 0])
+        .domain([lowerHz,upperHz]),
+	xaxis = d3.axisBottom(x),
+	yaxis = d3.axisLeft(y),
+	xgrid = d3.axisBottom(x).tickSize(-graph.height).tickFormat(''),
+	ygrid = d3.axisLeft(y).tickSize(-graph.width).tickFormat('');
+
+const foreignObject = foregroundElements.append('foreignObject')
+    .attr('width', graph.width)
+    .attr('height', graph.height)
+const vertGrid = backgroundElements.append('g')
+    .attr('class', 'axis-grid')
+    .attr('transform', 'translate(0,' + graph.height + ')')
+    .call(xgrid);
+const horGrid = backgroundElements.append('g')
+    .attr('class', 'axis-grid')
+    .call(ygrid);
+const bottomAxis = backgroundElements.append("g")
+    .attr("class", "axis")
+    .attr("transform", "translate(0," + graph.height + ")")
+    .call(xaxis);
+const xlabel = foregroundElements.append("text")
+    .attr("text-anchor", "end")
+	.attr("x", graph.width - 3)
+	.attr("y", graph.height - 4)
+    .attr("fill", "#808080")
+	//.attr("style", "position: relative; z-index: 999") // this doesn't work! I don't know why
+	.attr("style", "font-size:10px")
+    .text("Time (s)");
+const zoomlabel = foregroundElements.append("text")
+    .attr("text-anchor", "end")
+    .attr("x", graph.width - 3)
+	.attr("y", 11)
+    .text("Zoom: " + d3.format(".2f")(1 / (graph.width/(1024 * graph.width/graph.height))))
+    .attr("fill", "#808080")
+	.attr("style", "font-size:10px");
+	//.attr("style", "z-index: 999");
+const leftAxis = backgroundElements.append("g")
+    .attr("class", "axis")
+    .call(yaxis);
+const ylabel = foregroundElements.append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("y", 7)
+    .attr("x", -3)
+    .attr("dy", "0.71em")
+    //.attr("style", "fill: #800000") // this is the way to change the text color
+	.attr("fill", "#808080")
+	.attr("style", "font-size:10px")
+    .text("Frequency (kHz)");
+var zoom = d3.zoom()
+	.extent([[0, 0], [graph.width, graph.height]])
+	.scaleExtent([graph.width / (1024 * graph.width/graph.height), 256 * graph.width/(1024 * graph.width/graph.height)])
+	.translateExtent([[graph.width-(1024 * graph.width/graph.height), graph.height-1024], [graph.width, graph.height]]);
+const canvas_space = foreignObject.append("xhtml:canvas")
+    .call(zoom)
+    .attr("id", "spectral_canvas")
+    .attr("width", 1024 * graph.width/graph.height) // to match graph ratio
+    .attr("height", 1024)
+	.attr("style", "position:static")
+	.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+	//.attr("style", "position:relative; z-index: -1");
+var vertical = foregroundElements.append("line")
+    .attr("y1", 0)
+    .attr("y2", graph.height)
+    .attr("x1", 0)
+    .attr("x2", 0)
+    .attr("stroke", "#505050A0");
+var horizontal = foregroundElements.append("line")
+    .attr("y1", 0)
+    .attr("y2", 0)
+    .attr("x1", 0)
+    .attr("x2", graph.width)
+    .attr("stroke", "#505050A0");
+var final_color = backgroundElements.append('circle')
+	//.attr('style', '@media (color-gamut: p3)') // this doesn't seem to work
+    .attr('cx', 0)
+    .attr('cy', -7)
+    .attr('r', 6)
+    .attr('stroke', 'gray')
+    .attr('fill', '#00000000');
+var identify = backgroundElements.append('text')
+    .attr("text-anchor", "beginning")
+    .attr("x", 10)
+	.attr("y", -4)
+    .text(0 + " Hz")
+    .attr("fill", "#808080")
+	.attr("style", "font-size:10px");
+svg_canvas.on("mousemove", function(){  
+	mouse = d3.mouse(this);
+	mousex = mouse[0]
+	mousey = mouse[1]
+
+	//truex = mousex / graph.width * lowerTime + (1 - mousex / graph.width) * upperTime
+	truey = mousey / graph.height * lowerHz + (1 - mousey / graph.height) * upperHz
+
+	vertical.attr("x1", mousex - 1);
+	vertical.attr("x2", mousex - 1);
+	if (mousey < graph.height) {
+		horizontal.attr("y1", mousey + 1);
+		horizontal.attr("y2", mousey + 2); // + 2 instead of + 1 prevents scrolling issues, and the offset is unnoticeable
+	}
+	final_color.attr("cx", mousex);
+
+	if (mousex < graph.width / 2) {
+		identify.attr("text-anchor", "beginning")
+			.attr("x", mousex + 10)
+			.text(d3.format(".0f")(truey * 1000) + " Hz")
+	}
+	else {
+		identify.attr("text-anchor", "end")
+			.attr("x", mousex - 9)
+			.text(d3.format(".0f")(truey * 1000) + " Hz")
+	}
+});
+
+var canvas = canvas_space.node();
+var gl = canvas.getContext("webgl2", {preserveDrawingBuffer: true});
+if (`drawingBufferColorSpace` in gl) {
+    gl.drawingBufferColorSpace = 'display-p3';
+    console.log(gl.drawingBufferColorSpace);
+}
+
+var inProgram = webglUtils.createProgramFromSources(gl, [vertexShaderSource, iterFrag]);
+var inLocs = {
+    'time': gl.getUniformLocation(inProgram, "time"),
+    'hue': gl.getUniformLocation(inProgram, "hue"),
+    'res': gl.getUniformLocation(inProgram, "res")
+};
+
+var outProgram = webglUtils.createProgramFromSources(gl, [scaleVert, colorFrag]);
+var outLocs = {
+    'time': gl.getUniformLocation(outProgram, "time"),
+    'k': gl.getUniformLocation(outProgram, "k"),
+    'tx': gl.getUniformLocation(outProgram, "tx"),
+    'ty': gl.getUniformLocation(outProgram, "ty"),
+    'hue': gl.getUniformLocation(outProgram, "hue"),
+    'res': gl.getUniformLocation(outProgram, "res"),
+	'dark': gl.getUniformLocation(outProgram, "dark")
+};
+
+var tex = gl.createTexture();
+var targetTex = gl.createTexture();
+var targetTex2 = gl.createTexture();
+var temp = gl.createTexture();
+var positionBuffer = gl.createBuffer(); 
+const frameBuffer = gl.createFramebuffer();
+const texCoordBuffer = gl.createBuffer();
+
+function resizeCanvas() {
+	
+	const maxWidth = Math.min(640, document.querySelector("body").offsetWidth);
+	svg.attr("width", maxWidth);
+	graph.width = svg.attr("width") - margin.left - margin.right;
+	graph.height = Math.round(graph.width * 315/600);
+	svg.attr("height", graph.height + margin.top + margin.bottom);
+	svg_canvas.attr("width", maxWidth - margin.left - margin.right);
+	svg_canvas.attr("height", graph.height + margin.bottom);
+
+	canvas.width = graph.width;
+	canvas.height = graph.height;
+
+	x = d3.scaleLinear().range([0, graph.width]).domain([ - graph.width / 60,0]); // 60 is the normal frame rate
+	y = d3.scaleLinear().range([graph.height, 0]).domain([0,24 * graph.height / 1024]); // the range of the audio is to 24 kHz
+
+	foreignObject.attr('width', graph.width).attr('height', graph.height);
+	canvas_space.attr('width', graph.width).attr('height', graph.height);
+
+	xaxis = d3.axisBottom(x);
+	bottomAxis.attr("transform", "translate(0," + graph.height + ")").call(xaxis); // brings bottom axis to bottom: works
+	xgrid = d3.axisBottom(x).tickSize(-graph.height).tickFormat('');
+	vertGrid.attr("transform", "translate(0," + graph.height + ")").call(xgrid); // respaces vertical grid: works
+	xlabel.attr("x", graph.width - 3);
+	xlabel.attr("y", graph.height - 4)
+
+	yaxis = d3.axisLeft(y);
+	leftAxis.call(yaxis);
+	ygrid = d3.axisLeft(y).tickSize(-graph.width).tickFormat('');
+	horGrid.call(ygrid); // respaces horizontal grid: works (now, hehe)
+	ylabel.attr("x", -82)
+		.attr("y", 5);
+
+	vertical.attr("y2", graph.height);
+	zoomlabel.attr("x", graph.width - 3).attr("y", 11);
+	width = 1950;
+	height = 1024;
+
+	zoom = d3.zoom()
+		.extent([[0, 0], [graph.width, graph.height]])
+		.scaleExtent([graph.width / (1024 * graph.width/graph.height), 256 * graph.width/(1024 * graph.width/graph.height)])
+		.translateExtent([[graph.width-(1024 * graph.width/graph.height), graph.height-1024], [graph.width, graph.height]])
+		.on("zoom", function () {
+
+			lowerTime = d3.event.transform.rescaleX(x).domain()[0]
+			upperTime = d3.event.transform.rescaleX(x).domain()[1]
+			lowerHz = d3.event.transform.rescaleY(y).domain()[0]
+			upperHz = d3.event.transform.rescaleY(y).domain()[1]
+
+			mouse = d3.mouse(this);
+			mousex = mouse[0]
+			mousey = mouse[1]
+
+			truex = mousex / graph.width * lowerTime + (1 - mousex / graph.width) * upperTime
+			truey = mousey / graph.height * lowerHz + (1 - mousey / graph.height) * upperHz
+
+			vertical.attr("x1", mousex - 1);
+			vertical.attr("x2", mousex - 1);
+			if (mousey < graph.height) {
+				horizontal.attr("y1", mousey + 1);
+				horizontal.attr("y2", mousey + 2); // + 2 instead of + 1 prevents scrolling issues, and the offset is unnoticeable
+			}
+			final_color.attr("cx", mousex);
+
+			if (mousex < graph.width / 2) {
+				identify.attr("text-anchor", "beginning")
+					.attr("x", mousex + 10)
+					.text(d3.format(".0f")(truey * 1000) + " Hz")
+			}
+			else {
+				identify.attr("text-anchor", "end")
+					.attr("x", mousex - 9)
+					.text(d3.format(".0f")(truey * 1000) + " Hz")
+			}
+
+			vertGrid.call(xgrid.scale(d3.event.transform.rescaleX(x)));
+			horGrid.call(ygrid.scale(d3.event.transform.rescaleY(y)));
+			bottomAxis.call(xaxis.scale(d3.event.transform.rescaleX(x)));
+			leftAxis.call(yaxis.scale(d3.event.transform.rescaleY(y)));
+			k = d3.event.transform['k'];
+			tx = d3.event.transform['x'];
+			ty = d3.event.transform['y'];
+			zoomlabel.text("Zoom: " + d3.format(".2f")(k / (graph.width/(1024 * graph.width/graph.height))));
+
+			if (!toggle) {display();}
+		});
+	
+	canvas_space.call(zoom);
+	display();
+
+	d3.select("#container").attr("style","display:block")
+
+}
+
+function setRectangle(gl, x, y, width, height) {
+	var x1 = x;
+	var x2 = x + width;
+	var y1 = y;
+	var y2 = y + height;
+	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+		x1, y1,
+		x2, y1,
+		x1, y2,
+		x1, y2,
+		x2, y1,
+		x2, y2,
+	]), gl.STATIC_DRAW);
+}
+
+function firstRender(h, s, l) {
+
+	resizeCanvas();
+	gl.viewport(0, 0, width, height);
+
+	gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+
+	gl.activeTexture(gl.TEXTURE0+0);
+	gl.bindTexture(gl.TEXTURE_2D, tex);
+	gl.texImage2D(gl.TEXTURE_2D, 0, gl.R8, 1024, 1, 0, gl.RED, gl.UNSIGNED_BYTE, data);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR); 
+
+	gl.activeTexture(gl.TEXTURE0+1);
+	gl.bindTexture(gl.TEXTURE_2D, targetTex);
+	gl.texImage2D(gl.TEXTURE_2D, 0, gl.R8, width, height, 0, gl.RED, gl.UNSIGNED_BYTE, null);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+
+	gl.activeTexture(gl.TEXTURE0+2);
+	gl.bindTexture(gl.TEXTURE_2D, targetTex2);
+	gl.texImage2D(gl.TEXTURE_2D, 0, gl.R8, width, height, 0, gl.RED, gl.UNSIGNED_BYTE, null);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+
+	gl.activeTexture(gl.TEXTURE0+0);
+	gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+
+	gl.enableVertexAttribArray(gl.getAttribLocation(inProgram, "a_position"));
+	gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+	gl.vertexAttribPointer(gl.getAttribLocation(inProgram, "a_position"), 2, gl.FLOAT, false, 0, 0);
+	gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
+	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+		0.0, 0.0,
+		1.0, 0.0,
+		0.0, 1.0,
+		0.0, 1.0,
+		1.0, 0.0,
+		1.0, 1.0,
+	]), gl.STATIC_DRAW);
+	gl.enableVertexAttribArray(gl.getAttribLocation(inProgram, "a_texCoord"));
+	gl.vertexAttribPointer(gl.getAttribLocation(inProgram, "a_texCoord"), 2, gl.FLOAT, false, 0, 0);
+
+	gl.useProgram(inProgram);
+
+	gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuffer);
+	gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, targetTex2, 0);
+	gl.uniform2f(gl.getUniformLocation(inProgram, "u_resolution"), width, height); 
+	gl.uniform2f(gl.getUniformLocation(inProgram, "res"), width, height);
+	gl.uniform1i(gl.getUniformLocation(inProgram, "u_image"), 0);
+	gl.uniform1i(gl.getUniformLocation(inProgram, "prev_image"), 1);
+	gl.uniform1f(inLocs.time, 0.0 * 0.001);
+	gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+	setRectangle(gl, 0, 0, width, height);
+
+	gl.uniform3f(inLocs.hue, h, s, l);
+	gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+	gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+	temp = targetTex2;
+	targetTex2 = targetTex;
+	targetTex = temp;
+
+	gl.enableVertexAttribArray(gl.getAttribLocation(outProgram, "a_position"));
+	gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+	gl.vertexAttribPointer(gl.getAttribLocation(outProgram, "a_position"), 2, gl.FLOAT, false, 0, 0);
+	gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
+	gl.enableVertexAttribArray(gl.getAttribLocation(outProgram, "a_texCoord"));
+	gl.vertexAttribPointer(gl.getAttribLocation(outProgram, "a_texCoord"), 2, gl.FLOAT, false, 0, 0);
+
+	gl.activeTexture(gl.TEXTURE0+0);
+	gl.bindTexture(gl.TEXTURE_2D, targetTex);
+
+	gl.useProgram(outProgram);
+
+	gl.uniform2f(gl.getUniformLocation(outProgram, "u_resolution"), graph.width, graph.height); 
+	gl.uniform2f(gl.getUniformLocation(outProgram, "res"), width, height);
+	gl.uniform1f(gl.getUniformLocation(outProgram, "k"), k);
+	gl.uniform1f(gl.getUniformLocation(outProgram, "tx"), tx);
+	gl.uniform1f(gl.getUniformLocation(outProgram, "ty"), ty);
+	gl.uniform1i(gl.getUniformLocation(outProgram, "u_image"), 0);
+	gl.uniform3f(outLocs.hue, h, s, l);
+	gl.uniform1f(outLocs.time, 0.0 * 0.001);
+	gl.uniform1f(outLocs.dark, localStorage.theme == "dark");
+	gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+	setRectangle(gl, 0, 0, width, height);
+
+	gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+}
+
+navigator.getUserMedia = ( navigator.getUserMedia ||
+                       navigator.webkitGetUserMedia ||
+                       navigator.mozGetUserMedia ||
+                       navigator.msGetUserMedia);
+
+navigator.mediaDevices.getUserMedia({ video : false, audio : true })
+	.then(callback)
+	.catch((err) => {
+		/* handle the error */
+	});
+
+function display() {
+    gl.enableVertexAttribArray(gl.getAttribLocation(outProgram, "a_position"));
+	gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+	gl.vertexAttribPointer(gl.getAttribLocation(outProgram, "a_position"), 2, gl.FLOAT, false, 0, 0);
+	gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
+	gl.enableVertexAttribArray(gl.getAttribLocation(outProgram, "a_texCoord"));
+	gl.vertexAttribPointer(gl.getAttribLocation(outProgram, "a_texCoord"), 2, gl.FLOAT, false, 0, 0);
+
+	gl.activeTexture(gl.TEXTURE0+0);
+	gl.bindTexture(gl.TEXTURE_2D, targetTex);
+
+	gl.useProgram(outProgram);
+
+	//console.log("Uniform", graph.width, graph.height);
+	gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer); // I think this isn't necessary
+	gl.uniform2f(gl.getUniformLocation(outProgram, "u_resolution"), graph.width, graph.height); 
+	gl.uniform1i(gl.getUniformLocation(outProgram, "u_image"), 0);
+	gl.uniform1f(gl.getUniformLocation(outProgram, "k"), k);
+	gl.uniform1f(gl.getUniformLocation(outProgram, "tx"), tx);
+	gl.uniform1f(gl.getUniformLocation(outProgram, "ty"), ty);
+	gl.uniform1f(outLocs.dark, localStorage.theme == "dark");
+	gl.drawArrays(gl.TRIANGLES, 0, 6);
+}
+
+var data;  
+var bwdata = new Uint8Array(4);
+
+function callback(stream) {
+    var ctx = new AudioContext();
+    var mic = ctx.createMediaStreamSource(stream);
+    var analyser = ctx.createAnalyser();
+    mic.connect(analyser);
+    data = new Uint8Array(analyser.frequencyBinCount);
+    firstRender();
+
+    function play() {
+        analyser.getByteFrequencyData(data);   
+        //console.log(analyser.minDecibels);
+        //console.log(analyser.maxDecibels);
+
+        gl.enableVertexAttribArray(gl.getAttribLocation(inProgram, "a_position"));
+    	gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+    	gl.vertexAttribPointer(gl.getAttribLocation(inProgram, "a_position"), 2, gl.FLOAT, false, 0, 0);
+    	gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
+    	gl.enableVertexAttribArray(gl.getAttribLocation(inProgram, "a_texCoord"));
+    	gl.vertexAttribPointer(gl.getAttribLocation(inProgram, "a_texCoord"), 2, gl.FLOAT, false, 0, 0);
+
+        gl.activeTexture(gl.TEXTURE0+0);
+        gl.bindTexture(gl.TEXTURE_2D, tex);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.R8, 1024, 1, 0, gl.RED, gl.UNSIGNED_BYTE, data);
+
+        gl.activeTexture(gl.TEXTURE0+1);
+        gl.bindTexture(gl.TEXTURE_2D, targetTex);
+
+    	gl.useProgram(inProgram);
+
+        gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuffer);
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, targetTex2, 0);
+
+  		//gl.readPixels(0, 0, width, height-2, gl.RED, gl.UNSIGNED_BYTE, bwdata); // height-2 is necessary for some reason
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer); // I think this isn't necessary
+        gl.uniform1i(gl.getUniformLocation(inProgram, "u_image"), 0);
+        gl.uniform1i(gl.getUniformLocation(inProgram, "prev_image"), 1);
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+        temp = targetTex2;
+        targetTex2 = targetTex;
+        targetTex = temp;
+
+        display();
+
+        if (toggle) {requestAnimationFrame(play);}
+    }   
+
+    btn.addEventListener('click', function handleClick() {
+    toggle = !toggle;
+    if (toggle) btn.textContent = '⏸';
+    else btn.textContent = '▶️';
+    play();
+
+	});
+
+}
+
+window.addEventListener('click', display);
+
+function updateWindow(){
+	resizeCanvas();
+	display();
+}
+
+d3.select(window).on('resize.updatesvg', function() {
+    updateWindow();
+    });
+</script>
+	</article>
+</main>
+
+
+
+
+
+
+
+  <footer class="mt-8 flex sm:flex-col-reverse justify-between items-center">
+  <p class="mt-0 text-sm">
+    TH ↔ Þ
+  </p>
+  <p class="flex items-center mt-0">
+    
+      <a class="icon mx-2" href="https://github.com/agaura" title="github">
+      
+        <svg fill="#63636f" width="18" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>GitHub</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+      
+      </a>
+    
+      <a class="icon mx-2" href="https://www.instagram.com/arg793/" title="instagram">
+      
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><path fill = "#bc2a8d" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+      
+      </a>
+    
+      <a class="icon mx-2" href="https://www.linkedin.com/in/alexander-gaura-19980514a/" title="linkedin">
+      
+        <svg fill="#0073b1" width="18" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>LinkedIn</title><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+      
+      </a>
+    
+      <a class="icon mx-2" href="/index.xml" title="rss">
+      
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><path fill = "#ee802f" d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/></svg>
+      
+      </a>
+    
+  </p>
+</footer>
+</body>
+</html>
