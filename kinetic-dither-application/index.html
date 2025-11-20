@@ -56,11 +56,11 @@
   
   
   
-  <link rel="stylesheet" href="/minima.1742677992.css">
+  <link rel="stylesheet" href="/minima.1763599949.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1742677992.js"></script>
+  <script defer type="text/javascript" src="/minima.1763599949.js"></script>
 </head>
 <script>
   
@@ -130,10 +130,10 @@
 	<p></p>
 	<article class="md">
 		<h1 id="introduction">Introduction</h1>
-<p>       This shader is demonstrating what it would look like to remove a portion of the color wheel. The inspiration? I just don&rsquo;t like the color green (🤮) and wanted to get rid of it… however, this gave me the inspiration to see what it would look like if I could optionally remove any color by removing a sector from the color wheel. So now, with this shader, we can see what that would look like when looking directly at a color wheel.</p>
-<p>       Now, there is not a clear solution on what we can do to &ldquo;get rid&rdquo; of a color while still maintaining &ldquo;something&rdquo; there to fill its spot. It&rsquo;s not like we can create a new color, and if we were to choose a gradient from another part of the color wheel, what would make sense? Instead, we will use <a href="https://en.wikipedia.org/wiki/Dither">dithering</a> - a technique that uses patterns of available colors to create the illusion of unavailable colors. In particular, we will add a time component $t$, and for any given color $c$ let $c_l$ and $c_r$ be the nearest color in the color wheel to its left and right. Let $\hat{c}$ be the color displayed and $d$ be a distance metric. Then, we have</p>
+<p>This shader is demonstrating what it would look like to remove a portion of the color wheel. The inspiration? I just don&rsquo;t like the color green (🤮) and wanted to get rid of it… however, this gave me the inspiration to see what it would look like if I could optionally remove any color by removing a sector from the color wheel. So now, with this shader, we can see what that would look like when looking directly at a color wheel.</p>
+<p>Now, there is not a clear solution on what we can do to &ldquo;get rid&rdquo; of a color while still maintaining &ldquo;something&rdquo; there to fill its spot. It&rsquo;s not like we can create a new color, and if we were to choose a gradient from another part of the color wheel, what would make sense? Instead, we will use <a href="https://en.wikipedia.org/wiki/Dither">dithering</a> - a technique that uses patterns of available colors to create the illusion of unavailable colors. In particular, we will add a time component $t$, and for any given color $c$ let $c_l$ and $c_r$ be the nearest color in the color wheel to its left and right. Let $\hat{c}$ be the color displayed and $d$ be a distance metric. Then, we have</p>
 <p>$$P(\hat{c} = c_l|t) = \frac{d(c, c_l)}{d(c_l, c_r)}$$</p>
-<p>       In other words, an annihilated color will be displayed as one of the two nearest acceptable colors at random, but it will be more likely to display the closer of the two acceptable colors (proportional to how close they are!). Let&rsquo;s see how this looks:</p>
+<p>In other words, an annihilated color will be displayed as one of the two nearest acceptable colors at random, but it will be more likely to display the closer of the two acceptable colors (proportional to how close they are!). Let&rsquo;s see how this looks:</p>
 <h1 id="shader">Shader</h1>
 <p>If viewing on mobile, make sure to enable WebGL 2.0.</p>
 <script src="https://d3js.org/d3.v6.min.js"></script>
@@ -1019,7 +1019,7 @@ out vec4 outColor;void main()
 </li>
 </ul>
 <h1 id="discussion">Discussion</h1>
-<p>       I invite the reader in particular to try pressing ▶️, setting the <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" style="position:relative; top:2px;">
+<p>I invite the reader in particular to try pressing ▶️, setting the <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" style="position:relative; top:2px;">
 <path fill='gray' d="M6 11v-4l-6 5 6 5v-4h12v4l6-5-6-5v4z" /></svg> slider to around 25%, and seeing what effect changing the <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" style="position:relative; top:2px;">
 <linearGradient id="Gradient2" x1="0" x2="0" y1="0" y2="1">
 <stop offset="0%" stop-color="#d60071" />
@@ -1033,8 +1033,8 @@ out vec4 outColor;void main()
 </linearGradient>
 <path fill="url(#Gradient2)" d="M12 0c-4.87 7.197-8 11.699-8 16.075 0 4.378 3.579 7.925 8 7.925s8-3.547 8-7.925c0-4.376-3.13-8.878-8-16.075zm.462 20.471c2.56-1.049 4.124-4.889 3.021-8.853 3.798 4.909.754 9.393-3.021 8.853z" /></svg> slider has on the color wheel. While the changes are obvious and noticeable, I believe it is quite impressive how little of a difference there is. Remember, when the <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" style="position:relative; top:2px;">
 <path fill='gray' d="M6 11v-4l-6 5 6 5v-4h12v4l6-5-6-5v4z" /></svg> slider is at 25%, that means a whole quarter of the color wheel is missing! Yet, it doesn&rsquo;t feel like quite that much is gone. Thank dithering!</p>
-<p>       Note: This color wheel is a special one, and represents slices from a color space called <a href="https://bottosson.github.io/posts/colorpicker/">Okhsl</a>. The benefit of this space is in its <em>perceptual uniformity</em>, further investigated <a href="https://agaura.github.io/comparison/">here</a>.</p>
-<p>       Now that we&rsquo;ve created this, what does it look like in practice with an actual image? See <a href="https://agaura.github.io/selectiveshader/">here</a>.</p>
+<p>Note: This color wheel is a special one, and represents slices from a color space called <a href="https://bottosson.github.io/posts/colorpicker/">Okhsl</a>. The benefit of this space is in its <em>perceptual uniformity</em>, further investigated <a href="https://agaura.github.io/comparison/">here</a>.</p>
+<p>Now that we&rsquo;ve created this, what does it look like in practice with an actual image? See <a href="https://agaura.github.io/selectiveshader/">here</a>.</p>
 
 	</article>
 </main>

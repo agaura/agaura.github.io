@@ -56,11 +56,11 @@
   
   
   
-  <link rel="stylesheet" href="/minima.1742677992.css">
+  <link rel="stylesheet" href="/minima.1763599949.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1742677992.js"></script>
+  <script defer type="text/javascript" src="/minima.1763599949.js"></script>
 </head>
 <script>
   
@@ -130,12 +130,12 @@
 	<p></p>
 	<article class="md">
 		<h1 id="introduction">Introduction</h1>
-<p>  There was a very interesting <a href="https://blog.johnnovak.net/2016/09/21/what-every-coder-should-know-about-gamma/">article</a> I came across that I highly recommend discussing the gamma function that addressed color mixing. Essentially: color mixing is often done inaccurately. For example, if you mix two sRGB colors by just averaging them, that color will not be the same color as if you just shined two flashlights of those colors (at 50% brightness) and overlapped them. This is because sRGB colors do not represent the amount of red, green, and blue light you need to mix a color. Instead, they are adjusted (by a function referred to as <em>gamma</em>) to optimize how distinct colors are. It turns out people are better at differentiating dark colors than light ones, so the gamma function is added to adjust the linear sRGB values in order to make the colors of your display as diverse as possible with the limitation of only having 8 bits per red, green, and blue. This gamma function is more-or-less just raising the color’s value to the 2.4th power (to go from sRGB to linear sRGB), so if you want to mix colors the same way light actually would mix, you will have to undo that.</p>
-<p>  But, how do we know that this method is correct? The science behind it is pretty sound (if you like you can look into CIE 1931 color matching functions and how XYZ space was created, but in summary colors are basically <em>defined</em> by how you can mix three colors to make them and linear sRGB is just a transform of those spaces, so mixing is perfectly predictable and okay), but it’d be nice to check to be sure. Also, we live in reality! Who knows what these display manufacturers are actually selling us. What if the math is right but the display shows it wrong? How could I check? While this isn’t fool-proof, I decided to make a visualization so you can at least check yourself whether a color prediction is valid.</p>
+<p>There was a very interesting <a href="https://blog.johnnovak.net/2016/09/21/what-every-coder-should-know-about-gamma/">article</a> I came across that I highly recommend discussing the gamma function that addressed color mixing. Essentially: color mixing is often done inaccurately. For example, if you mix two sRGB colors by just averaging them, that color will not be the same color as if you just shined two flashlights of those colors (at 50% brightness) and overlapped them. This is because sRGB colors do not represent the amount of red, green, and blue light you need to mix a color. Instead, they are adjusted (by a function referred to as <em>gamma</em>) to optimize how distinct colors are. It turns out people are better at differentiating dark colors than light ones, so the gamma function is added to adjust the linear sRGB values in order to make the colors of your display as diverse as possible with the limitation of only having 8 bits per red, green, and blue. This gamma function is more-or-less just raising the color’s value to the 2.4th power (to go from sRGB to linear sRGB), so if you want to mix colors the same way light actually would mix, you will have to undo that.</p>
+<p>But, how do we know that this method is correct? The science behind it is pretty sound (if you like you can look into CIE 1931 color matching functions and how XYZ space was created, but in summary colors are basically <em>defined</em> by how you can mix three colors to make them and linear sRGB is just a transform of those spaces, so mixing is perfectly predictable and okay), but it’d be nice to check to be sure. Also, we live in reality! Who knows what these display manufacturers are actually selling us. What if the math is right but the display shows it wrong? How could I check? While this isn’t fool-proof, I decided to make a visualization so you can at least check yourself whether a color prediction is valid.</p>
 <h1 id="visualization">Visualization</h1>
-<p>  So, here is a demonstration showing how colors mix. You can control the two colors being mixed with the sliders. In the entire left half of the image there are no mixed pixels: all of the pixels match either the top-left color or the bottom-left color. Starting from the middle, some pixels are colored the same as the predicted mixed result until they dominate at the corners on the right side.</p>
-<p>  To see how they truly match, it is recommnended to look at the screen from far away and/or blur your vision until the colors at the center blends together. If all is well with the display, then the center should match the two right corners and we can be comfortable that color math is valid.</p>
-<p>  NOTE: the center may not match the two right corners due to display issues or an incorrect calibration. For instance, some displays may cause a strange shift in color when pixels transition between frames (if the visualization appears to change color slightly when scrolling, almost like it’s flickering, this is likely the case for your display), so the paused visualization may be better.</p>
+<p>So, here is a demonstration showing how colors mix. You can control the two colors being mixed with the sliders. In the entire left half of the image there are no mixed pixels: all of the pixels match either the top-left color or the bottom-left color. Starting from the middle, some pixels are colored the same as the predicted mixed result until they dominate at the corners on the right side.</p>
+<p>To see how they truly match, it is recommnended to look at the screen from far away and/or blur your vision until the colors at the center blends together. If all is well with the display, then the center should match the two right corners and we can be comfortable that color math is valid.</p>
+<p>NOTE: the center may not match the two right corners due to display issues or an incorrect calibration. For instance, some displays may cause a strange shift in color when pixels transition between frames (if the visualization appears to change color slightly when scrolling, almost like it’s flickering, this is likely the case for your display), so the paused visualization may be better.</p>
 <script src="https://d3js.org/d3.v6.min.js"></script>
 <script src="https://unpkg.com/d3-simple-slider"></script>
 <script src="https://unpkg.com/topojson@3"></script>
@@ -1082,7 +1082,7 @@ var fragmentShaderSource = '#version 300 es' + document.getElementById('colors')
     }
 </script>
 <h1 id="discussion">Discussion</h1>
-<p>  One might notice that when experimenting with colors of different lightness that the lighter color always seems to dominate the color mix. This is not a coincidence, it’s the same reason the gamma function exists. Since human eyes are more sensitive to dark colors, a true 50/50 mix of two colors will always look more like the lighter one. Therefore, while mixing colors in a space like XYZ or linear sRGB is accurate to how light would actually mix, it might not be the best for making gradients that feel equally spaced.</p>
+<p>One might notice that when experimenting with colors of different lightness that the lighter color always seems to dominate the color mix. This is not a coincidence, it’s the same reason the gamma function exists. Since human eyes are more sensitive to dark colors, a true 50/50 mix of two colors will always look more like the lighter one. Therefore, while mixing colors in a space like XYZ or linear sRGB is accurate to how light would actually mix, it might not be the best for making gradients that feel equally spaced.</p>
 
 	</article>
 </main>

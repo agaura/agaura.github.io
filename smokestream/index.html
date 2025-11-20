@@ -56,11 +56,11 @@
   
   
   
-  <link rel="stylesheet" href="/minima.1742677992.css">
+  <link rel="stylesheet" href="/minima.1763599949.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1742677992.js"></script>
+  <script defer type="text/javascript" src="/minima.1763599949.js"></script>
 </head>
 <script>
   
@@ -130,9 +130,9 @@
 	<p></p>
 	<article class="md">
 		<h1 id="introduction">Introduction</h1>
-<p>  In the background of this page you can see an invisible sprite leaving a trail of multi-colored “smoke.” Feel free to click and drag on the page itself, your cursor will also give off colored smoke. The experience works in both light and dark mode but is best viewed in dark mode, so click the ⚪️/⚫️ button to switch. Scroll down for an empty area to interact with the smoke and for information on the settings.</p>
-<p>  <span style="color:red"><b>Caution</b></span>: If there is any lag, move the bottom slider to the right. However, if you have a fast computer, best high-definition results come from moving the bottom slider to the left.</p>
-<p>  Note: All settings can also be toggled by pressing on the keyboard key that matches the first letter of the setting.</p>
+<p>In the background of this page you can see an invisible sprite leaving a trail of multi-colored “smoke.” Feel free to click and drag on the page itself, your cursor will also give off colored smoke. The experience works in both light and dark mode but is best viewed in dark mode, so click the ⚪️/⚫️ button to switch. Scroll down for an empty area to interact with the smoke and for information on the settings.</p>
+<p><span style="color:red"><b>Caution</b></span>: If there is any lag, move the bottom slider to the right. However, if you have a fast computer, best high-definition results come from moving the bottom slider to the left.</p>
+<p>Note: All settings can also be toggled by pressing on the keyboard key that matches the first letter of the setting.</p>
 <script src="https://d3js.org/d3.v6.min.js"></script>
 <script src="https://unpkg.com/d3-simple-slider"></script>    <!-- topojson -->
 <script src="https://unpkg.com/topojson@3"></script>    <!-- WebGL -->
@@ -3845,16 +3845,16 @@ freeSpace.addEventListener('touchmove', function(e){ e.preventDefault(); }, {pas
     
 </script>
 <h1 id="information">Information</h1>
-<p>  The colors emitted by the cursor are determined by both the direction and the speed of the drag. The “Glitter” setting adds more variance to the colors and “Lock Color Direction” causes the colors to be determined only by the <em>initial</em> direction of the drag.</p>
-<p>  There is a play/pause button to turn on/off the smoke. However, you can also press any key on your keyboard that doesn’t match the first letter of the above settings to play/pause, and if you want to see changes one frame at a time you can press the period (&quot;.&quot;) key. Smoke can be emitted by the cursor even when paused.</p>
-<p>  The sliders can change how the smoke works. The top slider changes how quickly the smoke spreads, and the middle slider varies the density of the smoke, effectively changing the way the smoke spreads where higher values seem to make it flow more like watercolor paint. The bottom slider changes the pixel size of the fluid.</p>
-<p>  The buttons show what is going on under-the-hood controlling how the smoke moves, and are painted with multicolored gradients. In the case of both Pressure and Divergence, lighter green/yellow-red colors represent positive values and darker blue-magenta colors represent negative values. The gradients cycle between colors creating bands such that it either is linear where the $N$th band has
+<p>The colors emitted by the cursor are determined by both the direction and the speed of the drag. The “Glitter” setting adds more variance to the colors and “Lock Color Direction” causes the colors to be determined only by the <em>initial</em> direction of the drag.</p>
+<p>There is a play/pause button to turn on/off the smoke. However, you can also press any key on your keyboard that doesn’t match the first letter of the above settings to play/pause, and if you want to see changes one frame at a time you can press the period (&quot;.&quot;) key. Smoke can be emitted by the cursor even when paused.</p>
+<p>The sliders can change how the smoke works. The top slider changes how quickly the smoke spreads, and the middle slider varies the density of the smoke, effectively changing the way the smoke spreads where higher values seem to make it flow more like watercolor paint. The bottom slider changes the pixel size of the fluid.</p>
+<p>The buttons show what is going on under-the-hood controlling how the smoke moves, and are painted with multicolored gradients. In the case of both Pressure and Divergence, lighter green/yellow-red colors represent positive values and darker blue-magenta colors represent negative values. The gradients cycle between colors creating bands such that it either is linear where the $N$th band has
 $N$ times the strength as the first band (as in the case of Pressure), or it has $\sqrt[4]{2^{N-1}}$ times the strength as the first band (as in the case of Divergence, i.e. it’s a logarithmic scale). Velocity is shaded such that every direction is prescribed its own hue, and the strength of the hue is the velocity in that direction.</p>
 <h1 id="extra-details">Extra Details</h1>
-<p>  The smoke shader should work both on desktop and on mobile, although it’s better on desktop. It is best rendered on chrome, as if your monitor is capable of rendering P3 colors (most macs can, for example) then the colors will render as P3 colors (giving a wider gamut, making even more colorful smoke and gradients!).</p>
-<p>  Colors themselves are picked from the Okhsl color space, allowing for perceptually smoother gradients. The colors are technically floats, and while monitors do not normally render float values for colors, this allows for colors to be rendered extra smooth by adding a little noise, preventing banding.</p>
-<p>  Click-and-drag actions are somewhat sinusoidal (with a bit of noise), for that reason when quick and long paths are made with your cursor the smoke will seemingly have a lot of texture.</p>
-<p>  The smoke will also adjust easily to the screen changing sizes (although the smoke does behave slightly differently depending on the ratio of the dimensions, where it will spread farther across the wider dimension), so feel free to experiment with that as well.</p>
+<p>The smoke shader should work both on desktop and on mobile, although it’s better on desktop. It is best rendered on chrome, as if your monitor is capable of rendering P3 colors (most macs can, for example) then the colors will render as P3 colors (giving a wider gamut, making even more colorful smoke and gradients!).</p>
+<p>Colors themselves are picked from the Okhsl color space, allowing for perceptually smoother gradients. The colors are technically floats, and while monitors do not normally render float values for colors, this allows for colors to be rendered extra smooth by adding a little noise, preventing banding.</p>
+<p>Click-and-drag actions are somewhat sinusoidal (with a bit of noise), for that reason when quick and long paths are made with your cursor the smoke will seemingly have a lot of texture.</p>
+<p>The smoke will also adjust easily to the screen changing sizes (although the smoke does behave slightly differently depending on the ratio of the dimensions, where it will spread farther across the wider dimension), so feel free to experiment with that as well.</p>
 
 	</article>
 </main>

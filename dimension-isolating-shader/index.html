@@ -58,11 +58,11 @@ The problem at the heart of the matter here is that there is not a good way to d
   
   
   
-  <link rel="stylesheet" href="/minima.1742677992.css">
+  <link rel="stylesheet" href="/minima.1763599949.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1742677992.js"></script>
+  <script defer type="text/javascript" src="/minima.1763599949.js"></script>
 </head>
 <script>
   
@@ -132,14 +132,14 @@ The problem at the heart of the matter here is that there is not a good way to d
 	<p></p>
 	<article class="md">
 		<h1 id="introduction">Introduction</h1>
-<p>   It’s quite common to see an image or to want to have an image in grayscale. What is it that we are doing when we have a grayscale image? We are deleting two dimensions—hue and saturation—from the color space representing our image. However, why cannot/why don’t we delete the other dimensions? Why is this the only standard operation?</p>
-<p>   The problem at the heart of the matter here is that there is not a good way to do it. Say we wanted to have a full-color image with non-existent saturation. That does not make sense, because the dimensions of hue and saturation have a relationship where hue only exists so long as saturation does. Saturation without hue? Same issue. Either without luminance? Also impossible, every color has a brightness attached to it. This is also interesting and says something about the way color spaces work differently than, say, physical space, which also is 3D.</p>
-<p>   However, there is a solution! From an information-theoretic standpoint, we can develop a definition of <em>dimension</em> which can allow us to remove dimensions easily. Normally, the number of dimensions is the minimum number of distinct units needed to describe something within its space, and a dimension is one of those units. Now, instead, let us say that the number of dimensions is the number of distinct units we can <em>confidently</em> describe. If we can’t tell what hue, saturation, or value something is, then that dimension essentially doesn’t exist.</p>
-<p>   How do we do this? By dithering! See here, and using its notation, we can say that if
+<p>It’s quite common to see an image or to want to have an image in grayscale. What is it that we are doing when we have a grayscale image? We are deleting two dimensions—hue and saturation—from the color space representing our image. However, why cannot/why don’t we delete the other dimensions? Why is this the only standard operation?</p>
+<p>The problem at the heart of the matter here is that there is not a good way to do it. Say we wanted to have a full-color image with non-existent saturation. That does not make sense, because the dimensions of hue and saturation have a relationship where hue only exists so long as saturation does. Saturation without hue? Same issue. Either without luminance? Also impossible, every color has a brightness attached to it. This is also interesting and says something about the way color spaces work differently than, say, physical space, which also is 3D.</p>
+<p>However, there is a solution! From an information-theoretic standpoint, we can develop a definition of <em>dimension</em> which can allow us to remove dimensions easily. Normally, the number of dimensions is the minimum number of distinct units needed to describe something within its space, and a dimension is one of those units. Now, instead, let us say that the number of dimensions is the number of distinct units we can <em>confidently</em> describe. If we can’t tell what hue, saturation, or value something is, then that dimension essentially doesn’t exist.</p>
+<p>How do we do this? By dithering! See here, and using its notation, we can say that if
 $X$ is a set where one dimension is chosen from and $x$ and $y$ are elements of that dimension, then if $\forall x,y \in X$ we have</p>
 <p>$$P(c|\hat{c}_x)=P(c|\hat{c}_y)$$</p>
 <p>where $\hat{c}_x, \hat{c}_y$ are displayed colors with $x$ and $y$ being the values of $X$ in the displayed color, then $X$ is not a relevant dimension. In other words, if you can’t tell what value one of a color’s dimensions is supposed to have, then that dimension doesn’t exist.</p>
-<p>   In fact, this gives us a way to have fractional dimensions too, as we can gradually remove the confidence someone has of something being of a certain value within its dimension. Thus, we have are able to build a shader with sliders!</p>
+<p>In fact, this gives us a way to have fractional dimensions too, as we can gradually remove the confidence someone has of something being of a certain value within its dimension. Thus, we have are able to build a shader with sliders!</p>
 <h1 id="shader">Shader</h1>
 <script src="https://d3js.org/d3.v6.min.js"/></script>
 <script src="https://unpkg.com/d3-simple-slider"></script>    <!-- topojson -->
@@ -1187,7 +1187,7 @@ out vec4 outColor;void main()
 </li>
 </ul>
 <h1 id="discussion">Discussion</h1>
-<p>   I’d highly recommend the reader to try every iteration of minimizing and maximizing the first three sliders after hitting the ▶️ button, the results look very neat! Also very much recommend uploading your own photos, it’s very interesting to see what results there are! What can be concluded is that the idea works very well, and it also shows the influence each dimension has. It seems that saturation is by far the least important/information-giving of the dimensions, followed by hue, followed by luminance, which is by far the most important dimension. It’s also interesting to see how saturation appears when there is no hue or luminance. It appears purple, which I suppose is an artifact on the distrbution of hues in Okhsl, or it can be a condemnation of my implementation. In any case, enjoy messing around with this!</p>
+<p>I’d highly recommend the reader to try every iteration of minimizing and maximizing the first three sliders after hitting the ▶️ button, the results look very neat! Also very much recommend uploading your own photos, it’s very interesting to see what results there are! What can be concluded is that the idea works very well, and it also shows the influence each dimension has. It seems that saturation is by far the least important/information-giving of the dimensions, followed by hue, followed by luminance, which is by far the most important dimension. It’s also interesting to see how saturation appears when there is no hue or luminance. It appears purple, which I suppose is an artifact on the distrbution of hues in Okhsl, or it can be a condemnation of my implementation. In any case, enjoy messing around with this!</p>
 
 	</article>
 </main>
