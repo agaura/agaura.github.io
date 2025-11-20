@@ -2,60 +2,60 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://agaura.github.io/</loc>
+    <loc>http://localhost:1313/</loc>
     <lastmod>2025-11-19T11:38:44-05:00</lastmod>
   </url><url>
-    <loc>https://agaura.github.io/chromaticity-exploration/</loc>
+    <loc>http://localhost:1313/chromaticity-clouds/</loc>
     <lastmod>2025-11-19T11:38:44-05:00</lastmod>
   </url><url>
-    <loc>https://agaura.github.io/color-mixing-prediction/</loc>
+    <loc>http://localhost:1313/color-mixing-prediction/</loc>
     <lastmod>2024-01-15T18:52:17-05:00</lastmod>
   </url><url>
-    <loc>https://agaura.github.io/tags/dither/</loc>
+    <loc>http://localhost:1313/tags/dither/</loc>
     <lastmod>2024-01-15T18:52:17-05:00</lastmod>
   </url><url>
-    <loc>https://agaura.github.io/tags/shader/</loc>
+    <loc>http://localhost:1313/tags/shader/</loc>
     <lastmod>2024-01-15T18:52:17-05:00</lastmod>
   </url><url>
-    <loc>https://agaura.github.io/tags/</loc>
+    <loc>http://localhost:1313/tags/</loc>
     <lastmod>2024-01-15T18:52:17-05:00</lastmod>
   </url><url>
-    <loc>https://agaura.github.io/color-space-point/</loc>
+    <loc>http://localhost:1313/color-space-point/</loc>
     <lastmod>2023-07-26T11:26:07-04:00</lastmod>
   </url><url>
-    <loc>https://agaura.github.io/categories/</loc>
+    <loc>http://localhost:1313/categories/</loc>
     <lastmod>2023-03-15T15:58:16-04:00</lastmod>
   </url><url>
-    <loc>https://agaura.github.io/categories/projects/</loc>
+    <loc>http://localhost:1313/categories/projects/</loc>
     <lastmod>2023-03-15T15:58:16-04:00</lastmod>
   </url><url>
-    <loc>https://agaura.github.io/smokestream/</loc>
+    <loc>http://localhost:1313/smokestream/</loc>
     <lastmod>2023-03-15T15:58:16-04:00</lastmod>
   </url><url>
-    <loc>https://agaura.github.io/time-dither/</loc>
+    <loc>http://localhost:1313/time-dither/</loc>
     <lastmod>2022-12-21T08:31:50-05:00</lastmod>
   </url><url>
-    <loc>https://agaura.github.io/audio-spectrum/</loc>
+    <loc>http://localhost:1313/audio-spectrum/</loc>
     <lastmod>2022-11-28T12:06:38+01:00</lastmod>
   </url><url>
-    <loc>https://agaura.github.io/dimension-isolating-shader/</loc>
+    <loc>http://localhost:1313/dimension-isolating-shader/</loc>
     <lastmod>2022-05-26T13:56:21+02:00</lastmod>
   </url><url>
-    <loc>https://agaura.github.io/dithering-based-comparison/</loc>
+    <loc>http://localhost:1313/dithering-based-comparison/</loc>
     <lastmod>2022-05-08T15:57:59+02:00</lastmod>
   </url><url>
-    <loc>https://agaura.github.io/kinetic-dither-application/</loc>
+    <loc>http://localhost:1313/kinetic-dither-application/</loc>
     <lastmod>2022-04-27T11:52:10+02:01</lastmod>
   </url><url>
-    <loc>https://agaura.github.io/kinetic-dither-shader/</loc>
+    <loc>http://localhost:1313/kinetic-dither-shader/</loc>
     <lastmod>2022-04-27T11:52:10+02:02</lastmod>
   </url><url>
-    <loc>https://agaura.github.io/about/</loc>
+    <loc>http://localhost:1313/about/</loc>
     <lastmod>2022-04-17T17:08:58+02:00</lastmod>
   </url><url>
-    <loc>https://agaura.github.io/categories/writing/</loc>
+    <loc>http://localhost:1313/categories/writing/</loc>
     <lastmod>2022-04-17T17:08:58+02:00</lastmod>
   </url><url>
-    <loc>https://agaura.github.io/series/</loc>
+    <loc>http://localhost:1313/series/</loc>
   </url>
 </urlset>

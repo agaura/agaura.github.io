@@ -1,25 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta property="og:url" content="https://agaura.github.io/dimension-isolating-shader/">
+  <meta property="og:url" content="http://localhost:1313/kinetic-dither-shader/">
   <meta property="og:site_name" content="Alexander Gaura">
-  <meta property="og:title" content="Dimension Isolating Shader">
-  <meta property="og:description" content="Introduction It’s quite common to see an image or to want to have an image in grayscale. What is it that we are doing when we have a grayscale image? We are deleting two dimensions—hue and saturation—from the color space representing our image. However, why cannot/why don’t we delete the other dimensions? Why is this the only standard operation?
-The problem at the heart of the matter here is that there is not a good way to do it.">
+  <meta property="og:title" content="Kinetic Dither Shader">
+  <meta property="og:description" content="Introduction This shader displays images with a portion of the color wheel being impossible to show, instead being displayed as noise being dithered so as to approximate that color. For more information, see here.
+Shader ▶️ Upload Controls ▶️/⏸ Button: Controls time, causes noisiness to evolve over time and smoothens dither Slider: Controls the annihilated hue. Runs counterclockwise starting from the rightmost point of the color wheel (red/hot pink) Slider: Controls with width of the sector being annihilated, where the percentage corresponding to the percentage of the color wheel within that sector, centered around the annihilated hue as defined by the above slider Slider: Changes the size of the resolution of the dithered annihilated colors Discussion This shader more-or-less functions as a fun little artistic thingy.">
   <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
-    <meta property="article:published_time" content="2022-05-26T13:56:21+02:00">
-    <meta property="article:modified_time" content="2022-05-26T13:56:21+02:00">
+    <meta property="article:published_time" content="2022-04-27T11:52:10+02:02">
+    <meta property="article:modified_time" content="2022-04-27T11:52:10+02:02">
     <meta property="article:tag" content="Shader">
     <meta property="article:tag" content="Dither">
 
   
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Dimension Isolating Shader">
-  <meta name="twitter:description" content="Introduction It’s quite common to see an image or to want to have an image in grayscale. What is it that we are doing when we have a grayscale image? We are deleting two dimensions—hue and saturation—from the color space representing our image. However, why cannot/why don’t we delete the other dimensions? Why is this the only standard operation?
-The problem at the heart of the matter here is that there is not a good way to do it.">
+  <meta name="twitter:title" content="Kinetic Dither Shader">
+  <meta name="twitter:description" content="Introduction This shader displays images with a portion of the color wheel being impossible to show, instead being displayed as noise being dithered so as to approximate that color. For more information, see here.
+Shader ▶️ Upload Controls ▶️/⏸ Button: Controls time, causes noisiness to evolve over time and smoothens dither Slider: Controls the annihilated hue. Runs counterclockwise starting from the rightmost point of the color wheel (red/hot pink) Slider: Controls with width of the sector being annihilated, where the percentage corresponding to the percentage of the color wheel within that sector, centered around the annihilated hue as defined by the above slider Slider: Changes the size of the resolution of the dithered annihilated colors Discussion This shader more-or-less functions as a fun little artistic thingy.">
 
   
   
@@ -46,7 +46,7 @@ The problem at the heart of the matter here is that there is not a good way to d
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#262d33">
   <title>
     
-    Alexander Gaura - Dimension Isolating Shader
+    Alexander Gaura - Kinetic Dither Shader
     
   </title>
   
@@ -58,11 +58,11 @@ The problem at the heart of the matter here is that there is not a good way to d
   
   
   
-  <link rel="stylesheet" href="/minima.1763600939.css">
+  <link rel="stylesheet" href="/minima.1763599070.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1763600939.js"></script>
+  <script defer type="text/javascript" src="/minima.1763599070.js"></script>
 </head>
 <script>
   
@@ -110,11 +110,11 @@ The problem at the heart of the matter here is that there is not a good way to d
   
   
 
-<h1 class="mt-6 mb-6">Dimension Isolating Shader</h1>
+<h1 class="mt-6 mb-6">Kinetic Dither Shader</h1>
 <div class="mb-3 text-xs flex justify-between sm:flex-col">
 	<div>
 	
-		Posted at &mdash; May 26, 2022
+		Posted at &mdash; Apr 27, 2022
 	
 		
 	</div>
@@ -132,39 +132,30 @@ The problem at the heart of the matter here is that there is not a good way to d
 	<p></p>
 	<article class="md">
 		<h1 id="introduction">Introduction</h1>
-<p>It’s quite common to see an image or to want to have an image in grayscale. What is it that we are doing when we have a grayscale image? We are deleting two dimensions—hue and saturation—from the color space representing our image. However, why cannot/why don’t we delete the other dimensions? Why is this the only standard operation?</p>
-<p>The problem at the heart of the matter here is that there is not a good way to do it. Say we wanted to have a full-color image with non-existent saturation. That does not make sense, because the dimensions of hue and saturation have a relationship where hue only exists so long as saturation does. Saturation without hue? Same issue. Either without luminance? Also impossible, every color has a brightness attached to it. This is also interesting and says something about the way color spaces work differently than, say, physical space, which also is 3D.</p>
-<p>However, there is a solution! From an information-theoretic standpoint, we can develop a definition of <em>dimension</em> which can allow us to remove dimensions easily. Normally, the number of dimensions is the minimum number of distinct units needed to describe something within its space, and a dimension is one of those units. Now, instead, let us say that the number of dimensions is the number of distinct units we can <em>confidently</em> describe. If we can’t tell what hue, saturation, or value something is, then that dimension essentially doesn’t exist.</p>
-<p>How do we do this? By dithering! See here, and using its notation, we can say that if
-$X$ is a set where one dimension is chosen from and $x$ and $y$ are elements of that dimension, then if $\forall x,y \in X$ we have</p>
-<p>$$P(c|\hat{c}_x)=P(c|\hat{c}_y)$$</p>
-<p>where $\hat{c}_x, \hat{c}_y$ are displayed colors with $x$ and $y$ being the values of $X$ in the displayed color, then $X$ is not a relevant dimension. In other words, if you can’t tell what value one of a color’s dimensions is supposed to have, then that dimension doesn’t exist.</p>
-<p>In fact, this gives us a way to have fractional dimensions too, as we can gradually remove the confidence someone has of something being of a certain value within its dimension. Thus, we have are able to build a shader with sliders!</p>
+<p>       This shader displays images with a portion of the color wheel being impossible to show, instead being displayed as noise being dithered so as to approximate that color. For more information, see <a href="https://agaura.github.io/okhslapp/">here</a>.</p>
 <h1 id="shader">Shader</h1>
-<script src="https://d3js.org/d3.v6.min.js"/></script>
-<script src="https://unpkg.com/d3-simple-slider"></script>    <!-- topojson -->
-<script src="https://unpkg.com/topojson@3"></script>    <!-- WebGL -->
-<script src="https://webgl2fundamentals.org/webgl/resources/webgl-utils.js"></script>
-<script src="https://unpkg.com/jquery@3.5.1"></script>
-<p><b style="font-size:30px" id='btn' onmouseover="this.style.cursor='pointer';" width = 20px>▶️</b></p>
-<style>
+<html>
+ <!-- D3.js -->
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="https://unpkg.com/d3-simple-slider"></script>    <!-- topojson -->
+    <script src="https://unpkg.com/topojson@3"></script>    <!-- WebGL -->
+    <script src="https://webgl2fundamentals.org/webgl/resources/webgl-utils.js"></script>
+	<b style="font-size:30px" id='btn' onmouseover="this.style.cursor='pointer';" width = 20px>▶️</b>
+    <style>
         input[type="file"] {
             display: none;
-        }
-		.custom-file-upload {
+        }        .custom-file-upload {
             border: 1px solid #ccc;
             display: inline-block;
             padding: 6px 12px;
             cursor: pointer;
         }
-</style>
-<div align="center">
+    </style>    <div align="center">
         <label class="custom-file-upload">
-            <input id="upload" type="file" name="myPhoto" onchange="preview();" />
+            <input id="uploadImage" type="file" name="myPhoto" onchange="PreviewImage();" />
             <i class="fa fa-cloud-upload"></i>  Upload
         </label>
-    </div>
-	<div align="center" style="padding-top: 20px">
+    </div>    <div align="center" style="padding-top: 20px">
         <canvas id="canvas"></canvas>
         <!--
 for most samples webgl-utils only provides shader compiling/linking and
@@ -174,35 +165,22 @@ and https://webgl2fundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html
 for webgl-utils, m3, m4, and webgl-lessons-ui.
 -->
     </div>
-      <div align="center" id="slider-fill">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-        style="position:relative; top:-23px;">
-        <linearGradient id="Gradient2" x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0%" stop-color="#d60071" />
-            <stop offset="20%" stop-color="#c04e00" />
-            <stop offset="30%" stop-color="#917200" />
-            <stop id='example' offset="45%" stop-color="#468a00" />
-            <stop offset="50%" stop-color="#008a79" />
-            <stop offset="60%" stop-color="#0083a8" />
-            <stop offset="70%" stop-color="#4b5dff" />
-            <stop offset="100%" stop-color="#b200df" />
-        </linearGradient>
-        <path fill="url(#Gradient2)"
-            d="M12 0c-4.87 7.197-8 11.699-8 16.075 0 4.378 3.579 7.925 8 7.925s8-3.547 8-7.925c0-4.376-3.13-8.878-8-16.075zm.462 20.471c2.56-1.049 4.124-4.889 3.021-8.853 3.798 4.909.754 9.393-3.021 8.853z" /></svg>
-</div>
-<div align="center" id="slider-fill2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style = "position:relative; top:-23px;"><path fill='gray' d="M22.266 14.724c-.064.898-.242 1.766-.522 2.586l1.601.675c-.163.461-.353.909-.568 1.344l-1.602-.676c-.383.751-.855 1.448-1.402 2.078l1.229 1.229c-.323.364-.667.709-1.032 1.032l-2.262-2.262c1.874-1.59 3.125-4.039 3.125-6.735 0-4.878-3.954-8.832-8.832-8.832s-8.833 3.954-8.833 8.832c0 2.505 1.107 5.024 3.126 6.735l-2.293 2.27-1.031-1.031 1.259-1.238c-.562-.647-1.046-1.365-1.434-2.139l-1.606.665c-.212-.436-.399-.885-.559-1.348l1.605-.664c-.268-.802-.439-1.646-.5-2.521h-1.735v-1.459h1.734c.063-.897.242-1.765.522-2.585l-1.6-.675c.163-.461.352-.91.567-1.344l1.602.675c.383-.75.855-1.448 1.403-2.078l-1.229-1.229c.323-.365.668-.709 1.032-1.031l1.229 1.229c.647-.562 1.366-1.045 2.141-1.433l-.665-1.606c.435-.212.885-.399 1.347-.558l.665 1.604c.802-.267 1.647-.438 2.522-.5v-1.734h1.459v1.733c.899.063 1.767.242 2.587.522l.675-1.6c.462.162.911.353 1.345.567l-.676 1.602c.751.383 1.449.854 2.08 1.402l1.229-1.229c.365.322.709.666 1.032 1.03l-1.229 1.229c.562.647 1.045 1.366 1.434 2.14l1.606-.665c.212.436.399.885.558 1.348l-1.604.664c.269.802.439 1.646.501 2.521h1.733v1.459h-1.734zm-3.434-.729c0 3.767-3.064 6.832-6.832 6.832s-6.833-3.065-6.833-6.832 3.065-6.832 6.833-6.832 6.832 3.065 6.832 6.832zm-7.36-1.81l-2.158-2.158-1.415 1.413 2.158 2.158 1.415-1.413z"/></svg></div>
-<div align="center" id="slider-fill3"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-        style="position:relative; top:-23px;">
-        <path fill='gray'
-            d="M14 19h-4c-.276 0-.5.224-.5.5s.224.5.5.5h4c.276 0 .5-.224.5-.5s-.224-.5-.5-.5zm0 2h-4c-.276 0-.5.224-.5.5s.224.5.5.5h4c.276 0 .5-.224.5-.5s-.224-.5-.5-.5zm.25 2h-4.5l1.188.782c.154.138.38.218.615.218h.895c.234 0 .461-.08.615-.218l1.187-.782zm3.75-13.799c0 3.569-3.214 5.983-3.214 8.799h-1.989c-.003-1.858.87-3.389 1.721-4.867.761-1.325 1.482-2.577 1.482-3.932 0-2.592-2.075-3.772-4.003-3.772-1.925 0-3.997 1.18-3.997 3.772 0 1.355.721 2.607 1.482 3.932.851 1.478 1.725 3.009 1.72 4.867h-1.988c0-2.816-3.214-5.23-3.214-8.799 0-3.723 2.998-5.772 5.997-5.772 3.001 0 6.003 2.051 6.003 5.772zm4-.691v1.372h-2.538c.02-.223.038-.448.038-.681 0-.237-.017-.464-.035-.69h2.535zm-10.648-6.553v-1.957h1.371v1.964c-.242-.022-.484-.035-.726-.035-.215 0-.43.01-.645.028zm-3.743 1.294l-1.04-1.94 1.208-.648 1.037 1.933c-.418.181-.822.401-1.205.655zm10.586 1.735l1.942-1.394.799 1.115-2.054 1.473c-.191-.43-.423-.827-.687-1.194zm-3.01-2.389l1.038-1.934 1.208.648-1.041 1.941c-.382-.254-.786-.473-1.205-.655zm-10.068 3.583l-2.054-1.472.799-1.115 1.942 1.393c-.264.366-.495.763-.687 1.194zm13.707 6.223l2.354.954-.514 1.271-2.425-.982c.21-.397.408-.812.585-1.243zm-13.108 1.155l-2.356 1.06-.562-1.251 2.34-1.052c.173.433.371.845.578 1.243zm-1.178-3.676h-2.538v-1.372h2.535c-.018.226-.035.454-.035.691 0 .233.018.458.038.681z" /></svg></div>
-<div align="center" id="slider-fill5"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style = "position:relative; top:-23px;"><path fill = 'gray' d="M6 11v-4l-6 5 6 5v-4h12v4l6-5-6-5v4z"/></svg></div>
-<div align="center" id="slider-fill4"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-        style="position:relative; top:-23px;">
-        <path fill='gray'
-            d="M12 0l-11 6v12.131l11 5.869 11-5.869v-12.066l-11-6.065zm9 11.623l-3 1.569v-3.26l3-1.601v3.292zm-13-.654l3 1.625v3.186l-3-1.614v-3.197zm.9-1.799l2.986-1.603 3.132 1.688-3.014 1.608-3.104-1.693zm4.1 3.43l3-1.6v3.238l-3 1.569v-3.207zm4.138-4.475l-3.139-1.691 2.801-1.503 3.11 1.715-2.772 1.479zm-2.424-4.345l-2.825 1.517-2.728-1.47 2.834-1.546 2.719 1.499zm-7.649 1.19l2.711 1.46-2.973 1.596-2.67-1.456 2.932-1.6zm-1.065 4.908v3.204l-3-1.636v-3.216l3 1.648zm-3 3.843l3 1.636v3.185l-3-1.611v-3.21zm5 5.888v-3.169l3 1.614v3.146l-3-1.591zm5-1.545l3-1.569v3.104l-3 1.601v-3.136zm5 .468v-3.083l3-1.569v3.051l-3 1.601z" /></svg></div>
-<script type="text/javascript">
-        "use strict";
-		var vertexShaderSource = `#version 300 es
+	<div align="center" id="slider-fill" ><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style = "position:relative; top:-23px;">
+	<linearGradient id="Gradient2" x1="0" x2="0" y1="0" y2="1">
+        <stop offset="0%" stop-color="#d60071"/>
+        <stop offset="20%" stop-color="#c04e00"/>
+		<stop offset="30%" stop-color="#917200"/>
+		<stop id = 'example' offset="45%" stop-color="#468a00"/>
+		<stop offset="50%" stop-color="#008a79"/>
+		<stop offset="60%" stop-color="#0083a8"/>
+		<stop offset="70%" stop-color="#4b5dff"/>
+		<stop offset="100%" stop-color="#b200df"/>
+      </linearGradient>
+	  <path fill="url(#Gradient2)" d="M12 0c-4.87 7.197-8 11.699-8 16.075 0 4.378 3.579 7.925 8 7.925s8-3.547 8-7.925c0-4.376-3.13-8.878-8-16.075zm.462 20.471c2.56-1.049 4.124-4.889 3.021-8.853 3.798 4.909.754 9.393-3.021 8.853z"/></svg></div>
+	<div align="center" id="slider-fill2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style = "position:relative; top:-23px;"><path fill = 'gray' d="M6 11v-4l-6 5 6 5v-4h12v4l6-5-6-5v4z"/></svg></div>
+	<div align="center" id="slider-fill3"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style = "position:relative; top:-23px;"><path fill = 'gray' d="M12 0l-11 6v12.131l11 5.869 11-5.869v-12.066l-11-6.065zm9 11.623l-3 1.569v-3.26l3-1.601v3.292zm-13-.654l3 1.625v3.186l-3-1.614v-3.197zm.9-1.799l2.986-1.603 3.132 1.688-3.014 1.608-3.104-1.693zm4.1 3.43l3-1.6v3.238l-3 1.569v-3.207zm4.138-4.475l-3.139-1.691 2.801-1.503 3.11 1.715-2.772 1.479zm-2.424-4.345l-2.825 1.517-2.728-1.47 2.834-1.546 2.719 1.499zm-7.649 1.19l2.711 1.46-2.973 1.596-2.67-1.456 2.932-1.6zm-1.065 4.908v3.204l-3-1.636v-3.216l3 1.648zm-3 3.843l3 1.636v3.185l-3-1.611v-3.21zm5 5.888v-3.169l3 1.614v3.146l-3-1.591zm5-1.545l3-1.569v3.104l-3 1.601v-3.136zm5 .468v-3.083l3-1.569v3.051l-3 1.601z"/></svg></div>
+    <script type="text/javascript">
+        "use strict";        var vertexShaderSource = `#version 300 es
         // an attribute is an input (in) to a vertex shader.
 // It will receive data from a buffer
 in vec2 a_position;
@@ -219,8 +197,7 @@ v_texCoord = a_texCoord;
 `;        var fragmentShaderSource = `#version 300 es
 // fragment shaders don't have a default precision so we need
 // to pick one. highp is a good default. It means "high precision"
-precision highp float;
-float rand(vec2 co) {
+precision highp float;float rand(vec2 co) {
     return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
 }// Copyright(c) 2021 Björn Ottosson
 //
@@ -565,11 +542,9 @@ vec3 okhsv_to_srgb(vec3 hsv)
 	float L_vt = toe_inv(L_v);
 	float C_vt = C_v * L_vt / L_v;	float L_new = toe_inv(L);
 	C = C * L_new / L;
-	L = L_new;
-	vec3 rgb_scale = oklab_to_linear_srgb(vec3( L_vt, a_ * C_vt, b_ * C_vt ));
+	L = L_new;	vec3 rgb_scale = oklab_to_linear_srgb(vec3( L_vt, a_ * C_vt, b_ * C_vt ));
 	float scale_L = cbrt(1.f / max(max(rgb_scale.r, rgb_scale.g), max(rgb_scale.b, 0.f)));	L = L * scale_L;
-	C = C * scale_L;
-	vec3 rgb = oklab_to_linear_srgb(vec3( L, C * a_, C * b_ ));
+	C = C * scale_L;	vec3 rgb = oklab_to_linear_srgb(vec3( L, C * a_, C * b_ ));
 	return vec3(
 		srgb_transfer_function(rgb.r),
 		srgb_transfer_function(rgb.g),
@@ -629,173 +604,84 @@ vec3 okhsv_to_srgb(vec3 hsv)
 	}
 	return vec3( h, s, l );
 }
-float circleMix(float mix1, float mix2, float a) {
-	float res = mix(mix1, mix2, a);
-	if (distance(mix1, mix2) > 0.5) {(mix1 == min(mix1, mix2)) ? res =  mix(mix1 + 1.0, mix2, a) : res =  mix(mix1, mix2 + 1.0, a);}
-	return res;
-}
 bool inDither( float h, float antiHue, float antiRad) {
 	return (((h > antiHue - antiRad) && (h < antiHue + antiRad))) ||
 	(((h - 1.0f > antiHue - antiRad) && (h - 1.0f < antiHue + antiRad))) ||
 	(((1.0f + h > antiHue - antiRad) && (1.0f + h < antiHue + antiRad)));
 }
-float ditherHue( float h, float r1, float r2, float r3, float antiRad, float ts) {
-	float rightBound = h - antiRad * r2;
-    if (rightBound < -0.5) rightBound = rightBound + 1.0;
-    float leftBound = h + antiRad * r2;
-    if (leftBound > 0.5) leftBound = leftBound - 1.0;
-	if ((h > h - antiRad) && (h < h + antiRad))
-        if (((h - (h - antiRad)) / (2.0f * antiRad)) < r1)
+float dither( float h, float r, float antiHue, float antiRad) {
+	float rightBound = antiHue - antiRad;
+    if (rightBound < -0.5f) rightBound = rightBound + 1.0f;
+    float leftBound = antiHue + antiRad;
+    if (leftBound > 0.5f) leftBound = leftBound - 1.0f;
+	if ((h > antiHue - antiRad) && (h < antiHue + antiRad))
+        if (((h - (antiHue - antiRad)) / (2.0f * antiRad)) < r)
             h = rightBound;
         else h = leftBound;
-    else if ((h - 1.0 > h - antiRad) && (h - 1.0 < h + antiRad))
-        if (((h - 1.0 - (h - antiRad)) / (2.0 * antiRad)) < r1)
+    else if ((h - 1.0f > antiHue - antiRad) && (h - 1.0f < antiHue + antiRad))
+        if (((h - 1.0f - (antiHue - antiRad)) / (2.0f * antiRad)) < r)
             h = rightBound;
         else h = leftBound;
-    else if ((1.0 + h > h - antiRad) && (1.0 + h < h + antiRad))
-        if (((1.0 + h - (h - antiRad)) / (2.0 * antiRad)) < r1)
+    else if ((1.0f + h > antiHue - antiRad) && (1.0f + h < antiHue + antiRad))
+        if (((1.0f + h - (antiHue - antiRad)) / (2.0f * antiRad)) < r)
             h = rightBound;
         else h = leftBound;
-	if (h < 0.0) h = h + 1.0;
-	if (ts < 0.05) h = circleMix(r3, h, 25.0*(ts - 0.01)); // h is based on r, so you really should put in a new r!!!
-	if (ts < 0.01) h = r3;
 	return h;
-}
-float dither( float v, float r, float antiRad, float lim) {
-    float lowerBound = max(0.0, v - antiRad);
-    if (v - antiRad < lim) lowerBound = mix(max(0.0, v - antiRad), lim, antiRad);
-    float upperBound = min(lowerBound + 2.0 * antiRad, 1.0 - lim);
-    if (v + antiRad > 1.0 - lim) {
-        upperBound = mix(min(1.0, v + antiRad), 1.0 - lim, antiRad);
-        lowerBound = max(lowerBound, upperBound - 2.0 * antiRad);
-    }
-    return mix(lowerBound, upperBound, r);
-}
-float ditherSat( float v, float r, float antiRad) {
-    float lowerBound = max(-1., v - 2.*antiRad);
-    float upperBound = min(lowerBound + 2.0 * antiRad, 1.0);
-    return mix(lowerBound, upperBound, r);
 }
 uniform sampler2D u_image;
 uniform float time;
+uniform float antiHue;
+uniform float antiRad;
 uniform vec2 res;
-uniform float hue;
-uniform float sat;
-uniform float lum;
-uniform float lim;
 // the texCoords passed in from the vertex shader.
 in vec2 v_texCoord;// we need to declare an output for the fragment shader
 out vec4 outColor;void main()
 {
-    vec2 uv = clamp(floor((v_texCoord - 0.5)*res)/res + 0.5 + 0.5/res, 0.5/res, 1.0 - 0.5/res);
+    vec2 uv = v_texCoord;
+    float iTime = time / 1.0;
 	vec4 tex = texture(u_image, uv);
     vec3 hsl = srgb_to_okhsl(tex.rgb);
-    float r1 = rand(vec2(uv.x, time));
-    r1 = rand(vec2(r1, uv.y));
-    float r2 = rand(vec2(uv.x, uv.y));
-    r2 = rand(vec2(r2, time));
-    float r3 = rand(vec2(r1, r2));
-	vec3 lab = linear_srgb_to_oklab(vec3(
-		srgb_transfer_function_inv(tex.r),
-		srgb_transfer_function_inv(tex.g),
-		srgb_transfer_function_inv(tex.b)
-		));
-	float ts = length(vec2(lab.y,lab.z));
-    //vec3 col = okhsl_to_srgb(vec3(ditherHue(hsl.x, r1, rand(vec2(r1, r2 * r3 * 100.0)), 0.5 - hue / 2.0),
-    //    dither(hsl.y, r2, 1.0 - sat, 0.0),
-    //    dither(hsl.z, r3, 1.0 - lum, lim)));
-	//vec3 col = okhsl_to_srgb(vec3(dither(hsl.z, r3, 1.0 - lum, lim),
-    //    dither(hsl.y, r2, 1.0 - sat, 0.0),
-    //    ditherHue(hsl.x, r1, rand(vec2(r1, r2 * r3 * 100.0)), 0.5 - hue / 2.0)));
-	//vec3 col = okhsl_to_srgb(vec3(dither(hsl.y, r2, 1.0 - sat, 0.0),
-    //    ditherHue(hsl.x, r1, rand(vec2(r1, r2 * r3 * 100.0)), 0.5 - hue / 2.0),
-    //    dither(hsl.z, r3, 1.0 - lum, lim)));
-	//vec3 col = okhsl_to_srgb(vec3(dither(hsl.z, r3, 1.0 - lum, lim),
-    //    dither(hsl.y, r2, 1.0 - sat, 0.0),
-    //    ditherHue(hsl.x, r1, rand(vec2(r1, r2 * r3 * 100.0)), 0.5 - hue / 2.0)));
-	//vec3 col = okhsl_to_srgb(vec3(ditherHue(hsl.x, r1, rand(vec2(r1, r2 * r3 * 100.0)), 0.5 - hue / 2.0),
-    //    dither(hsl.z, r3, 1.0 - lum, lim),
-    //    dither(hsl.y, r2, 1.0 - sat, 0.0)));
-    //vec3 col = okhsl_to_srgb(vec3(ditherHue(((hsl.z > 0.85) || (hsl.z < 0.15)) ? 0.0 : hsl.x, r1, rand(vec2(r1, r2 * r3 * 100.0)), 0.5 - hue / 2.0),
-    //   dither(((hsl.z > 0.85) || (hsl.z < 0.15)) ? 0.0 : hsl.y, r2, 1.0 - sat, 0.0),
-    //   dither(hsl.z, r3, 1.0 - lum, lim)));
-	vec3 newcol = vec3(ditherHue(hsl.x, r1, rand(vec2(r1, r2 * r3 * 100.0)), rand(vec2(r3 * 10.0, time)), 0.5 - hue / 2.0, ts),
-       ditherSat(hsl.y, r2, 1.0 - sat),
-       dither(hsl.z, r3, 1.0 - lum, lim));
-	if (newcol.y < 0.) {
-		newcol.x += 0.5;
-		newcol.y = -newcol.y;
+    float h = hsl.x;
+    float s = hsl.y;
+	float temp = h;
+	if (inDither(h, antiHue, antiRad)) {
+		uv = clamp(floor((uv-0.5)*res)/res + 0.5 + 0.5/res, 0.5/res, 1.0 - 0.5/res);
+		temp = srgb_to_okhsl(texture(u_image, uv).rgb).x;
+		if ((uv.x == 0.0) && (uv.y == 0.0)) h = atan(1.0, 1.0)/(2.0*M_PI);
+		if (inDither(temp, antiHue, antiRad)) h = temp;
 	}
-// this is for testing properties of hue and lightness
-/*
-	if (lum < 0.01) {
-		if (uv.x < 0.5) newcol = vec3(hsl.z * 1.0, 0.75, 0.6);
-		else newcol = vec3(0.0, 0.0, hsl.z);
-		// rotating hue
-		newcol = mix(vec3(hsl.z * 1.0, 0.75, 0.6), vec3(0.0, 0.0, hsl.z), clamp(uv.x*1.5 - 0.25, 0.0,1.0));
-		newcol = vec3(hsl.z * 1.0, mix(0.75,0.0,clamp(uv.x*3. - 1., 0.0,1.0)), mix(0.6, hsl.z, clamp(uv.x*3. - 1., 0.0,1.0)));
-		// desaturating hue
-		newcol = vec3(0.8, mix(hsl.z * 2.0 - 1.,0.0,clamp(uv.x*3. - 1., 0.0,1.0)), mix(0.4, hsl.z, clamp(uv.x*1.5 - 0.25, 0.0,1.0)));
-		//newcol = vec3(0.8, mix(hsl.z,0.0,clamp(uv.x*3. - 1., 0.0,1.0)), mix(0.4, hsl.z, clamp(uv.x*1.5 - 0.25, 0.0,1.0)));
-		// limiting grayscale
-		newcol = vec3(0.8, mix(hsl.z * 2.0 - 1.,0.0,clamp(uv.x*3. - 1., 0.0,1.0)), mix(0.4, hsl.z * 0.2, clamp(uv.x*3. - 1., 0.0,1.0)));
-		//newcol = vec3(hsl.z * 1.0, mix(0.75,0.0,clamp(uv.x*3. - 1., 0.0,1.0)), mix(0.6, hsl.z *0.2, clamp(uv.x*3. - 1., 0.0,1.0)));
-		//newcol = vec3(hsl.z * 0.25, mix(0.75,0.0,clamp(uv.x*3. - 1., 0.0,1.0)), mix(0.6, hsl.z *0.2, clamp(uv.x*3. - 1., 0.0,1.0)));
-		newcol = vec3(hsl.z * 1.0, mix(0.75,0.0,clamp(uv.x*3. - 1., 0.0,1.0)), mix(0.6, hsl.z, clamp(uv.x*3. - 1., 0.0,1.0)));
-	}
-	*/
-	vec3 col = okhsl_to_srgb(newcol);
-	outColor = vec4(col, 1.0);
-	//vec4 almost = vec4(col,min(1.0,(pow(0.5,64.0) - (pow(abs(0.5 - v_texCoord.x),64.0) + pow(abs(0.5 - v_texCoord.y),64.0)))/pow(0.5,64.0)));
-	//outColor = almost.a * vec4(almost.rgb, 1.0); // see https://stackoverflow.com/questions/39341564/webgl-how-to-correctly-blend-alpha-channel-png for why I did this, I get issues with safari otherwise
+    if (s > 1.0) s = 1.0;
+    float r = rand(vec2(uv.x, iTime));
+    r = rand(vec2(r, uv.y));
+	h = dither(h, r, antiHue, antiRad);
+    vec3 col = okhsl_to_srgb(vec3(h, s, hsl.z));
+	col = s > 1.0 ? vec3(0.0) : col;
+    outColor = vec4(col,tex.w);
 }`;        // Get A WebGL context
         /** @type {HTMLCanvasElement} */
 		var toggle = true;
 		const btn = document.getElementById('btn');
         var canvas = document.querySelector("canvas");
-        const gl = canvas.getContext("webgl2", {
-  			premultipliedAlpha: true,
-			alpha: true
-			});        // setup GLSL program
-		var texture = gl.createTexture();
+        var gl = canvas.getContext("webgl2");        // setup GLSL program
         var program = webglUtils.createProgramFromSources(gl,
             [vertexShaderSource, fragmentShaderSource]);        // look up where the vertex data needs to go.
         var positionAttributeLocation = gl.getAttribLocation(program, "a_position");
         var texCoordAttributeLocation = gl.getAttribLocation(program, "a_texCoord");
-		var isImage = false;
-		var isVideo = false;
 		var locs = {
         'time': gl.getUniformLocation(program, "time"),
-        'hue': gl.getUniformLocation(program, "hue"),
-        'sat': gl.getUniformLocation(program, "sat"),
-        'lum': gl.getUniformLocation(program, "lum"),
-        'res': gl.getUniformLocation(program, "res"),
-        'lim': gl.getUniformLocation(program, "lim")
+        'hue': gl.getUniformLocation(program, "antiHue"),
+        'rad': gl.getUniformLocation(program, "antiRad"),
+        'res': gl.getUniformLocation(program, "res")
     };
+        var timeLocation = gl.getUniformLocation(program, "time");
+        var hueLocation = gl.getUniformLocation(program, "antiHue");
+        var radLocation = gl.getUniformLocation(program, "antiRad");
         var image = new Image();
-		var video = document.createElement('video');
-		video.addEventListener('loadedmetadata', function() {
-    		console.log("Loaded the video's data!");
-			video.loop = true;
-			video.muted = true;
-			video.play();
-			video.width = video.videoWidth;
-			video.height = video.videoHeight;
-			//console.log(video.width);
-			//console.log(video.height);
-			firstRender(video);
-			if (toggle) {
-				toggle = !toggle;
-				btn.textContent = '⏸';
-				render();
-			}
-		}, false);
-		function resizeCanvas(frame, multiplier) {
-			const maxHeight = Math.max(350, screen.availHeight - 450);
-			const maxWidth = Math.min(Math.min(600, screen.width * 0.85), frame.width/frame.height * maxHeight);
+		function resizeCanvas(image, multiplier) {
+			const maxWidth = Math.min(600, screen.width * 0.85);
             multiplier = multiplier || 1;
-            const width = Math.min(frame.width, maxWidth) | 0;
-            const height = Math.min(frame.height, frame.height/frame.width * maxWidth) | 0;
+            const width = Math.min(image.width, maxWidth) | 0;
+            const height = Math.min(image.height, image.height/image.width * maxWidth) | 0;
             if (canvas.width !== width || canvas.height !== height) {
                 canvas.width = width;
                 canvas.height = height;
@@ -803,7 +689,7 @@ out vec4 outColor;void main()
             }
             return false;
         }
-		function firstRender(frame, time) {
+		function firstRender(time) {
             time = time || 0;            // lookup uniforms
             var resolutionLocation = gl.getUniformLocation(program, "u_resolution");
             var imageLocation = gl.getUniformLocation(program, "u_image");
@@ -817,7 +703,6 @@ out vec4 outColor;void main()
             gl.vertexAttribPointer(
                 positionAttributeLocation, 2, gl.FLOAT, false, 0, 0);            // provide texture coordinates for the rectangle.
             var texCoordBuffer = gl.createBuffer();
-			gl.enableVertexAttribArray(texCoordAttributeLocation);            // Tell the attribute how to get data out of texCoordBuffer (ARRAY_BUFFER)
             gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
             gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
                 0.0, 0.0,
@@ -827,9 +712,10 @@ out vec4 outColor;void main()
                 1.0, 0.0,
                 1.0, 1.0,
             ]), gl.STATIC_DRAW);            // Turn on the attribute
+            gl.enableVertexAttribArray(texCoordAttributeLocation);            // Tell the attribute how to get data out of texCoordBuffer (ARRAY_BUFFER)
             gl.vertexAttribPointer(
                 texCoordAttributeLocation, 2, gl.FLOAT, false, 0, 0);            // Create a texture.
-                        // make unit 0 the active texture uint
+            var texture = gl.createTexture();            // make unit 0 the active texture uint
             // (ie, the unit all other texture commands will affect
             gl.bindTexture(gl.TEXTURE_2D, texture);            // Set the parameters so we don't need mips and so we're not filtering
             // and we don't repeat
@@ -839,41 +725,28 @@ out vec4 outColor;void main()
                 gl.RGBA,
                 gl.RGBA,
                 gl.UNSIGNED_BYTE,
-                frame);
-			resizeCanvas(frame);            // Tell WebGL how to convert from clip space to pixels
+                image);
+			resizeCanvas(image);            // Tell WebGL how to convert from clip space to pixels
             gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);            // Clear the canvas
             gl.useProgram(program);            // Bind the attribute/buffer set we want.
             // pixels to clipspace in the shader
-            gl.uniform2f(resolutionLocation, frame.width, frame.height);            // Tell the shader to get the texture from texture unit 0
+            gl.uniform2f(resolutionLocation, image.width, image.height);            // Tell the shader to get the texture from texture unit 0
             gl.uniform1i(imageLocation, 0);            // Update the time
             gl.uniform1f(locs.time, time * 0.001);
-            gl.uniform1f(locs.hue, sliderFill.value());
-            gl.uniform1f(locs.sat, sliderFill2.value());
-            gl.uniform1f(locs.lum, sliderFill3.value());
-            gl.uniform2f(locs.res, gl.canvas.width*Math.pow(1 - sliderFill4.value(), 4) + 1, gl.canvas.height*Math.pow(1 - sliderFill4.value(), 4) + 1);
-            gl.uniform1f(locs.lim, sliderFill5.value() / 2.0);
+			gl.uniform1f(locs.hue, sliderFill.value());
+            gl.uniform1f(locs.rad, sliderFill2.value() / 2.0);
+			gl.uniform2f(locs.res, image.width*Math.pow(1 - sliderFill3.value(), 4) + 1,image.height*Math.pow(1 - sliderFill3.value(), 4) + 1);
             // in setRectangle puts data in the position buffer
             gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);            // Set a rectangle the same size as the image.
-            setRectangle(gl, 0, 0, frame.width, frame.height);            // Draw the rectangle.
+            setRectangle(gl, 0, 0, image.width, image.height);            // Draw the rectangle.
             gl.drawArrays(gl.TRIANGLES, 0, 6);
         }
 		function render(time) {
         	time = time || 0;
         	gl.uniform1f(locs.time, time * 0.001);
-            gl.uniform1f(locs.hue, sliderFill.value());
-            gl.uniform1f(locs.sat, sliderFill2.value());
-            gl.uniform1f(locs.lum, sliderFill3.value());
-            gl.uniform2f(locs.res, gl.canvas.width*Math.pow(1 - sliderFill4.value(), 4) + 1, gl.canvas.height*Math.pow(1 - sliderFill4.value(), 4) + 1);
-            gl.uniform1f(locs.lim, sliderFill5.value() / 2.0);
-			if (isVideo) {
-				gl.bindTexture(gl.TEXTURE_2D, texture);
-  				gl.texImage2D(gl.TEXTURE_2D,
-                	0,
-                	gl.RGBA,
-                	gl.RGBA,
-                	gl.UNSIGNED_BYTE,
-                	video);
-			}
+        	gl.uniform1f(locs.hue, sliderFill.value());
+        	gl.uniform1f(locs.rad, sliderFill2.value() / 2.0);
+			gl.uniform2f(locs.res, image.width*Math.pow(1 - sliderFill3.value(), 4) + 1,image.height*Math.pow(1 - sliderFill3.value(), 4) + 1);
         	gl.drawArrays(gl.TRIANGLES, 0, 6);
         	if (!toggle) requestAnimationFrame(render);
     	}
@@ -891,24 +764,15 @@ out vec4 outColor;void main()
                 x2, y2,
             ]), gl.STATIC_DRAW);
         }
-		function preview() {
+		function PreviewImage() {
             var oFReader = new FileReader();
-            oFReader.readAsDataURL(document.getElementById("upload").files[0]);
+            oFReader.readAsDataURL(document.getElementById("uploadImage").files[0]);
 			oFReader.onload = function (oFREvent) {
-				var match = oFReader.result.match(/^data:([^/]+)\/([^;]+);/) || [];
-				var type = match[1];
-                if (type === "image") {
-					isImage = true;
-					isVideo = false;
-					image.src = oFREvent.target.result;
-					image.onload = function () {firstRender(image)};
-				}
-				else if (type === "video") {
-					isImage = false;
-					isVideo = true;
-					video.src = oFREvent.target.result;
-				}
+                image.src = oFREvent.target.result;
             };
+			image.onload = function () {
+                firstRender();
+			};
         }
 		function componentToHex(c) {
 			var hex = c.toString(16);
@@ -964,136 +828,98 @@ out vec4 outColor;void main()
     		}
     		return [h, s, l];
 		}
-	var data = [0, 1.0];
-    var sliderFill = d3
-        .sliderBottom()
-        .min(d3.min(data))
-        .max(d3.max(data))
-        .width(Math.min(300,screen.width*0.55))
-        .tickFormat(d3.format('.0%'))
-        .ticks(5)
-        .default(0.0)
-        .fill('#415794')
-        .handle(
-            d3
+		var colors = ['#d60071', '#d7006d', '#d7006a', '#d80066', '#d80063', '#d9005f', '#da005b', '#da0058', '#da0054', '#db0050', '#db004c', '#dc0048', '#dc0043', '#dd003f', '#dd003a', '#dd0035', '#de002f', '#de0029', '#de0022', '#df001a', '#df000e', '#de0700', '#db1c00', '#d72700', '#d42f00', '#d13500', '#ce3b00', '#cc3f00', '#c94300', '#c74600', '#c54900', '#c24c00', '#c04e00', '#be5100', '#bc5300', '#bb5500', '#b95600', '#b75800', '#b55a00', '#b45b00', '#b25c00', '#b05e00', '#af5f00', '#ad6000', '#ac6100', '#aa6300', '#a96400', '#a86500', '#a66600', '#a56700', '#a46700', '#a26800', '#a16900', '#a06a00', '#9e6b00', '#9d6c00', '#9c6d00', '#9a6d00', '#996e00', '#986f00', '#967000', '#957000', '#947100', '#927200', '#917200', '#907300', '#8e7400', '#8d7400', '#8c7500', '#8a7600', '#897600', '#877700', '#867800', '#847800', '#837900', '#817a00', '#7f7a00', '#7e7b00', '#7c7c00', '#7a7d00', '#787d00', '#767e00', '#747f00', '#727f00', '#708000', '#6e8100', '#6b8200', '#698200', '#668300', '#638400', '#608500', '#5d8600', '#598700', '#558800', '#518800', '#4c8900', '#468a00', '#408b00', '#398d00', '#308e00', '#238f00', '#0e9000', '#009014', '#009023', '#00902e', '#008f36', '#008f3c', '#008f42', '#008e47', '#008e4b', '#008e4f', '#008e53', '#008d56', '#008d59', '#008d5c', '#008d5f', '#008c61', '#008c64', '#008c66', '#008c68', '#008c6a', '#008b6c', '#008b6e', '#008b70', '#008b72', '#008b74', '#008a76', '#008a77', '#008a79', '#008a7a', '#008a7c', '#00897d', '#00897f', '#008980', '#008982', '#008983', '#008885', '#008886', '#008887', '#008889', '#00888a', '#00878b', '#00878d', '#00878e', '#00878f', '#008791', '#008692', '#008693', '#008695', '#008696', '#008697', '#008599', '#00859a', '#00859b', '#00859d', '#00849e', '#0084a0', '#0084a1', '#0084a3', '#0083a4', '#0083a6', '#0083a8', '#0082a9', '#0082ab', '#0082ad', '#0081af', '#0081b1', '#0080b3', '#0080b5', '#007fb7', '#007fb9', '#007ebc', '#007ebe', '#007dc1', '#007cc4', '#007cc7', '#007bca', '#007acd', '#0079d1', '#0077d5', '#0076da', '#0074df', '#0073e5', '#0070eb', '#006df3', '#0069fc', '#1467fe', '#2266ff', '#2c65ff', '#3363ff', '#3a62ff', '#4060ff', '#465fff', '#4b5dff', '#505cff', '#545aff', '#5859ff', '#5c57ff', '#6055ff', '#6453ff', '#6851ff', '#6c4fff', '#6f4dff', '#734bff', '#7649ff', '#7946ff', '#7d43ff', '#8040ff', '#833dff', '#873aff', '#8a36fe', '#8e32fe', '#912dfe', '#9427fe', '#9820fe', '#9b16ff', '#9f06fe', '#a101fc', '#a400f8', '#a600f5', '#a800f1', '#aa00ee', '#ac00ea', '#af00e7', '#b000e3', '#b200df', '#b400dc', '#b600d8', '#b800d4', '#b900d1', '#bb00cd', '#bd00ca', '#be00c6', '#c000c2', '#c100bf', '#c200bb', '#c400b7', '#c500b4', '#c600b0', '#c800ad', '#c900a9', '#ca00a5', '#cb00a2', '#cc009e', '#cd009b', '#ce0097', '#cf0094', '#d00090', '#d0008d', '#d10089', '#d20086', '#d30082', '#d4007f', '#d4007b', '#d50078', '#d60074']; 
+		var grays = ['#000000', '#010101', '#020202', '#030303', '#040404', '#050505', '#060606', '#070707', '#080808', '#090909', '#0a0a0a', '#0b0b0b', '#0c0c0c', '#0d0d0d', '#0e0e0e', '#0f0f0f', '#101010', '#111111', '#121212', '#131313', '#141414', '#151515', '#161616', '#171717', '#181818', '#191919', '#1a1a1a', '#1b1b1b', '#1c1c1c', '#1d1d1d', '#1e1e1e', '#1f1f1f', '#202020', '#212121', '#222222', '#232323', '#242424', '#252525', '#262626', '#272727', '#282828', '#292929', '#2a2a2a', '#2b2b2b', '#2c2c2c', '#2d2d2d', '#2e2e2e', '#2f2f2f', '#303030', '#313131', '#323232', '#333333', '#343434', '#353535', '#363636', '#373737', '#383838', '#393939', '#3a3a3a', '#3b3b3b', '#3c3c3c', '#3d3d3d', '#3e3e3e', '#3f3f3f', '#404040', '#414141', '#424242', '#434343', '#444444', '#454545', '#464646', '#474747', '#484848', '#494949', '#4a4a4a', '#4b4b4b', '#4c4c4c', '#4d4d4d', '#4e4e4e', '#4f4f4f', '#505050', '#515151', '#525252', '#535353', '#545454', '#555555', '#565656', '#575757', '#585858', '#595959', '#5a5a5a', '#5b5b5b', '#5c5c5c', '#5d5d5d', '#5e5e5e', '#5f5f5f', '#606060', '#616161', '#626262', '#636363', '#646464', '#656565', '#666666', '#676767', '#686868', '#696969', '#6a6a6a', '#6b6b6b', '#6c6c6c', '#6d6d6d', '#6e6e6e', '#6f6f6f', '#707070', '#717171', '#727272', '#737373', '#747474', '#757575', '#767676', '#777777', '#787878', '#797979', '#7a7a7a', '#7b7b7b', '#7c7c7c', '#7d7d7d', '#7e7e7e', '#7f7f7f', '#808080', '#818181', '#828282', '#838383', '#848484', '#858585', '#868686', '#878787', '#888888', '#898989', '#8a8a8a', '#8b8b8b', '#8c8c8c', '#8d8d8d', '#8e8e8e', '#8f8f8f', '#909090', '#919191', '#929292', '#939393', '#949494', '#959595', '#969696', '#979797', '#989898', '#999999', '#9a9a9a', '#9b9b9b', '#9c9c9c', '#9d9d9d', '#9e9e9e', '#9f9f9f', '#a0a0a0', '#a1a1a1', '#a2a2a2', '#a3a3a3', '#a4a4a4', '#a5a5a5', '#a6a6a6', '#a7a7a7', '#a8a8a8', '#a9a9a9', '#aaaaaa', '#ababab', '#acacac', '#adadad', '#aeaeae', '#afafaf', '#b0b0b0', '#b1b1b1', '#b2b2b2', '#b3b3b3', '#b4b4b4', '#b5b5b5', '#b6b6b6', '#b7b7b7', '#b8b8b8', '#b9b9b9', '#bababa', '#bbbbbb', '#bcbcbc', '#bdbdbd', '#bebebe', '#bfbfbf', '#c0c0c0', '#c1c1c1', '#c2c2c2', '#c3c3c3', '#c4c4c4', '#c5c5c5', '#c6c6c6', '#c7c7c7', '#c8c8c8', '#c9c9c9', '#cacaca', '#cbcbcb', '#cccccc', '#cdcdcd', '#cecece', '#cfcfcf', '#d0d0d0', '#d1d1d1', '#d2d2d2', '#d3d3d3', '#d4d4d4', '#d5d5d5', '#d6d6d6', '#d7d7d7', '#d8d8d8', '#d9d9d9', '#dadada', '#dbdbdb', '#dcdcdc', '#dddddd', '#dedede', '#dfdfdf', '#e0e0e0', '#e1e1e1', '#e2e2e2', '#e3e3e3', '#e4e4e4', '#e5e5e5', '#e6e6e6', '#e7e7e7', '#e8e8e8', '#e9e9e9', '#eaeaea', '#ebebeb', '#ececec', '#ededed', '#eeeeee', '#efefef', '#f0f0f0', '#f1f1f1', '#f2f2f2', '#f3f3f3', '#f4f4f4', '#f5f5f5', '#f6f6f6', '#f7f7f7', '#f8f8f8', '#f9f9f9', '#fafafa', '#fbfbfb', '#fcfcfc', '#fdfdfd', '#fefefe', '#ffffff'];
+        function sliderColor(origin, s, color_data) {
+			var index = (s > 0.5) ? parseInt((origin * 255 + 128) % 256) : parseInt(origin * 255);
+			var rgb = hexToRgb(color_data[index]);
+			var hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+			hsl[1] = 2*Math.abs(s - 0.5)*(Math.abs(hsl[1] - 0.5) * 2);
+			hsl[2] = hsl[2]*2*Math.abs(s - 0.5) + (1-2*Math.abs(s - 0.5))*0.5; // replace 0.5 with sliderFill3.value()
+			var nrgb = hslToRgb(hsl[0],hsl[1],hsl[2]);
+			var ncolor = rgbToHex(nrgb[0], nrgb[1], nrgb[2])
+			return ncolor;
+		}
+        var data = [0, 1.0];      
+        var sliderFill = d3
+            .sliderBottom()
+            .min(d3.min(data))
+            .max(d3.max(data))
+            .width(Math.min(300,screen.width*0.55))
+            .tickFormat(d3.format('.0'))
+            .ticks(5)
+            .default(0.7)
+            .fill('#415794')
+            .handle(
+                d3
                 .symbol()
                 .type(d3.symbolCircle)
                 .size(250)
-        )
-        .on('onchange', val => {
-            if (toggle) render();
-        });
-    var gFill = d3
-        .select('div#slider-fill')
-        .append('svg')
-        .attr('width', Math.min(350,screen.width*0.7))
-        .attr('height', 65)
-	var gFillg = gFill
-        .append('g')
-        .attr('transform', 'translate(30,30)')
-        .attr('fill', '#aaaaaa')
-    gFillg.call(sliderFill);
-    var sliderFill2 = d3
-        .sliderBottom()
-        .min(d3.min(data))
-        .max(d3.max(data))
-        .width(Math.min(300,screen.width*0.55))
-        .tickFormat(d3.format('.0%'))
-        .ticks(5)
-        .default(0.0)
-        .fill('#415794')
-        .handle(
-            d3
-                .symbol()
-                .type(d3.symbolCircle)
-                .size(250)
-        )
-        .on('onchange', val => {
-            if (toggle) render();
-        });
-    var gFill2 = d3
-        .select('div#slider-fill2')
-        .append('svg')
-        .attr('width', Math.min(350,screen.width*0.7))
-        .attr('height', 65)
-    var gFillg2 = gFill2.append('g')
-        .attr('transform', 'translate(30,30)')
-        .attr('fill', '#aaaaaa');
-    gFillg2.call(sliderFill2);
-    var sliderFill3 = d3
-        .sliderBottom()
-        .min(d3.min(data))
-        .max(d3.max(data))
-        .width(Math.min(300,screen.width*0.55))
-        .tickFormat(d3.format('.0%'))
-        .ticks(5)
-        .default(0.0)
-        .fill('#415794')
-        .handle(
-            d3
-                .symbol()
-                .type(d3.symbolCircle)
-                .size(250)
-        )
-        .on('onchange', val => {
-            if (toggle) render();
-        });
-    var gFill3 = d3
-        .select('div#slider-fill3')
-        .append('svg')
-        .attr('width', Math.min(350,screen.width*0.7))
-        .attr('height', 65)
-    var gFillg3 = gFill3.append('g')
-        .attr('transform', 'translate(30,30)')
-        .attr('fill', '#aaaaaa');
-    gFillg3.call(sliderFill3);
-    var sliderFill4 = d3
-        .sliderBottom()
-        .min(d3.min(data))
-        .max(d3.max(data))
-        .width(Math.min(300,screen.width*0.55))
-        .tickFormat(d3.format('.0%'))
-        .ticks(5)
-        .default(0.0)
-        .fill('#415794')
-        .handle(
-            d3
-                .symbol()
-                .type(d3.symbolCircle)
-                .size(250)
-        )
-        .on('onchange', val => {
-            if (toggle) render();
-        });
-    var gFill4 = d3
-        .select('div#slider-fill4')
-        .append('svg')
-        .attr('width', Math.min(350,screen.width*0.7))
-        .attr('height', 65)
-    var gFillg4 = gFill4.append('g')
-        .attr('transform', 'translate(30,30)')
-        .attr('fill', '#aaaaaa');
-    gFillg4.call(sliderFill4);
-		btn.addEventListener('click', function () {
-				toggle = !toggle;
-				if (toggle) {
-					btn.textContent = '▶️';
-					if (isVideo) {video.pause()};
-				}
-				else {
-					btn.textContent = '⏸';
-					if (isVideo) {video.play()};
-				}
-				render();
-			});
-    var sliderFill5 = d3
+            )
+            .on('onchange', val => {
+                d3.select('div#slider-fill')
+				//.select('g') 					// these provide text color
+				//.attr("fill", colors[index])
+				.select('.handle')
+				.attr("fill", sliderColor(val, sliderFill2.value(), colors));
+				if (toggle) render();
+            });
+        var gFill = d3
+            .select('div#slider-fill')
+            .append('svg')
+            .attr('width', Math.min(350,screen.width*0.7))
+            .attr('height', 65)
+            .append('g')
+            .attr('transform', 'translate(30,30)')
+			.attr('fill', '#aaaaaa')
+        gFill.call(sliderFill);
+        var sliderFill2 = d3
             .sliderBottom()
             .min(d3.min(data))
             .max(d3.max(data))
             .width(Math.min(300,screen.width*0.55))
             .tickFormat(d3.format('.0%'))
             .ticks(5)
-            .default(0.50)
+            .default(0.4)
+            .fill('#415794')
+			.handle(
+                d3
+                .symbol()
+                .type(d3.symbolCircle)
+                .size(250)
+            )
+			.on('onchange', val => {
+				var index = parseInt((2-val)/2 * 255)
+                d3.select('div#slider-fill2')
+				.select('g')
+				.attr("fill", grays[index])
+				.select('.handle')
+				.attr("fill", grays[index]);
+				if (toggle) render();
+				d3.select('div#slider-fill')
+				//.select('g') 					// these provide text color
+				//.attr("fill", colors[index])
+				.select('.handle')
+				.attr("fill", sliderColor(sliderFill.value(), val, colors));
+				if (toggle) render();
+            });
+		var gFill2 = d3
+            .select('div#slider-fill2')
+            .append('svg')
+            .attr('width', Math.min(350,screen.width*0.7))
+            .attr('height', 65)
+            .append('g')
+            .attr('transform', 'translate(30,30)')
+			.attr('fill', '#aaaaaa');
+		gFill2.call(sliderFill2);
+		var sliderFill3 = d3
+            .sliderBottom()
+            .min(d3.min(data))
+            .max(d3.max(data))
+            .width(Math.min(300,screen.width*0.55))
+            .tickFormat(d3.format('.0%'))
+            .ticks(5)
+            .default(0.0)
             .fill('#415794')
 			.handle(
                 d3
@@ -1104,38 +930,31 @@ out vec4 outColor;void main()
 			.on('onchange', val => {
 				if (toggle) render();
             });
-		var gFill5 = d3
-			.select('div#slider-fill5')
-			.append('svg')
+        var gFill3 = d3
+            .select('div#slider-fill3')
+            .append('svg')
             .attr('width', Math.min(350,screen.width*0.7))
             .attr('height', 65)
-        var gFillg5 = gFill5.append('g')
-        	.attr('transform', 'translate(30,30)')
-        	.attr('fill', '#aaaaaa');
-    	gFillg5.call(sliderFill5);
-	image.src = "/oklab.jpg";
-	image.onload = function() {firstRender(image);}
-	function updateWindow(){
-		if (isImage) firstRender(image);
-        else firstRender(video);
-    	sliderFill.width(Math.min(300,screen.width*0.55));
-		gFill.attr('width', Math.min(350,screen.width*0.7));
-		gFillg.call(sliderFill);
-		sliderFill2.width(Math.min(300,screen.width*0.55));
-		gFill2.attr('width', Math.min(350,screen.width*0.7));
-		gFillg2.call(sliderFill2);
-		sliderFill3.width(Math.min(300,screen.width*0.55));
-		gFill3.attr('width', Math.min(350,screen.width*0.7));
-		gFillg3.call(sliderFill3);
-		sliderFill4.width(Math.min(300,screen.width*0.55));
-		gFill4.attr('width', Math.min(350,screen.width*0.7));
-		gFillg4.call(sliderFill4);
-		sliderFill5.width(Math.min(300,screen.width*0.55));
-		gFill5.attr('width', Math.min(350,screen.width*0.7));
-		gFillg5.call(sliderFill5);
-	}
-	d3.select(window).on('resize.updatesvg', updateWindow);
-</script>
+            .append('g')
+            .attr('transform', 'translate(30,30)')
+			.attr('fill', '#aaaaaa');
+        gFill3.call(sliderFill3);
+		gFill.select('.handle')
+			.attr("fill", sliderColor(sliderFill.value(), sliderFill2.value(), colors));
+		gFill2.select('.handle')
+			.attr("fill", grays[parseInt(sliderFill2.value() * 255)]);
+		window.onload=function(){
+  			btn.addEventListener('click', function handleClick() {
+				toggle = !toggle;
+				if (toggle) btn.textContent = '▶️';
+				else btn.textContent = '⏸';
+				render();
+			});
+		}
+	image.src = "/flower.jpeg";
+	image.onload = function() {firstRender();}
+		</script>
+</html>
 <h1 id="controls">Controls</h1>
 <ul>
 <li>▶️/⏸ Button: Controls time, causes noisiness to evolve over time and smoothens dither</li>
@@ -1155,27 +974,14 @@ out vec4 outColor;void main()
     </linearGradient>
     <path fill="url(#Gradient2)"
         d="M12 0c-4.87 7.197-8 11.699-8 16.075 0 4.378 3.579 7.925 8 7.925s8-3.547 8-7.925c0-4.376-3.13-8.878-8-16.075zm.462 20.471c2.56-1.049 4.124-4.889 3.021-8.853 3.798 4.909.754 9.393-3.021 8.853z" /></svg>
-        </html> Slider: Displayed hue is a random hue with "X% confidence" (i.e. the hue is chosen from 1-X% of the spectrum centered on the hue)
-</li>
-<li>
-<html>
-<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" style = "position:relative; top:2px;"><path fill='gray' d="M22.266 14.724c-.064.898-.242 1.766-.522 2.586l1.601.675c-.163.461-.353.909-.568 1.344l-1.602-.676c-.383.751-.855 1.448-1.402 2.078l1.229 1.229c-.323.364-.667.709-1.032 1.032l-2.262-2.262c1.874-1.59 3.125-4.039 3.125-6.735 0-4.878-3.954-8.832-8.832-8.832s-8.833 3.954-8.833 8.832c0 2.505 1.107 5.024 3.126 6.735l-2.293 2.27-1.031-1.031 1.259-1.238c-.562-.647-1.046-1.365-1.434-2.139l-1.606.665c-.212-.436-.399-.885-.559-1.348l1.605-.664c-.268-.802-.439-1.646-.5-2.521h-1.735v-1.459h1.734c.063-.897.242-1.765.522-2.585l-1.6-.675c.163-.461.352-.91.567-1.344l1.602.675c.383-.75.855-1.448 1.403-2.078l-1.229-1.229c.323-.365.668-.709 1.032-1.031l1.229 1.229c.647-.562 1.366-1.045 2.141-1.433l-.665-1.606c.435-.212.885-.399 1.347-.558l.665 1.604c.802-.267 1.647-.438 2.522-.5v-1.734h1.459v1.733c.899.063 1.767.242 2.587.522l.675-1.6c.462.162.911.353 1.345.567l-.676 1.602c.751.383 1.449.854 2.08 1.402l1.229-1.229c.365.322.709.666 1.032 1.03l-1.229 1.229c.562.647 1.045 1.366 1.434 2.14l1.606-.665c.212.436.399.885.558 1.348l-1.604.664c.269.802.439 1.646.501 2.521h1.733v1.459h-1.734zm-3.434-.729c0 3.767-3.064 6.832-6.832 6.832s-6.833-3.065-6.833-6.832 3.065-6.832 6.833-6.832 6.832 3.065 6.832 6.832zm-7.36-1.81l-2.158-2.158-1.415 1.413 2.158 2.158 1.415-1.413z"/></svg>
-        </html> Slider: Displays saturation is a random saturation with "X% confidence" (i.e. the saturation is chosen from roughly 1-X% of the spectrum centered on the saturation)
-</li>
-<li>
-<html>
-<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-    style="position:relative; top:2px;">
-    <path fill='gray'
-        d="M14 19h-4c-.276 0-.5.224-.5.5s.224.5.5.5h4c.276 0 .5-.224.5-.5s-.224-.5-.5-.5zm0 2h-4c-.276 0-.5.224-.5.5s.224.5.5.5h4c.276 0 .5-.224.5-.5s-.224-.5-.5-.5zm.25 2h-4.5l1.188.782c.154.138.38.218.615.218h.895c.234 0 .461-.08.615-.218l1.187-.782zm3.75-13.799c0 3.569-3.214 5.983-3.214 8.799h-1.989c-.003-1.858.87-3.389 1.721-4.867.761-1.325 1.482-2.577 1.482-3.932 0-2.592-2.075-3.772-4.003-3.772-1.925 0-3.997 1.18-3.997 3.772 0 1.355.721 2.607 1.482 3.932.851 1.478 1.725 3.009 1.72 4.867h-1.988c0-2.816-3.214-5.23-3.214-8.799 0-3.723 2.998-5.772 5.997-5.772 3.001 0 6.003 2.051 6.003 5.772zm4-.691v1.372h-2.538c.02-.223.038-.448.038-.681 0-.237-.017-.464-.035-.69h2.535zm-10.648-6.553v-1.957h1.371v1.964c-.242-.022-.484-.035-.726-.035-.215 0-.43.01-.645.028zm-3.743 1.294l-1.04-1.94 1.208-.648 1.037 1.933c-.418.181-.822.401-1.205.655zm10.586 1.735l1.942-1.394.799 1.115-2.054 1.473c-.191-.43-.423-.827-.687-1.194zm-3.01-2.389l1.038-1.934 1.208.648-1.041 1.941c-.382-.254-.786-.473-1.205-.655zm-10.068 3.583l-2.054-1.472.799-1.115 1.942 1.393c-.264.366-.495.763-.687 1.194zm13.707 6.223l2.354.954-.514 1.271-2.425-.982c.21-.397.408-.812.585-1.243zm-13.108 1.155l-2.356 1.06-.562-1.251 2.34-1.052c.173.433.371.845.578 1.243zm-1.178-3.676h-2.538v-1.372h2.535c-.018.226-.035.454-.035.691 0 .233.018.458.038.681z" /></svg>
-        </html> Slider: Displays luminance is a random luminance with "X% confidence" (i.e. the luminance is chosen from roughly 1-X% of the spectrum centered on the luminance)
+        </html> Slider: Controls the annihilated hue. Runs counterclockwise starting from the rightmost point of the color wheel (red/hot pink)
 </li>
 <li>
 <html>
 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
     style="position:relative; top:2px;">
     <path fill='gray' d="M6 11v-4l-6 5 6 5v-4h12v4l6-5-6-5v4z" /></svg>
-        </html> Slider: Determines the reduced width of the luminance spectrum, so 0% means 0% reduced, 50% means that luminance values are taken roughly between 0.25 and 0.75 (depending on the above luminance slider), and 100% meaning that all luminance values are 0.5 (depending on the above luminance slider)
+        </html> Slider: Controls with width of the sector being annihilated, where the percentage corresponding to the percentage of the color wheel within that sector, centered around the annihilated hue as defined by the above slider
 </li>
 <li>
 <html>
@@ -1183,40 +989,14 @@ out vec4 outColor;void main()
     style="position:relative; top:2px;">
     <path fill='gray'
         d="M12 0l-11 6v12.131l11 5.869 11-5.869v-12.066l-11-6.065zm9 11.623l-3 1.569v-3.26l3-1.601v3.292zm-13-.654l3 1.625v3.186l-3-1.614v-3.197zm.9-1.799l2.986-1.603 3.132 1.688-3.014 1.608-3.104-1.693zm4.1 3.43l3-1.6v3.238l-3 1.569v-3.207zm4.138-4.475l-3.139-1.691 2.801-1.503 3.11 1.715-2.772 1.479zm-2.424-4.345l-2.825 1.517-2.728-1.47 2.834-1.546 2.719 1.499zm-7.649 1.19l2.711 1.46-2.973 1.596-2.67-1.456 2.932-1.6zm-1.065 4.908v3.204l-3-1.636v-3.216l3 1.648zm-3 3.843l3 1.636v3.185l-3-1.611v-3.21zm5 5.888v-3.169l3 1.614v3.146l-3-1.591zm5-1.545l3-1.569v3.104l-3 1.601v-3.136zm5 .468v-3.083l3-1.569v3.051l-3 1.601z" /></svg>
-        </html> Slider: Changes the size of the resolution
+        </html> Slider: Changes the size of the resolution of the dithered annihilated colors
 </li>
 </ul>
 <h1 id="discussion">Discussion</h1>
-<p>I’d highly recommend the reader to try every iteration of minimizing and maximizing the first three sliders after hitting the ▶️ button, the results look very neat! Also very much recommend uploading your own photos, it’s very interesting to see what results there are! What can be concluded is that the idea works very well, and it also shows the influence each dimension has. It seems that saturation is by far the least important/information-giving of the dimensions, followed by hue, followed by luminance, which is by far the most important dimension. It’s also interesting to see how saturation appears when there is no hue or luminance. It appears purple, which I suppose is an artifact on the distrbution of hues in Okhsl, or it can be a condemnation of my implementation. In any case, enjoy messing around with this!</p>
+<p>       This shader more-or-less functions as a fun little artistic thingy. The effect works best on images with large regions that are nearly monochromatic and that contrast a lot with their environment, and whose color is saturated. Realistically, this means things like flowers, auroras, neon signs, etc. A lot of digital art tends to be made this way as well, I would recommend trying out some of your favorite images and seeing what happens. Have fun! :)</p>
 
 	</article>
 </main>
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css"
-  integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
-
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"
-  integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp" crossorigin="anonymous"></script>
-
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"
-  integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous"></script>
-
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    renderMathInElement(document.body, {
-      
-      
-      delimiters: [
-        { left: '$$', right: '$$', display: true },
-        { left: '$', right: '$', display: false },
-        { left: '\\(', right: '\\)', display: false },
-        { left: '\\[', right: '\\]', display: true }
-      ],
-      
-      throwOnError: false
-    });
-  });
-</script>
 
 
 

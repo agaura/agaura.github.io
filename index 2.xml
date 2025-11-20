@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Alexander Gaura</title>
-    <link>https://agaura.github.io/</link>
+    <link>http://localhost:1313/</link>
     <description>Recent content on Alexander Gaura</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>TH ↔ Þ</copyright>
-    <lastBuildDate>Wed, 19 Nov 2025 11:38:44 -0500</lastBuildDate><atom:link href="https://agaura.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 19 Nov 2025 11:38:44 -0500</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Exploration of Chromaticity with Point Clouds</title>
-      <link>https://agaura.github.io/chromaticity-exploration/</link>
+      <link>http://localhost:1313/chromaticity-clouds/</link>
       <pubDate>Wed, 19 Nov 2025 11:38:44 -0500</pubDate>
       
-      <guid>https://agaura.github.io/chromaticity-exploration/</guid>
+      <guid>http://localhost:1313/chromaticity-clouds/</guid>
       <description>Introduction To see the visualization, click here.
 The chromaticity diagram is one of the most informative diagrams in color science—it shows the range of colors the human eye can perceive and what portion of that range our displays can reproduce. While the diagram is quite interesting on its own, I feel like there is some information that begs to be explored. I wanted to do the following:
 intuit the range of colors that are missing from our displays compare the gamuts of different display color spaces better understand the relationship between the visible light spectrum/the rainbow with chromaticity To investigate this, I built an interactive visualization with three main components:</description>
@@ -21,96 +21,96 @@ intuit the range of colors that are missing from our displays compare the gamuts
     
     <item>
       <title>Color Mixing Prediction by Dither</title>
-      <link>https://agaura.github.io/color-mixing-prediction/</link>
+      <link>http://localhost:1313/color-mixing-prediction/</link>
       <pubDate>Mon, 15 Jan 2024 18:52:17 -0500</pubDate>
       
-      <guid>https://agaura.github.io/color-mixing-prediction/</guid>
+      <guid>http://localhost:1313/color-mixing-prediction/</guid>
       <description>Introduction There was a very interesting article I came across that I highly recommend discussing the gamma function that addressed color mixing. Essentially: color mixing is often done inaccurately. For example, if you mix two sRGB colors by just averaging them, that color will not be the same color as if you just shined two flashlights of those colors (at 50% brightness) and overlapped them. This is because sRGB colors do not represent the amount of red, green, and blue light you need to mix a color.</description>
     </item>
     
     <item>
       <title>Color Space Point Cloud</title>
-      <link>https://agaura.github.io/color-space-point/</link>
+      <link>http://localhost:1313/color-space-point/</link>
       <pubDate>Wed, 26 Jul 2023 11:26:07 -0400</pubDate>
       
-      <guid>https://agaura.github.io/color-space-point/</guid>
+      <guid>http://localhost:1313/color-space-point/</guid>
       <description>Here is a point cloud containing $2^{15}$ particles for exploring the various color spaces (or, more accurately, exploring the projection of sRGB into these spaces). They have various purposes, but CIELab, OKLab, and CAM16-UCS are all designed to be perceptually uniform. This design is built to make it easy to see the differences and surprising variability between these three spaces, and contrast them against the famous sRGB space and the XYZ space (which is a convenient space for conversions and characterization of colors).</description>
     </item>
     
     <item>
       <title>Smokestream</title>
-      <link>https://agaura.github.io/smokestream/</link>
+      <link>http://localhost:1313/smokestream/</link>
       <pubDate>Wed, 15 Mar 2023 15:58:16 -0400</pubDate>
       
-      <guid>https://agaura.github.io/smokestream/</guid>
+      <guid>http://localhost:1313/smokestream/</guid>
       <description>Introduction In the background of this page you can see an invisible sprite leaving a trail of multi-colored “smoke.” Feel free to click and drag on the page itself, your cursor will also give off colored smoke. The experience works in both light and dark mode but is best viewed in dark mode, so click the ⚪️/⚫️ button to switch. Scroll down for an empty area to interact with the smoke and for information on the settings.</description>
     </item>
     
     <item>
       <title>Time Dither</title>
-      <link>https://agaura.github.io/time-dither/</link>
+      <link>http://localhost:1313/time-dither/</link>
       <pubDate>Wed, 21 Dec 2022 08:31:50 -0500</pubDate>
       
-      <guid>https://agaura.github.io/time-dither/</guid>
+      <guid>http://localhost:1313/time-dither/</guid>
       <description>Previously I have used the concept of dithering with colors, but we can apply it to any system. Let’s see how this would look in the context of time:
 12:3456 Perhaps the only benefit is that you can somewhat estimate the milliseconds without needing the space to write them, but you can already do that with regular intuition. In any case, I do think it makes for a nice visual.</description>
     </item>
     
     <item>
       <title>Audio Spectrum</title>
-      <link>https://agaura.github.io/audio-spectrum/</link>
+      <link>http://localhost:1313/audio-spectrum/</link>
       <pubDate>Mon, 28 Nov 2022 12:06:38 +0100</pubDate>
       
-      <guid>https://agaura.github.io/audio-spectrum/</guid>
+      <guid>http://localhost:1313/audio-spectrum/</guid>
       <description>Audio Graph Below you can find a graph representing the spectrum of the audio input. The graph is interactive, so feel free trying to click and drag the graph or zoom to see better. Additionally, two different gradients are used depending on whether you are viewing in dark mode or light mode, so click the ⚪️/⚫️ button to switch.
 ▶️</description>
     </item>
     
     <item>
       <title>Dimension Isolating Shader</title>
-      <link>https://agaura.github.io/dimension-isolating-shader/</link>
+      <link>http://localhost:1313/dimension-isolating-shader/</link>
       <pubDate>Thu, 26 May 2022 13:56:21 +0200</pubDate>
       
-      <guid>https://agaura.github.io/dimension-isolating-shader/</guid>
+      <guid>http://localhost:1313/dimension-isolating-shader/</guid>
       <description>Introduction It’s quite common to see an image or to want to have an image in grayscale. What is it that we are doing when we have a grayscale image? We are deleting two dimensions—hue and saturation—from the color space representing our image. However, why cannot/why don’t we delete the other dimensions? Why is this the only standard operation?
 The problem at the heart of the matter here is that there is not a good way to do it.</description>
     </item>
     
     <item>
       <title>Dithering-Based Comparison of Cylindrical Color Spaces</title>
-      <link>https://agaura.github.io/dithering-based-comparison/</link>
+      <link>http://localhost:1313/dithering-based-comparison/</link>
       <pubDate>Sun, 08 May 2022 15:57:59 +0200</pubDate>
       
-      <guid>https://agaura.github.io/dithering-based-comparison/</guid>
+      <guid>http://localhost:1313/dithering-based-comparison/</guid>
       <description>Introduction Here we are using a dithering method to analyze the differences between three color spaces, namely HSL, Okhsl, and CIELch. The strategy being used is similar to that deployed here, but there is one major difference. Here, when we dither our colors, we are not anihilating any specific one, but rather, all of them. Borrowing the notation from that post, we have that for every color $c$:
 $$P(\hat{c}=c_\theta|t) = 0.</description>
     </item>
     
     <item>
       <title>Kinetic Dither Application—Okhsl Space Explorer</title>
-      <link>https://agaura.github.io/kinetic-dither-application/</link>
+      <link>http://localhost:1313/kinetic-dither-application/</link>
       <pubDate>Wed, 27 Apr 2022 11:52:10 +0201</pubDate>
       
-      <guid>https://agaura.github.io/kinetic-dither-application/</guid>
+      <guid>http://localhost:1313/kinetic-dither-application/</guid>
       <description>Introduction This shader is demonstrating what it would look like to remove a portion of the color wheel. The inspiration? I just don&amp;rsquo;t like the color green (🤮) and wanted to get rid of it… however, this gave me the inspiration to see what it would look like if I could optionally remove any color by removing a sector from the color wheel. So now, with this shader, we can see what that would look like when looking directly at a color wheel.</description>
     </item>
     
     <item>
       <title>Kinetic Dither Shader</title>
-      <link>https://agaura.github.io/kinetic-dither-shader/</link>
+      <link>http://localhost:1313/kinetic-dither-shader/</link>
       <pubDate>Wed, 27 Apr 2022 11:52:10 +0202</pubDate>
       
-      <guid>https://agaura.github.io/kinetic-dither-shader/</guid>
+      <guid>http://localhost:1313/kinetic-dither-shader/</guid>
       <description>Introduction This shader displays images with a portion of the color wheel being impossible to show, instead being displayed as noise being dithered so as to approximate that color. For more information, see here.
 Shader ▶️ Upload Controls ▶️/⏸ Button: Controls time, causes noisiness to evolve over time and smoothens dither Slider: Controls the annihilated hue. Runs counterclockwise starting from the rightmost point of the color wheel (red/hot pink) Slider: Controls with width of the sector being annihilated, where the percentage corresponding to the percentage of the color wheel within that sector, centered around the annihilated hue as defined by the above slider Slider: Changes the size of the resolution of the dithered annihilated colors Discussion This shader more-or-less functions as a fun little artistic thingy.</description>
     </item>
     
     <item>
       <title>About</title>
-      <link>https://agaura.github.io/about/</link>
+      <link>http://localhost:1313/about/</link>
       <pubDate>Sun, 17 Apr 2022 17:08:58 +0200</pubDate>
       
-      <guid>https://agaura.github.io/about/</guid>
+      <guid>http://localhost:1313/about/</guid>
       <description>Hey there! I&amp;rsquo;m a software developer with a focus on imaging, color management, and visualization. I graduated from a master&amp;rsquo;s program in Imaging and Light in Extended Reality in 2022 and received my bachelor&amp;rsquo;s degree in Mathematics from Princeton University in 2020.
 This website mostly functions as a way for me to teach myself and strengthen my understanding of what I like to study, as well as provide a space in which some of my projects can live.</description>
     </item>
