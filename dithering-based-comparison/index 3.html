@@ -58,11 +58,11 @@ $$P(\hat{c}=c_\theta|t) = 0.">
   
   
   
-  <link rel="stylesheet" href="/minima.1763599070.css">
+  <link rel="stylesheet" href="/minima.1763600909.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1763599070.js"></script>
+  <script defer type="text/javascript" src="/minima.1763600909.js"></script>
 </head>
 <script>
   
@@ -132,13 +132,13 @@ $$P(\hat{c}=c_\theta|t) = 0.">
 	<p></p>
 	<article class="md">
 		<h1 id="introduction">Introduction</h1>
-<p>       Here we are using a dithering method to analyze the differences between three color spaces, namely HSL, Okhsl, and CIELch. The strategy being used is similar to that deployed <a href="https://agaura.github.io/okhslapp/">here</a>, but there is one major difference. Here, when we dither our colors, we are not anihilating any specific one, but rather, all of them. Borrowing the notation from that post, we have that for every color $c$:</p>
+<p>Here we are using a dithering method to analyze the differences between three color spaces, namely HSL, Okhsl, and CIELch. The strategy being used is similar to that deployed <a href="https://agaura.github.io/okhslapp/">here</a>, but there is one major difference. Here, when we dither our colors, we are not anihilating any specific one, but rather, all of them. Borrowing the notation from that post, we have that for every color $c$:</p>
 <p>$$P(\hat{c}=c_\theta|t) = 0.5$$
 $$P(\hat{c}=c_{-\theta}|t) = 0.5$$</p>
-<p>       where $c_\theta$ is the color which makes angle $\theta$ with $c$ and the center of the circle. Essentially, every color may be displayed as the color at its same distance from the center but $\pm\theta$.</p>
-<p>       We’ll see that this ends up being a useful way to see some major differences between a “perceptually uniform space” such as Okhsl, and ones which are not designed that way. I’d highly recommend reading more about Okhsl <a href="https://bottosson.github.io/posts/colorpicker/">here</a>. In particular, we contrast Okhsl against HSL, which is a cylindricalization of the RGB space and one of the most common color spaces chosen to use for color pickers. It is similar to HSV as well. Meanwhile, CIELch is a cylindricalization of the CIELab space, the most famous color space used for describing colors precisely, often being the space used to make conversions between more complicated spaces. How intuitive are these spaces?</p>
+<p>where $c_\theta$ is the color which makes angle $\theta$ with $c$ and the center of the circle. Essentially, every color may be displayed as the color at its same distance from the center but $\pm\theta$.</p>
+<p>We’ll see that this ends up being a useful way to see some major differences between a “perceptually uniform space” such as Okhsl, and ones which are not designed that way. I’d highly recommend reading more about Okhsl <a href="https://bottosson.github.io/posts/colorpicker/">here</a>. In particular, we contrast Okhsl against HSL, which is a cylindricalization of the RGB space and one of the most common color spaces chosen to use for color pickers. It is similar to HSV as well. Meanwhile, CIELch is a cylindricalization of the CIELab space, the most famous color space used for describing colors precisely, often being the space used to make conversions between more complicated spaces. How intuitive are these spaces?</p>
 <h1 id="shader">Shader</h1>
-<p>       The following represent the color spaces of HSL, OKLab, and CIELch, respectively.</p>
+<p>The following represent the color spaces of HSL, OKLab, and CIELch, respectively.</p>
 <html>
 <!-- D3.js -->
 <script src="https://d3js.org/d3.v6.min.js"></script>
@@ -2114,7 +2114,7 @@ void main()
 </li>
 </ul>
 <h1 id="discussion">Discussion</h1>
-<p>       The thing to note is how no latent structures in the space become more apparent when changing the <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+<p>The thing to note is how no latent structures in the space become more apparent when changing the <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
 style="position:relative; top:2px;">
 <linearGradient id="Gradient2" x1="0" x2="0" y1="0" y2="1">
 <stop offset="0%" stop-color="#d60071" />

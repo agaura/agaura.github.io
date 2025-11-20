@@ -10,10 +10,10 @@
     <lastBuildDate>Wed, 19 Nov 2025 11:38:44 -0500</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Exploration of Chromaticity with Point Clouds</title>
-      <link>http://localhost:1313/chromaticity-clouds/</link>
+      <link>http://localhost:1313/chromaticity-exploration/</link>
       <pubDate>Wed, 19 Nov 2025 11:38:44 -0500</pubDate>
       
-      <guid>http://localhost:1313/chromaticity-clouds/</guid>
+      <guid>http://localhost:1313/chromaticity-exploration/</guid>
       <description>Introduction To see the visualization, click here.
 The chromaticity diagram is one of the most informative diagrams in color science—it shows the range of colors the human eye can perceive and what portion of that range our displays can reproduce. While the diagram is quite interesting on its own, I feel like there is some information that begs to be explored. I wanted to do the following:
 intuit the range of colors that are missing from our displays compare the gamuts of different display color spaces better understand the relationship between the visible light spectrum/the rainbow with chromaticity To investigate this, I built an interactive visualization with three main components:</description>

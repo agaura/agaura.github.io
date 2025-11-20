@@ -3,21 +3,21 @@
 <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta property="og:url" content="http://localhost:1313/kinetic-dither-application/">
+  <meta property="og:url" content="http://localhost:1313/color-mixing-prediction/">
   <meta property="og:site_name" content="Alexander Gaura">
-  <meta property="og:title" content="Kinetic Dither Application—Okhsl Space Explorer">
-  <meta property="og:description" content="Introduction This shader is demonstrating what it would look like to remove a portion of the color wheel. The inspiration? I just don’t like the color green (🤮) and wanted to get rid of it… however, this gave me the inspiration to see what it would look like if I could optionally remove any color by removing a sector from the color wheel. So now, with this shader, we can see what that would look like when looking directly at a color wheel.">
+  <meta property="og:title" content="Color Mixing Prediction by Dither">
+  <meta property="og:description" content="Introduction There was a very interesting article I came across that I highly recommend discussing the gamma function that addressed color mixing. Essentially: color mixing is often done inaccurately. For example, if you mix two sRGB colors by just averaging them, that color will not be the same color as if you just shined two flashlights of those colors (at 50% brightness) and overlapped them. This is because sRGB colors do not represent the amount of red, green, and blue light you need to mix a color.">
   <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
-    <meta property="article:published_time" content="2022-04-27T11:52:10+02:01">
-    <meta property="article:modified_time" content="2022-04-27T11:52:10+02:01">
+    <meta property="article:published_time" content="2024-01-15T18:52:17-05:00">
+    <meta property="article:modified_time" content="2024-01-15T18:52:17-05:00">
     <meta property="article:tag" content="Shader">
     <meta property="article:tag" content="Dither">
 
   
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Kinetic Dither Application—Okhsl Space Explorer">
-  <meta name="twitter:description" content="Introduction This shader is demonstrating what it would look like to remove a portion of the color wheel. The inspiration? I just don’t like the color green (🤮) and wanted to get rid of it… however, this gave me the inspiration to see what it would look like if I could optionally remove any color by removing a sector from the color wheel. So now, with this shader, we can see what that would look like when looking directly at a color wheel.">
+  <meta name="twitter:title" content="Color Mixing Prediction by Dither">
+  <meta name="twitter:description" content="Introduction There was a very interesting article I came across that I highly recommend discussing the gamma function that addressed color mixing. Essentially: color mixing is often done inaccurately. For example, if you mix two sRGB colors by just averaging them, that color will not be the same color as if you just shined two flashlights of those colors (at 50% brightness) and overlapped them. This is because sRGB colors do not represent the amount of red, green, and blue light you need to mix a color.">
 
   
   
@@ -44,7 +44,7 @@
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#262d33">
   <title>
     
-    Alexander Gaura - Kinetic Dither Application—Okhsl Space Explorer
+    Alexander Gaura - Color Mixing Prediction by Dither
     
   </title>
   
@@ -56,11 +56,11 @@
   
   
   
-  <link rel="stylesheet" href="/minima.1763599070.css">
+  <link rel="stylesheet" href="/minima.1763600909.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1763599070.js"></script>
+  <script defer type="text/javascript" src="/minima.1763600909.js"></script>
 </head>
 <script>
   
@@ -108,11 +108,11 @@
   
   
 
-<h1 class="mt-6 mb-6">Kinetic Dither Application—Okhsl Space Explorer</h1>
+<h1 class="mt-6 mb-6">Color Mixing Prediction by Dither</h1>
 <div class="mb-3 text-xs flex justify-between sm:flex-col">
 	<div>
 	
-		Posted at &mdash; Apr 27, 2022
+		Posted at &mdash; Jan 15, 2024
 	
 		
 	</div>
@@ -130,19 +130,18 @@
 	<p></p>
 	<article class="md">
 		<h1 id="introduction">Introduction</h1>
-<p>This shader is demonstrating what it would look like to remove a portion of the color wheel. The inspiration? I just don&rsquo;t like the color green (🤮) and wanted to get rid of it… however, this gave me the inspiration to see what it would look like if I could optionally remove any color by removing a sector from the color wheel. So now, with this shader, we can see what that would look like when looking directly at a color wheel.</p>
-<p>Now, there is not a clear solution on what we can do to &ldquo;get rid&rdquo; of a color while still maintaining &ldquo;something&rdquo; there to fill its spot. It&rsquo;s not like we can create a new color, and if we were to choose a gradient from another part of the color wheel, what would make sense? Instead, we will use <a href="https://en.wikipedia.org/wiki/Dither">dithering</a> - a technique that uses patterns of available colors to create the illusion of unavailable colors. In particular, we will add a time component $t$, and for any given color $c$ let $c_l$ and $c_r$ be the nearest color in the color wheel to its left and right. Let $\hat{c}$ be the color displayed and $d$ be a distance metric. Then, we have</p>
-<p>$$P(\hat{c} = c_l|t) = \frac{d(c, c_l)}{d(c_l, c_r)}$$</p>
-<p>In other words, an annihilated color will be displayed as one of the two nearest acceptable colors at random, but it will be more likely to display the closer of the two acceptable colors (proportional to how close they are!). Let&rsquo;s see how this looks:</p>
-<h1 id="shader">Shader</h1>
-<p>If viewing on mobile, make sure to enable WebGL 2.0.</p>
+<p>There was a very interesting <a href="https://blog.johnnovak.net/2016/09/21/what-every-coder-should-know-about-gamma/">article</a> I came across that I highly recommend discussing the gamma function that addressed color mixing. Essentially: color mixing is often done inaccurately. For example, if you mix two sRGB colors by just averaging them, that color will not be the same color as if you just shined two flashlights of those colors (at 50% brightness) and overlapped them. This is because sRGB colors do not represent the amount of red, green, and blue light you need to mix a color. Instead, they are adjusted (by a function referred to as <em>gamma</em>) to optimize how distinct colors are. It turns out people are better at differentiating dark colors than light ones, so the gamma function is added to adjust the linear sRGB values in order to make the colors of your display as diverse as possible with the limitation of only having 8 bits per red, green, and blue. This gamma function is more-or-less just raising the color’s value to the 2.4th power (to go from sRGB to linear sRGB), so if you want to mix colors the same way light actually would mix, you will have to undo that.</p>
+<p>But, how do we know that this method is correct? The science behind it is pretty sound (if you like you can look into CIE 1931 color matching functions and how XYZ space was created, but in summary colors are basically <em>defined</em> by how you can mix three colors to make them and linear sRGB is just a transform of those spaces, so mixing is perfectly predictable and okay), but it’d be nice to check to be sure. Also, we live in reality! Who knows what these display manufacturers are actually selling us. What if the math is right but the display shows it wrong? How could I check? While this isn’t fool-proof, I decided to make a visualization so you can at least check yourself whether a color prediction is valid.</p>
+<h1 id="visualization">Visualization</h1>
+<p>So, here is a demonstration showing how colors mix. You can control the two colors being mixed with the sliders. In the entire left half of the image there are no mixed pixels: all of the pixels match either the top-left color or the bottom-left color. Starting from the middle, some pixels are colored the same as the predicted mixed result until they dominate at the corners on the right side.</p>
+<p>To see how they truly match, it is recommnended to look at the screen from far away and/or blur your vision until the colors at the center blends together. If all is well with the display, then the center should match the two right corners and we can be comfortable that color math is valid.</p>
+<p>NOTE: the center may not match the two right corners due to display issues or an incorrect calibration. For instance, some displays may cause a strange shift in color when pixels transition between frames (if the visualization appears to change color slightly when scrolling, almost like it’s flickering, this is likely the case for your display), so the paused visualization may be better.</p>
 <script src="https://d3js.org/d3.v6.min.js"></script>
 <script src="https://unpkg.com/d3-simple-slider"></script>
 <script src="https://unpkg.com/topojson@3"></script>
 <script src="https://webgl2fundamentals.org/webgl/resources/webgl-utils.js"></script>
 <p><b style="font-size:30px" id='btn' onmouseover="this.style.cursor='pointer';" width=20px>▶️</b></p>
-<div align="center"><canvas id="canvas" width=600px height=600px></canvas></div>
-<div align="center" id="slider-fill">
+<div align="center" id="hue1">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
         style="position:relative; top:-23px;">
         <linearGradient id="Gradient2" x1="0" x2="0" y1="0" y2="1">
@@ -157,42 +156,61 @@
         </linearGradient>
         <path fill="url(#Gradient2)"
             d="M12 0c-4.87 7.197-8 11.699-8 16.075 0 4.378 3.579 7.925 8 7.925s8-3.547 8-7.925c0-4.376-3.13-8.878-8-16.075zm.462 20.471c2.56-1.049 4.124-4.889 3.021-8.853 3.798 4.909.754 9.393-3.021 8.853z" /></svg></div>
-<div align="center" id="slider-fill2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-        style="position:relative; top:-23px;">
-        <path fill='gray' d="M6 11v-4l-6 5 6 5v-4h12v4l6-5-6-5v4z" /></svg></div>
-<div align="center" id="slider-fill3"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+<div align="center" id="sat1"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style = "position:relative; top:-23px;"><path fill='gray' d="M22.266 14.724c-.064.898-.242 1.766-.522 2.586l1.601.675c-.163.461-.353.909-.568 1.344l-1.602-.676c-.383.751-.855 1.448-1.402 2.078l1.229 1.229c-.323.364-.667.709-1.032 1.032l-2.262-2.262c1.874-1.59 3.125-4.039 3.125-6.735 0-4.878-3.954-8.832-8.832-8.832s-8.833 3.954-8.833 8.832c0 2.505 1.107 5.024 3.126 6.735l-2.293 2.27-1.031-1.031 1.259-1.238c-.562-.647-1.046-1.365-1.434-2.139l-1.606.665c-.212-.436-.399-.885-.559-1.348l1.605-.664c-.268-.802-.439-1.646-.5-2.521h-1.735v-1.459h1.734c.063-.897.242-1.765.522-2.585l-1.6-.675c.163-.461.352-.91.567-1.344l1.602.675c.383-.75.855-1.448 1.403-2.078l-1.229-1.229c.323-.365.668-.709 1.032-1.031l1.229 1.229c.647-.562 1.366-1.045 2.141-1.433l-.665-1.606c.435-.212.885-.399 1.347-.558l.665 1.604c.802-.267 1.647-.438 2.522-.5v-1.734h1.459v1.733c.899.063 1.767.242 2.587.522l.675-1.6c.462.162.911.353 1.345.567l-.676 1.602c.751.383 1.449.854 2.08 1.402l1.229-1.229c.365.322.709.666 1.032 1.03l-1.229 1.229c.562.647 1.045 1.366 1.434 2.14l1.606-.665c.212.436.399.885.558 1.348l-1.604.664c.269.802.439 1.646.501 2.521h1.733v1.459h-1.734zm-3.434-.729c0 3.767-3.064 6.832-6.832 6.832s-6.833-3.065-6.833-6.832 3.065-6.832 6.833-6.832 6.832 3.065 6.832 6.832zm-7.36-1.81l-2.158-2.158-1.415 1.413 2.158 2.158 1.415-1.413z"/></svg></div>
+<div align="center" id="val1"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
         style="position:relative; top:-23px;">
         <path fill='gray'
             d="M14 19h-4c-.276 0-.5.224-.5.5s.224.5.5.5h4c.276 0 .5-.224.5-.5s-.224-.5-.5-.5zm0 2h-4c-.276 0-.5.224-.5.5s.224.5.5.5h4c.276 0 .5-.224.5-.5s-.224-.5-.5-.5zm.25 2h-4.5l1.188.782c.154.138.38.218.615.218h.895c.234 0 .461-.08.615-.218l1.187-.782zm3.75-13.799c0 3.569-3.214 5.983-3.214 8.799h-1.989c-.003-1.858.87-3.389 1.721-4.867.761-1.325 1.482-2.577 1.482-3.932 0-2.592-2.075-3.772-4.003-3.772-1.925 0-3.997 1.18-3.997 3.772 0 1.355.721 2.607 1.482 3.932.851 1.478 1.725 3.009 1.72 4.867h-1.988c0-2.816-3.214-5.23-3.214-8.799 0-3.723 2.998-5.772 5.997-5.772 3.001 0 6.003 2.051 6.003 5.772zm4-.691v1.372h-2.538c.02-.223.038-.448.038-.681 0-.237-.017-.464-.035-.69h2.535zm-10.648-6.553v-1.957h1.371v1.964c-.242-.022-.484-.035-.726-.035-.215 0-.43.01-.645.028zm-3.743 1.294l-1.04-1.94 1.208-.648 1.037 1.933c-.418.181-.822.401-1.205.655zm10.586 1.735l1.942-1.394.799 1.115-2.054 1.473c-.191-.43-.423-.827-.687-1.194zm-3.01-2.389l1.038-1.934 1.208.648-1.041 1.941c-.382-.254-.786-.473-1.205-.655zm-10.068 3.583l-2.054-1.472.799-1.115 1.942 1.393c-.264.366-.495.763-.687 1.194zm13.707 6.223l2.354.954-.514 1.271-2.425-.982c.21-.397.408-.812.585-1.243zm-13.108 1.155l-2.356 1.06-.562-1.251 2.34-1.052c.173.433.371.845.578 1.243zm-1.178-3.676h-2.538v-1.372h2.535c-.018.226-.035.454-.035.691 0 .233.018.458.038.681z" /></svg></div>
-<div align="center" id="slider-fill4"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+<div align="center"><canvas id="canvas" width=600px height=600px style="image-rendering: pixelated;"></canvas></div>
+<div align="center" id="hue2">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+        style="position:relative; top:-23px;">
+        <linearGradient id="Gradient2" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stop-color="#d60071" />
+            <stop offset="20%" stop-color="#c04e00" />
+            <stop offset="30%" stop-color="#917200" />
+            <stop id='example' offset="45%" stop-color="#468a00" />
+            <stop offset="50%" stop-color="#008a79" />
+            <stop offset="60%" stop-color="#0083a8" />
+            <stop offset="70%" stop-color="#4b5dff" />
+            <stop offset="100%" stop-color="#b200df" />
+        </linearGradient>
+        <path fill="url(#Gradient2)"
+            d="M12 0c-4.87 7.197-8 11.699-8 16.075 0 4.378 3.579 7.925 8 7.925s8-3.547 8-7.925c0-4.376-3.13-8.878-8-16.075zm.462 20.471c2.56-1.049 4.124-4.889 3.021-8.853 3.798 4.909.754 9.393-3.021 8.853z" /></svg></div>
+<div align="center" id="sat2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style = "position:relative; top:-23px;"><path fill='gray' d="M22.266 14.724c-.064.898-.242 1.766-.522 2.586l1.601.675c-.163.461-.353.909-.568 1.344l-1.602-.676c-.383.751-.855 1.448-1.402 2.078l1.229 1.229c-.323.364-.667.709-1.032 1.032l-2.262-2.262c1.874-1.59 3.125-4.039 3.125-6.735 0-4.878-3.954-8.832-8.832-8.832s-8.833 3.954-8.833 8.832c0 2.505 1.107 5.024 3.126 6.735l-2.293 2.27-1.031-1.031 1.259-1.238c-.562-.647-1.046-1.365-1.434-2.139l-1.606.665c-.212-.436-.399-.885-.559-1.348l1.605-.664c-.268-.802-.439-1.646-.5-2.521h-1.735v-1.459h1.734c.063-.897.242-1.765.522-2.585l-1.6-.675c.163-.461.352-.91.567-1.344l1.602.675c.383-.75.855-1.448 1.403-2.078l-1.229-1.229c.323-.365.668-.709 1.032-1.031l1.229 1.229c.647-.562 1.366-1.045 2.141-1.433l-.665-1.606c.435-.212.885-.399 1.347-.558l.665 1.604c.802-.267 1.647-.438 2.522-.5v-1.734h1.459v1.733c.899.063 1.767.242 2.587.522l.675-1.6c.462.162.911.353 1.345.567l-.676 1.602c.751.383 1.449.854 2.08 1.402l1.229-1.229c.365.322.709.666 1.032 1.03l-1.229 1.229c.562.647 1.045 1.366 1.434 2.14l1.606-.665c.212.436.399.885.558 1.348l-1.604.664c.269.802.439 1.646.501 2.521h1.733v1.459h-1.734zm-3.434-.729c0 3.767-3.064 6.832-6.832 6.832s-6.833-3.065-6.833-6.832 3.065-6.832 6.833-6.832 6.832 3.065 6.832 6.832zm-7.36-1.81l-2.158-2.158-1.415 1.413 2.158 2.158 1.415-1.413z"/></svg></div>
+<div align="center" id="val2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
         style="position:relative; top:-23px;">
         <path fill='gray'
-            d="M12 0l-11 6v12.131l11 5.869 11-5.869v-12.066l-11-6.065zm9 11.623l-3 1.569v-3.26l3-1.601v3.292zm-13-.654l3 1.625v3.186l-3-1.614v-3.197zm.9-1.799l2.986-1.603 3.132 1.688-3.014 1.608-3.104-1.693zm4.1 3.43l3-1.6v3.238l-3 1.569v-3.207zm4.138-4.475l-3.139-1.691 2.801-1.503 3.11 1.715-2.772 1.479zm-2.424-4.345l-2.825 1.517-2.728-1.47 2.834-1.546 2.719 1.499zm-7.649 1.19l2.711 1.46-2.973 1.596-2.67-1.456 2.932-1.6zm-1.065 4.908v3.204l-3-1.636v-3.216l3 1.648zm-3 3.843l3 1.636v3.185l-3-1.611v-3.21zm5 5.888v-3.169l3 1.614v3.146l-3-1.591zm5-1.545l3-1.569v3.104l-3 1.601v-3.136zm5 .468v-3.083l3-1.569v3.051l-3 1.601z" /></svg></div>
-<!-- Raw script tag to prevent markdown processing -->
-<script>
-"use strict";
-var vertexShaderSource = `#version 300 es
-     // an attribute is an input (in) to a vertex shader.
+            d="M14 19h-4c-.276 0-.5.224-.5.5s.224.5.5.5h4c.276 0 .5-.224.5-.5s-.224-.5-.5-.5zm0 2h-4c-.276 0-.5.224-.5.5s.224.5.5.5h4c.276 0 .5-.224.5-.5s-.224-.5-.5-.5zm.25 2h-4.5l1.188.782c.154.138.38.218.615.218h.895c.234 0 .461-.08.615-.218l1.187-.782zm3.75-13.799c0 3.569-3.214 5.983-3.214 8.799h-1.989c-.003-1.858.87-3.389 1.721-4.867.761-1.325 1.482-2.577 1.482-3.932 0-2.592-2.075-3.772-4.003-3.772-1.925 0-3.997 1.18-3.997 3.772 0 1.355.721 2.607 1.482 3.932.851 1.478 1.725 3.009 1.72 4.867h-1.988c0-2.816-3.214-5.23-3.214-8.799 0-3.723 2.998-5.772 5.997-5.772 3.001 0 6.003 2.051 6.003 5.772zm4-.691v1.372h-2.538c.02-.223.038-.448.038-.681 0-.237-.017-.464-.035-.69h2.535zm-10.648-6.553v-1.957h1.371v1.964c-.242-.022-.484-.035-.726-.035-.215 0-.43.01-.645.028zm-3.743 1.294l-1.04-1.94 1.208-.648 1.037 1.933c-.418.181-.822.401-1.205.655zm10.586 1.735l1.942-1.394.799 1.115-2.054 1.473c-.191-.43-.423-.827-.687-1.194zm-3.01-2.389l1.038-1.934 1.208.648-1.041 1.941c-.382-.254-.786-.473-1.205-.655zm-10.068 3.583l-2.054-1.472.799-1.115 1.942 1.393c-.264.366-.495.763-.687 1.194zm13.707 6.223l2.354.954-.514 1.271-2.425-.982c.21-.397.408-.812.585-1.243zm-13.108 1.155l-2.356 1.06-.562-1.251 2.34-1.052c.173.433.371.845.578 1.243zm-1.178-3.676h-2.538v-1.372h2.535c-.018.226-.035.454-.035.691 0 .233.018.458.038.681z" /></svg></div>
+<script type="x-shader/x-vertex" id="vertex">
+// an attribute is an input (in) to a vertex shader.
 // It will receive data from a buffer
+
 in vec2 a_position;
 in vec2 a_texCoord;// Used to pass in the resolution of the canvas
 uniform vec2 u_resolution;// Used to pass the texture coordinates to the fragment shader
 out vec2 v_texCoord;// all shaders have a main function
-void main() {// convert the position from pixels to 0.0 to 1.0
-vec2 zeroToOne = a_position / u_resolution;// convert from 0->1 to 0->2
-vec2 zeroToTwo = zeroToOne * 2.0;// convert from 0->2 to -1->+1 (clipspace)
-vec2 clipSpace = zeroToTwo - 1.0;gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);// pass the texCoord to the fragment shader
-// The GPU will interpolate this value between points.
-v_texCoord = a_texCoord;
-}
-`;
 
-var fragmentShaderSource = `#version 300 es
+void main() {
+    // convert the position from pixels to 0.0 to 1.0
+    vec2 zeroToOne = a_position / u_resolution;// convert from 0->1 to 0->2
+    vec2 zeroToTwo = zeroToOne * 2.0;// convert from 0->2 to -1->+1 (clipspace)
+    vec2 clipSpace = zeroToTwo - 1.0;
+    gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);// pass the texCoord to the fragment shader
+    // The GPU will interpolate this value between points.
+    v_texCoord = a_texCoord;
+}
+</script>
+<script type = "text" id = "colors">
 // fragment shaders don't have a default precision so we need
 // to pick one. highp is a good default. It means "high precision"
 precision highp float;float rand(vec2 co) {
  return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
-}// Copyright(c) 2021 Björn Ottosson
+}
+float better_rand(vec2 pos) {
+    return rand(vec2(pos.x*1029.+pos.y*232.3-10032., rand((pos + 10.4)*109.)*1234.21));
+}
+// Copyright(c) 2021 Björn Ottosson
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this softwareand associated documentation files(the "Software"), to deal in
@@ -621,41 +639,209 @@ float dither( float h, float r, float antiHue, float antiRad) {
      else h = leftBound;
  return h;
 }
+
+vec3 linear_to_sRGB(vec3 c) {
+    return vec3(srgb_transfer_function(c.r),
+        srgb_transfer_function(c.g),
+        srgb_transfer_function(c.b));
+}
+
+vec3 sRGB_to_linear(vec3 c) {
+    return vec3(srgb_transfer_function_inv(c.r),
+        srgb_transfer_function_inv(c.g),
+        srgb_transfer_function_inv(c.b));
+}
+
+float manhattan(vec2 xy1, vec2 xy2) {
+    return abs(xy1.x - xy2.x) + abs(xy1.y - xy2.y);
+}
+
 uniform sampler2D u_image;
 uniform float time;
 uniform float antiHue;
 uniform float antiRad;// the texCoords passed in from the vertex shader.
 uniform float lum;
 uniform float res;
+uniform vec3 col1;
+uniform vec3 col2;
 in vec2 v_texCoord;// we need to declare an output for the fragment shader
 out vec4 outColor;void main()
 {
- vec2 uv = 2.0*(v_texCoord - 0.5);
- float h = atan(uv.y, uv.x)/(2.0*M_PI);
- float s = length(uv);
- float temp = h;
- if (inDither(h, antiHue, antiRad)) {
-     uv = floor(uv*res)/res;
-     h = atan(uv.y, uv.x)/(2.0*M_PI);
-     if ((uv.x == 0.0) && (uv.y == 0.0)) h = atan(1.0, 1.0)/(2.0*M_PI);
-     if (inDither(temp, antiHue, antiRad)) h = temp;
-     }
- float iTime = time / 1.0;
- float r = rand(vec2(uv.x, iTime));
- r = rand(vec2(r, uv.y));
- h = dither(h, r, antiHue, antiRad);
- vec3 col = okhsl_to_srgb(vec3(h, s, lum));
- outColor = s > 0.99 ? vec4(0.0) : vec4(col, 1.0);
-}`;        // Get A WebGL context
+    float x = better_rand(v_texCoord + vec2(mod(time/100000.,10.)));
+    vec4 color1 = vec4(okhsl_to_srgb(col1),1.0);
+    vec4 color2 = vec4(okhsl_to_srgb(col2),1.0);
+    //vec4 result = vec4(linear_to_sRGB((sRGB_to_linear(color1.rgb)+sRGB_to_linear(color2.rgb))/2.),1.0);
+    //vec4 result = vec4(linear_to_sRGB(vec3(0.5)),1.0);
+    //vec4 result = vec4(vec3(hue),1.0);
+    vec4 result = vec4(linear_to_sRGB((sRGB_to_linear(color1.rgb)+sRGB_to_linear(color2.rgb))/2.),1.0);
+    vec4 wrongResult = vec4((color1.rgb+color2.rgb)/2.,1.0);
+    //result = wrongResult;
+    
+    vec2 uv = clamp((v_texCoord - 0.16)*1.0/(1.0-2.*0.16),0.0,1.0);
+    if (uv.x < 0.5) {
+        if (uv.y < 0.5) {
+            float threshold = max(.5, (.5 - uv.x) + (0.5-uv.y));
+            //threshold = pow(threshold - 0.5,1.)+0.5;
+            if (x < threshold) outColor = color1;
+            else outColor = color2;
+        }
+        else {
+            float threshold =max(.5, (.5 - uv.x) + uv.y-0.5);
+            //threshold = pow(threshold - 0.5,1.)+0.5;
+            if (x < threshold) outColor = color2;
+            else outColor = color1;
+        }
+    }
+    else {
+        float s2 = better_rand(uv + vec2(mod((time + x)/100000.,10.)));
+        if (uv.y < 0.5) {
+            float threshold = (uv.x-0.5) + (0.5-uv.y);
+            float threshold2 = (uv.x - 0.5)*2.;
+            if (threshold < 0.5) {
+                //if (s2 < threshold2) outColor = result;
+                if (x < 0.5) outColor = color1;
+                else outColor = color2;
+            }
+            else {
+                //if (s2 < threshold2) outColor = result;
+                //if (x < (threshold - 0.5) * 2.) outColor = wrongResult;
+                if (x < (threshold - 0.5) * 2.) outColor = result;
+                else {
+                    if (x < (threshold - 0.5) * 2. + (1.0 - (threshold - 0.5) * 2.)/2.) outColor = color1;
+                    else outColor = color2;
+                }
+            }
+        }
+        else {
+            float threshold = (uv.x-0.5) + uv.y-0.5;
+            float threshold2 = (uv.x - 0.5)*2.;
+            if (threshold < 0.5) {
+                //if (s2 < threshold2) outColor = result;
+                if (x < 0.5) outColor = color1;
+                else outColor = color2;
+            }
+            else {
+                //if (s2 < threshold2) outColor = result;
+                if (x < (threshold - 0.5) * 2.) outColor = result;
+                else {
+                    if (x < (threshold - 0.5) * 2. + (1.0 - (threshold - 0.5) * 2.)/2.) outColor = color1;
+                    else outColor = color2;
+                }
+            }
+        }
+    }
+
+
+    /*
+    else {
+        
+        float threshold = (v_texCoord.x - 0.5)*2.;
+        if (x < threshold) outColor = result;
+        else {
+            if (x < (1.0 - threshold) / 2. + threshold) outColor = color1;
+            else outColor = color2;
+        }
+        //outColor = result;
+    }
+    */
+    /*
+    else {
+        if (v_texCoord.y < 0.5) {
+            float threshold = (v_texCoord.x-0.5) + (0.5-v_texCoord.y);
+            threshold = pow(threshold - 0.5,1.)+0.5;
+            if (x < threshold) outColor = result;
+            else {
+                if (x < (1.0 - threshold) / 2. + threshold) outColor = color1;
+                else outColor = color2;
+            }
+        }
+        else {
+            float threshold = (v_texCoord.x-0.5) + v_texCoord.y-0.5;
+            threshold = pow(threshold - 0.5,1.)+0.5;
+            threshold = pow(threshold - 0.5,1.)+0.5;
+            if (x < threshold) outColor = result;
+            else {
+                if (x < (1.0 - threshold) / 2. + threshold) outColor = color1;
+                else outColor = color2;
+            }
+        }
+    }
+    */
+    
+    /*
+    else {
+        float s2 = better_rand(v_texCoord + vec2(mod((time + x)/100000.,10.)));
+        if (v_texCoord.y < 0.5) {
+            float threshold = (v_texCoord.x-0.5) + (0.5-v_texCoord.y);
+            threshold = pow(threshold - 0.5,1.)+0.5;
+            float threshold2 = (v_texCoord.x - 0.5)*2.;
+            if (x < threshold) outColor = result;
+            else if (s2 < threshold2) outColor = result;
+            else {
+                if (x < (1.0 - threshold) / 2. + threshold) outColor = color1;
+                else outColor = color2;
+            }
+
+            if (threshold < 0.5) {
+                if (x < 0.5) outColor = color1;
+                else outColor = color2;
+            }
+        }
+        else {
+            float threshold = (v_texCoord.x-0.5) + v_texCoord.y-0.5;
+            threshold = pow(threshold - 0.5,1.)+0.5;
+            float threshold2 = (v_texCoord.x - 0.5)*2.;
+            if (x < threshold) outColor = result;
+            else if (s2 < threshold2) outColor = result;
+            else {
+                if (x < (1.0 - threshold) / 2. + threshold) outColor = color1;
+                else outColor = color2;
+            }
+        }
+    }*/
+
+    vec2 xy = mod(v_texCoord+vec2(0.,0.5),1.);
+    float alpha = min(max(pow(clamp(min(min(manhattan(v_texCoord, vec2(0.0,0.5)), manhattan(v_texCoord, vec2(0.5,0.0))),
+        min(manhattan(v_texCoord, vec2(1.0,0.5)), manhattan(v_texCoord, vec2(0.5,1.0))))*2.1,0.0,1.0),5.),
+        pow(clamp((0.5-distance(v_texCoord, vec2(0.5)))*3.-0.2,0.0,1.0),1.)),
+        pow(clamp((0.5-distance(v_texCoord, vec2(0.5)))*1.5,0.0,1.0),0.1));
+    //alpha = 1.0;
+    outColor = alpha * outColor;
+
+    /*
+    // the min max part in the grad is done incorrectly, it needs to be considerate of the sign
+    if (v_texCoord.y > 0.5) {
+        vec3 linear_color1 = sRGB_to_linear(color1.rgb);
+        vec3 linear_color2 = sRGB_to_linear(color2.rgb);
+        vec3 diff = abs(linear_color1-linear_color2);
+        vec3 signs = sign(linear_color1-linear_color2);
+        float max_change = max(diff.x, max(diff.y, diff.z));
+        vec3 grad = vec3(max(linear_color1.x, linear_color2.x + signs.x * v_texCoord.x * max_change),
+            max(linear_color1.y, linear_color2.y + signs.y * v_texCoord.x * max_change),
+            min(linear_color1.z, linear_color2.z + signs.z * v_texCoord.x * max_change));
+        outColor = vec4(linear_to_sRGB(grad),1.0);
+    }
+    */
+ 
+}
+</script>
+<script>
+
+"use strict";
+var vertexShaderSource = '#version 300 es' + document.getElementById('vertex').text;
+var fragmentShaderSource = '#version 300 es' + document.getElementById('colors').text;
+
+// Get A WebGL context
     /** @type {HTMLCanvasElement} */
     var toggle = true;
     const btn = document.getElementById('btn');
     var canvas = document.querySelector("canvas");
     var gl = canvas.getContext("webgl2");        // setup GLSL program
-    if (`drawingBufferColorSpace` in gl) {
-        gl.drawingBufferColorSpace = 'display-p3';
-        console.log(gl.drawingBufferColorSpace);
-    }
+    // this shouldn't use p3 because the predictions will be off unless you modify the shader, but not all devices will be able to see p3 so then the defaulted sRGB predictions will be off
+    //if (`drawingBufferColorSpace` in gl) {
+    //    gl.drawingBufferColorSpace = 'display-p3';
+    //    console.log(gl.drawingBufferColorSpace);
+    //}
     var image = new Image();
     image.src = canvas.toDataURL();
     var program = webglUtils.createProgramFromSources(gl,
@@ -667,8 +853,16 @@ out vec4 outColor;void main()
         'hue': gl.getUniformLocation(program, "antiHue"),
         'rad': gl.getUniformLocation(program, "antiRad"),
         'lum': gl.getUniformLocation(program, "lum"),
-        'res': gl.getUniformLocation(program, "res")
+        'res': gl.getUniformLocation(program, "res"),
+        'col1': gl.getUniformLocation(program, "col1"),
+        'col2': gl.getUniformLocation(program, "col2")
     };
+    //var color1 = [0.74,1.0,0.53];
+    //var color2 = [0.13,1.0,0.27];
+    // these two colors are a really good example of where the predictions are very different
+    var color1 = [0.29,1.0,0.56]; //hue of 0.52 works too
+    var color2 = [0.95,1.0,0.24];
+
 
     function resizeCanvas(image, multiplier) {
         const maxWidth = Math.min(600, screen.width * 0.85);
@@ -686,10 +880,8 @@ out vec4 outColor;void main()
     function render(time) {
         time = time || 0;
         gl.uniform1f(locs.time, time * 0.001);
-        gl.uniform1f(locs.hue, sliderFill.value());
-        gl.uniform1f(locs.rad, sliderFill2.value() / 2.0);
-        gl.uniform1f(locs.lum, sliderFill3.value());
-        gl.uniform1f(locs.res, (Math.max(image.width, image.height) * Math.pow(1 - sliderFill4.value(), 4)) + 1);
+        gl.uniform3f(locs.col1, color1[0], color1[1], color1[2]);
+    	gl.uniform3f(locs.col2, color2[0], color2[1], color2[2]);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
         if (!toggle) requestAnimationFrame(render);
     }
@@ -723,10 +915,8 @@ out vec4 outColor;void main()
     	gl.uniform2f(gl.getUniformLocation(program, "u_resolution"), image.width, image.height);            // Tell the shader to get the texture from texture unit 0
     	gl.uniform1i(gl.getUniformLocation(program, "u_image"), 0);            // Update the time
     	gl.uniform1f(locs.time, 0.0 * 0.001);
-    	gl.uniform1f(locs.hue, sliderFill.value());
-    	gl.uniform1f(locs.rad, sliderFill2.value() / 2.0);
-    	gl.uniform1f(locs.lum, sliderFill3.value());
-    	gl.uniform1f(locs.res, (Math.max(image.width, image.height) * Math.pow(1 - sliderFill4.value(), 4)) + 1);
+        gl.uniform3f(locs.col1, color1[0], color1[1], color1[2]);
+    	gl.uniform3f(locs.col2, color2[0], color2[1], color2[2]);
     	// in setRectangle puts data in the position buffer
     	gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);            // Set a rectangle the same size as the image.
     	setRectangle(gl, 0, 0, image.width, image.height);            // Draw the rectangle.
@@ -822,145 +1012,64 @@ out vec4 outColor;void main()
     }
 
     var data = [0, 1.0];
-    var sliderFill = d3
-        .sliderBottom()
-        .min(d3.min(data))
-        .max(d3.max(data))
-        .width(Math.min(300,screen.width*0.55))
-        .tickFormat(d3.format('.0'))
-        .ticks(5)
-        .default(0.5)
-        .fill('#415794')
-        .handle(
+
+    function makeSlider(divName, def_val, func) {
+        var sliderFill = d3
+            .sliderBottom()
+            .min(d3.min([0,1.0]))
+            .max(d3.max([0,1.0]))
+            .width(Math.min(300,screen.width*0.55))
+            .tickFormat(d3.format('.0%'))
+            .ticks(5)
+            .default(def_val)
+            .fill('#415794')
+            .handle(
             d3
                 .symbol()
                 .type(d3.symbolCircle)
                 .size(250)
-        )
-        .on('onchange', val => {
-            d3.select('div#slider-fill')
-                .select('.handle')
-                .attr("fill", sliderColor(val, sliderFill2.value(), sliderFill3.value(), colors));
-            if (toggle) render();
-        });
+            )
+            .on('onchange', func);
+        var gFill = d3
+            .select(divName)
+            .append('svg')
+            .attr('width', Math.min(350,screen.width*0.7))
+            .attr('height', 65)
+            .append('g')
+            .attr('transform', 'translate(30,30)')
+            .attr('fill', '#aaaaaa')
+        gFill.call(sliderFill);
+    }
 
-    var gFill = d3
-        .select('div#slider-fill')
-        .append('svg')
-        .attr('width', Math.min(350,screen.width*0.7))
-        .attr('height', 65)
-        .append('g')
-        .attr('transform', 'translate(30,30)')
-        .attr('fill', '#aaaaaa')
-    gFill.call(sliderFill);
+    makeSlider('div#hue1', color1[0], val => {
+        color1[0] = val;
+        if (toggle) render();
+    });
 
-    var sliderFill2 = d3
-        .sliderBottom()
-        .min(d3.min(data))
-        .max(d3.max(data))
-        .width(Math.min(300,screen.width*0.55))
-        .tickFormat(d3.format('.0%'))
-        .ticks(5)
-        .default(0.6)
-        .fill('#415794')
-        .handle(
-            d3
-                .symbol()
-                .type(d3.symbolCircle)
-                .size(250)
-        )
-        .on('onchange', val => {
-            var index = parseInt((2 - val) / 2 * 255)
-            d3.select('div#slider-fill2')
-                .select('.handle')
-                .attr("fill", grays[index]);
-            d3.select('div#slider-fill')
-                .select('.handle')
-                .attr("fill", sliderColor(sliderFill.value(), val, sliderFill3.value(), colors));
-            if (toggle) render();
-        });
+    makeSlider('div#sat1', color1[1], val => {
+        color1[1] = val;
+        if (toggle) render();
+    });
 
-    var gFill2 = d3
-        .select('div#slider-fill2')
-        .append('svg')
-        .attr('width', Math.min(350,screen.width*0.7))
-        .attr('height', 65)
-        .append('g')
-        .attr('transform', 'translate(30,30)')
-        .attr('fill', '#aaaaaa');
-    gFill2.call(sliderFill2);
+    makeSlider('div#val1', color1[2], val => {
+        color1[2] = val;
+        if (toggle) render();
+    });
 
-    var sliderFill3 = d3
-        .sliderBottom()
-        .min(d3.min(data))
-        .max(d3.max(data))
-        .width(Math.min(300,screen.width*0.55))
-        .tickFormat(d3.format('.0'))
-        .ticks(5)
-        .default(0.4)
-        .fill('#415794')
-        .handle(
-            d3
-                .symbol()
-                .type(d3.symbolCircle)
-                .size(250)
-        )
-        .on('onchange', val => {
-            var index = parseInt(val * 255)
-            d3.select('div#slider-fill3')
-                .select('.handle')
-                .attr("fill", grays[index]);
-            d3.select('div#slider-fill')
-                .select('.handle')
-                .attr("fill", sliderColor(sliderFill.value(), sliderFill2.value(), val, colors));
-            if (toggle) render();
-        });
+    makeSlider('div#hue2', color2[0], val => {
+        color2[0] = val;
+        if (toggle) render();
+    });
 
-    var gFill3 = d3
-        .select('div#slider-fill3')
-        .append('svg')
-        .attr('width', Math.min(350,screen.width*0.7))
-        .attr('height', 65)
-        .append('g')
-        .attr('transform', 'translate(30,30)')
-        .attr('fill', '#aaaaaa');
-    gFill3.call(sliderFill3);
+    makeSlider('div#sat2', color2[1], val => {
+        color2[1] = val;
+        if (toggle) render();
+    });
 
-    var sliderFill4 = d3
-        .sliderBottom()
-        .min(d3.min(data))
-        .max(d3.max(data))
-        .width(Math.min(300,screen.width*0.55))
-        .tickFormat(d3.format('.0%'))
-        .ticks(5)
-        .default(0.0)
-        .fill('#415794')
-        .handle(
-            d3
-                .symbol()
-                .type(d3.symbolCircle)
-                .size(250)
-        )
-        .on('onchange', val => {
-            if (toggle) render();
-        });
-
-    var gFill4 = d3
-        .select('div#slider-fill4')
-        .append('svg')
-        .attr('width', Math.min(350,screen.width*0.7))
-        .attr('height', 65)
-        .append('g')
-        .attr('transform', 'translate(30,30)')
-        .attr('fill', '#aaaaaa');
-    gFill4.call(sliderFill4);
-
-    gFill.select('.handle')
-        .attr("fill", sliderColor(sliderFill.value(), sliderFill2.value(), sliderFill3.value(), colors));
-    gFill2.select('.handle')
-        .attr("fill", grays[parseInt(sliderFill2.value() * 255)]);
-    gFill3.select('.handle')
-        .attr("fill", grays[parseInt(sliderFill3.value() * 255)]);
+    makeSlider('div#val2', color2[2], val => {
+        color2[2] = val;
+        if (toggle) render();
+    });
         
     window.onload = function () {
         btn.addEventListener('click', function handleClick() {
@@ -972,98 +1081,11 @@ out vec4 outColor;void main()
 		firstRender();
     }
 </script>
-<!-- End raw script section -->
-<h1 id="controls">Controls</h1>
-<ul>
-<li>▶️/⏸ Button: Controls time, causes noisiness to evolve over time and smoothens dither</li>
-<li>
-<html>
-<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-    style="position:relative; top:2px;">
-    <linearGradient id="Gradient2" x1="0" x2="0" y1="0" y2="1">
-        <stop offset="0%" stop-color="#d60071" />
-        <stop offset="20%" stop-color="#c04e00" />
-        <stop offset="30%" stop-color="#917200" />
-        <stop id='example' offset="45%" stop-color="#468a00" />
-        <stop offset="50%" stop-color="#008a79" />
-        <stop offset="60%" stop-color="#0083a8" />
-        <stop offset="70%" stop-color="#4b5dff" />
-        <stop offset="100%" stop-color="#b200df" />
-    </linearGradient>
-    <path fill="url(#Gradient2)"
-        d="M12 0c-4.87 7.197-8 11.699-8 16.075 0 4.378 3.579 7.925 8 7.925s8-3.547 8-7.925c0-4.376-3.13-8.878-8-16.075zm.462 20.471c2.56-1.049 4.124-4.889 3.021-8.853 3.798 4.909.754 9.393-3.021 8.853z" /></svg>
-        </html> Slider: Controls the annihilated hue. Runs counterclockwise starting from the rightmost point of the color wheel (red/hot pink)
-</li>
-<li>
-<html>
-<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-    style="position:relative; top:2px;">
-    <path fill='gray' d="M6 11v-4l-6 5 6 5v-4h12v4l6-5-6-5v4z" /></svg>
-        </html> Slider: Controls with width of the sector being annihilated, where the percentage corresponding to the percentage of the color wheel within that sector, centered around the annihilated hue as defined by the above slider
-</li>
-<li>
-<html>
-<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-    style="position:relative; top:2px;">
-    <path fill='gray'
-        d="M14 19h-4c-.276 0-.5.224-.5.5s.224.5.5.5h4c.276 0 .5-.224.5-.5s-.224-.5-.5-.5zm0 2h-4c-.276 0-.5.224-.5.5s.224.5.5.5h4c.276 0 .5-.224.5-.5s-.224-.5-.5-.5zm.25 2h-4.5l1.188.782c.154.138.38.218.615.218h.895c.234 0 .461-.08.615-.218l1.187-.782zm3.75-13.799c0 3.569-3.214 5.983-3.214 8.799h-1.989c-.003-1.858.87-3.389 1.721-4.867.761-1.325 1.482-2.577 1.482-3.932 0-2.592-2.075-3.772-4.003-3.772-1.925 0-3.997 1.18-3.997 3.772 0 1.355.721 2.607 1.482 3.932.851 1.478 1.725 3.009 1.72 4.867h-1.988c0-2.816-3.214-5.23-3.214-8.799 0-3.723 2.998-5.772 5.997-5.772 3.001 0 6.003 2.051 6.003 5.772zm4-.691v1.372h-2.538c.02-.223.038-.448.038-.681 0-.237-.017-.464-.035-.69h2.535zm-10.648-6.553v-1.957h1.371v1.964c-.242-.022-.484-.035-.726-.035-.215 0-.43.01-.645.028zm-3.743 1.294l-1.04-1.94 1.208-.648 1.037 1.933c-.418.181-.822.401-1.205.655zm10.586 1.735l1.942-1.394.799 1.115-2.054 1.473c-.191-.43-.423-.827-.687-1.194zm-3.01-2.389l1.038-1.934 1.208.648-1.041 1.941c-.382-.254-.786-.473-1.205-.655zm-10.068 3.583l-2.054-1.472.799-1.115 1.942 1.393c-.264.366-.495.763-.687 1.194zm13.707 6.223l2.354.954-.514 1.271-2.425-.982c.21-.397.408-.812.585-1.243zm-13.108 1.155l-2.356 1.06-.562-1.251 2.34-1.052c.173.433.371.845.578 1.243zm-1.178-3.676h-2.538v-1.372h2.535c-.018.226-.035.454-.035.691 0 .233.018.458.038.681z" /></svg>
-        </html> Slider: Displays the color wheel at difference luminances
-</li>
-<li>
-<html>
-<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-    style="position:relative; top:2px;">
-    <path fill='gray'
-        d="M12 0l-11 6v12.131l11 5.869 11-5.869v-12.066l-11-6.065zm9 11.623l-3 1.569v-3.26l3-1.601v3.292zm-13-.654l3 1.625v3.186l-3-1.614v-3.197zm.9-1.799l2.986-1.603 3.132 1.688-3.014 1.608-3.104-1.693zm4.1 3.43l3-1.6v3.238l-3 1.569v-3.207zm4.138-4.475l-3.139-1.691 2.801-1.503 3.11 1.715-2.772 1.479zm-2.424-4.345l-2.825 1.517-2.728-1.47 2.834-1.546 2.719 1.499zm-7.649 1.19l2.711 1.46-2.973 1.596-2.67-1.456 2.932-1.6zm-1.065 4.908v3.204l-3-1.636v-3.216l3 1.648zm-3 3.843l3 1.636v3.185l-3-1.611v-3.21zm5 5.888v-3.169l3 1.614v3.146l-3-1.591zm5-1.545l3-1.569v3.104l-3 1.601v-3.136zm5 .468v-3.083l3-1.569v3.051l-3 1.601z" /></svg>
-        </html> Slider: Changes the size of the resolution of the dithered annihilated colors
-</li>
-</ul>
 <h1 id="discussion">Discussion</h1>
-<p>I invite the reader in particular to try pressing ▶️, setting the <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" style="position:relative; top:2px;">
-<path fill='gray' d="M6 11v-4l-6 5 6 5v-4h12v4l6-5-6-5v4z" /></svg> slider to around 25%, and seeing what effect changing the <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" style="position:relative; top:2px;">
-<linearGradient id="Gradient2" x1="0" x2="0" y1="0" y2="1">
-<stop offset="0%" stop-color="#d60071" />
-<stop offset="20%" stop-color="#c04e00" />
-<stop offset="30%" stop-color="#917200" />
-<stop id='example' offset="45%" stop-color="#468a00" />
-<stop offset="50%" stop-color="#008a79" />
-<stop offset="60%" stop-color="#0083a8" />
-<stop offset="70%" stop-color="#4b5dff" />
-<stop offset="100%" stop-color="#b200df" />
-</linearGradient>
-<path fill="url(#Gradient2)" d="M12 0c-4.87 7.197-8 11.699-8 16.075 0 4.378 3.579 7.925 8 7.925s8-3.547 8-7.925c0-4.376-3.13-8.878-8-16.075zm.462 20.471c2.56-1.049 4.124-4.889 3.021-8.853 3.798 4.909.754 9.393-3.021 8.853z" /></svg> slider has on the color wheel. While the changes are obvious and noticeable, I believe it is quite impressive how little of a difference there is. Remember, when the <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" style="position:relative; top:2px;">
-<path fill='gray' d="M6 11v-4l-6 5 6 5v-4h12v4l6-5-6-5v4z" /></svg> slider is at 25%, that means a whole quarter of the color wheel is missing! Yet, it doesn&rsquo;t feel like quite that much is gone. Thank dithering!</p>
-<p>Note: This color wheel is a special one, and represents slices from a color space called <a href="https://bottosson.github.io/posts/colorpicker/">Okhsl</a>. The benefit of this space is in its <em>perceptual uniformity</em>, further investigated <a href="https://agaura.github.io/comparison/">here</a>.</p>
-<p>Now that we&rsquo;ve created this, what does it look like in practice with an actual image? See <a href="https://agaura.github.io/selectiveshader/">here</a>.</p>
+<p>One might notice that when experimenting with colors of different lightness that the lighter color always seems to dominate the color mix. This is not a coincidence, it’s the same reason the gamma function exists. Since human eyes are more sensitive to dark colors, a true 50/50 mix of two colors will always look more like the lighter one. Therefore, while mixing colors in a space like XYZ or linear sRGB is accurate to how light would actually mix, it might not be the best for making gradients that feel equally spaced.</p>
 
 	</article>
 </main>
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css"
-  integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
-
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"
-  integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp" crossorigin="anonymous"></script>
-
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"
-  integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous"></script>
-
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    renderMathInElement(document.body, {
-      
-      
-      delimiters: [
-        { left: '$$', right: '$$', display: true },
-        { left: '$', right: '$', display: false },
-        { left: '\\(', right: '\\)', display: false },
-        { left: '\\[', right: '\\]', display: true }
-      ],
-      
-      throwOnError: false
-    });
-  });
-</script>
 
 
 
