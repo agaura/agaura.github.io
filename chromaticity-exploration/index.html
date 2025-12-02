@@ -58,11 +58,11 @@ intuit the range of colors that are missing from our displays compare the gamuts
   
   
   
-  <link rel="stylesheet" href="/minima.1763601591.css">
+  <link rel="stylesheet" href="/minima.1764684617.css">
 
   
   
-  <script defer type="text/javascript" src="/minima.1763601591.js"></script>
+  <script defer type="text/javascript" src="/minima.1764684617.js"></script>
 </head>
 <script>
   
@@ -155,7 +155,7 @@ intuit the range of colors that are missing from our displays compare the gamuts
 <h3 id="a-point-cloud-approach">A point-cloud approach</h3>
 <p>In my visualization, the chromaticity diagram is represented as an interactive moving point cloud. This has a few advantages:</p>
 <ul>
-<li>In 3D, point clouds are easy to see-through, allowing the ability to look at the inside of a shape</li>
+<li>In 3D, point clouds are easy to see through, allowing the ability to look at the inside of a shape</li>
 <li>When plotting shapes, they are easy to distinguish via their densities—no need to highlight or outline regions</li>
 <li>In 2D, colors which occupy different brightnesses can periodically occupy the same chromaticity, so we can see the range of brightnesses</li>
 <li>Hovering and selection become simple visual changes where we can increase the size of the points</li>
@@ -184,7 +184,7 @@ So, there are analogues to chromaticity in other spaces calculated the same way,
 <li>a whitepoint</li>
 </ul>
 <p>The whitepoint is the chromaticity produced when red, green, and blue are all at maximum intensity. Because this whitepoint fixes the relative strengths of the primaries, it also constrains the overall shape of the gamut.</p>
-<p>To construct the max gamut, spectral chromaticities were paired with theirz opposites and scaled so that each pair summed to the equal-energy whitepoint (X = Y = Z = 1). This produces the largest possible gamut consistent with that whitepoint. Notably, this is actually a different whitepoint than the whitepoint used by sRGB, P3, and Rec. 2020, which is why you will notice that their gamuts reach their top at a different place than the central axis in the visualization.</p>
+<p>To construct the max gamut, spectral chromaticities were paired with their opposites and scaled so that each pair summed to the equal-energy whitepoint (X = Y = Z = 1). This produces the largest possible gamut consistent with that whitepoint. Notably, this is actually a different whitepoint than the whitepoint used by sRGB, P3, and Rec. 2020, which is why you will notice that their gamuts reach their top at a different place than the central axis in the visualization.</p>
 <h1 id="visible-light-spectrum">Visible Light Spectrum</h1>
 <p>Included is also a visible light spectrum. This, like the max gamut, is desaturated until made displayable, but it is quite &ldquo;accurate&rdquo; in the sense that it is equivalent to projecting a true rainbow on a gray surface. The underlying data is from the CIE 1931 2° XYZ color-matching functions (via <a href="http://www.cvrl.org/cmfs.htm">cvrl.org</a>). The values from this dataset define the XYZ values for each wavelength, and I just found the gray value and mixing coefficient which maximized its saturation in P3. By hovering over or clicking the spectrum you can see the matching chromaticities in the chromaticity diagram and the 3D point cloud.</p>
 
